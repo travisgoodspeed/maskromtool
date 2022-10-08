@@ -1,0 +1,35 @@
+{
+    "00about": "Export from MaskROMTool by Travis Goodspeed",
+    "00github": "http://github.com/travisgoodspeed/mcuexploits/",
+    "cols": [
+        {
+            "linetype": 1,
+            "x1": 211,
+            "x2": 213,
+            "y1": 585,
+            "y2": 207
+        }
+    ],
+    "imagefilename": "lutleft.bmp",
+    "rows": [
+        {
+            "linetype": 0,
+            "x1": 510,
+            "x2": 191,
+            "y1": 220,
+            "y2": 221
+        },
+        {
+            "linetype": 0,
+            "x1": 510,
+            "x2": 191,
+            "y1": 220,
+            "y2": 221
+        }
+    ],
+    "thresholds": {
+        "blue": 4.931472870731113e+27,
+        "green": 0,
+        "red": 3.2229864679470793e-44
+    }
+}

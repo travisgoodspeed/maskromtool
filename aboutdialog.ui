@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>aboutDialog</class>
+ <widget class="QDialog" name="aboutDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>404</width>
+    <height>425</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>About Mask ROM Tool</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QPlainTextEdit" name="plainTextEdit">
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="plainText">
+      <string>Howdy y'all,
+
+In the summer of 2022, I found myself reverse engineering mask ROMs and frustrated by existing tools, so instead of patching Adam Laurie's Rompar or Chris Gerlinsky's Bitract, I dusted off my atrophied C++ skills and wrote another tool.
+
+Like all CAD software, this one takes a bit of getting used to.  Please read the README file and work a few toy examples before starting a real project.  Please keep your progress in a git repository, and please forgive me if I ever have to break backward compatibility.
+
+And if you find this to be useful, please kindly pay the licensing fee forward by giving a tool or a devkit to a clever student.
+
+--Travis
+
+https://github.com/travisgoodspeed/maskromtool/</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
