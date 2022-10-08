@@ -14,7 +14,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools Charts)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Charts)
 
-
+# We currently only support English, so we define this file but we do
+# not link it.  That can, of course, be changed if/when we get around
+# to translating the tool.
 set(TS_FILES maskromtool_en_001.ts)
 
 # The MACOSX_BUNDLE_ICON_FILE variable is added to the Info.plist
@@ -54,7 +56,7 @@ set(PROJECT_SOURCES
         romdecoderpython.h romdecoderpython.cpp
         romruleambiguous.h romruleambiguous.cpp
         romruledialog.h romruledialog.cpp romruledialog.ui
-        ${TS_FILES}
+#        ${TS_FILES}
         ${app_icon_macos}
         ${app_icon_resource_windows}
 )
