@@ -21,8 +21,12 @@ void RomRuleDialog::clearViolations(){
     ui->listWidget->clear();
 }
 void RomRuleDialog::addViolation(RomRuleViolation* violation){
-    //FIXME: Fill this up.
     ui->listWidget->addItem(new RomRuleDialogEntry(violation));
+}
+void RomRuleDialog::removeViolation(RomRuleViolation* violation){
+    //TODO
+    qDebug()<<"Removing an item doesn't work yet, so I'm clearing them all.";
+    ui->listWidget->clear();
 }
 void RomRuleDialog::setMaskRomTool(MaskRomTool* maskRomTool){
     mrt=maskRomTool;

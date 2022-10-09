@@ -101,6 +101,9 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
     }else if(violations.contains((RomRuleViolation*) item)){
         violations.remove((RomRuleViolation*) item);
         //Violations are commentary; they don't dirty the alignment.
+
+        //Gotta remove the violation so that it isn't used after a free.
+        violationDialog.removeViolation((RomRuleViolation*) item);
     }else if(bitfixes.contains((RomBitFix*) item)){
         bitfixes.remove((RomBitFix*) item);
         //Bit fixes change the value but not the alignment.
@@ -120,7 +123,9 @@ void MaskRomTool::nextMode(){
     //static int mode=0;
 
     setBitsVisible(!bitsVisible);
+    setViolationsVisible(bitsVisible);
     ui->actionBits->setChecked(bitsVisible);
+    ui->actionViolations->setChecked(bitsVisible);
 }
 
 void MaskRomTool::on_actionPhotograph_triggered(){

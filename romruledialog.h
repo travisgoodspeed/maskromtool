@@ -19,6 +19,7 @@ public:
     ~RomRuleDialog();
     void clearViolations();
     void addViolation(RomRuleViolation* violation);
+    void removeViolation(RomRuleViolation* violation);
     void setMaskRomTool(MaskRomTool* maskRomTool);
 
 private slots:
