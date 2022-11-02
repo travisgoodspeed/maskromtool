@@ -378,7 +378,6 @@ void MaskRomTool::on_exportJSONBits_triggered(){
         json.writeFile(this, filename);
 }
 
-
 //Exports a .bin file from a MARC4 ROM.
 void MaskRomTool::on_exportMARC4_triggered(){
     RomDecoderMarc4 marc4;
@@ -600,7 +599,10 @@ void MaskRomTool::fileOpen(QString filename){
 
 //Opens an image as the backgound for annotation, and matching .json if it's available.
 void MaskRomTool::on_openButton_triggered(){
-    QString newfilename = QFileDialog::getOpenFileName(this,tr("Open Image"), tr("Image Files (*.png *.jpg *.bmp)"));
+    QString newfilename = QFileDialog::getOpenFileName(this, tr("Open Image"), QDir::homePath(),
+                                                       tr("Image Files (*.png *.jpg *.bmp)"));
+
+
     if(newfilename.isEmpty())
         return;
 
