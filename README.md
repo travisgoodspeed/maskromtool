@@ -234,3 +234,8 @@ source tool for bit marking, and
 [Bitviewer](https://github.com/SiliconAnalysis/bitviewer) is his
 matching tool for decoding bits to bytes.
 
+Peter Bosch's [PLA Decode](https://github.com/peterbjornx/pladecode)
+is a bit marking tool used for extracting old Intel microcode.  See
+his [Hardwear.io](https://www.youtube.com/watch?v=4oFOpDflJMA) talk
+from 2020 for more details.
+
