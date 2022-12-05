@@ -850,7 +850,8 @@ QJsonObject MaskRomTool::exportJSON(){
     root["00imagefilename"]=imagefilename;
 
     /* We try not to break compatibility, but as features are added,
-     * we must add new
+     * we should update this date to indicate the new file format
+     * version number.
      */
     root["00version"]="2022.09.28";
 
