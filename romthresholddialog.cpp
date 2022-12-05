@@ -27,16 +27,16 @@ void RomThresholdDialog::setMaskRomTool(MaskRomTool* parent){
     qreal r=3, g=3, b=3;
     mrt->getBitThreshold(r,g,b);
 
+    //This must come first, or we'll redraw the bits and destroy the thresholds.
+    ui->sizeScrollBar->setValue(mrt->getBitSize());
+
+    //We've buffered these values, so they won't jump around.
     ui->redScrollBar->setValue((int) r);
     ui->greenScrollBar->setValue((int) g);
     ui->blueScrollBar->setValue((int) b);
-
     ui->redEdit->setText(QString::number((int) r));
     ui->greenEdit->setText(QString::number((int) g));
     ui->blueEdit->setText(QString::number((int) b));
-
-    //This must come last, or we'll redraw the bits and destroy the thresholds.
-    ui->sizeScrollBar->setValue(mrt->getBitSize());
 
     setModal(false);
 }
