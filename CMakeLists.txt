@@ -49,6 +49,7 @@ set(PROJECT_SOURCES
         romdecoderphotograph.h romdecoderphotograph.cpp
         asciidialog.h asciidialog.cpp asciidialog.ui
         romaligner.h romaligner.cpp
+        romalignernew.h romalignernew.cpp
         romrule.h romrule.cpp
         romrulecount.h romrulecount.cpp
         romruleduplicate.h romruleduplicate.cpp

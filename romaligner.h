@@ -12,26 +12,15 @@
 
 #include "rombititem.h"
 
+class MaskRomTool;
+
 class RomAligner
 {
 public:
     RomAligner();
 
     //Marks the table of bits, returns top-left entry.
-    virtual RomBitItem* markBitTable(QSet<RomBitItem*> &bits)=0;
-};
-
-class RomAlignerDefault : public RomAligner {
-    RomBitItem* markBitTable(QSet<RomBitItem*> &bits);
-
-
-    //Maybe make these private?
-    QSet<RomBitItem*> bits;
-
-    //Returns the next bit to the right, of all unmarked bits.
-    RomBitItem* onetoright(RomBitItem* i);
-    //Returns the top-left of all unmarked bits, but does not mark that bit.
-    RomBitItem* startofnextrow();
+    virtual RomBitItem* markBitTable(MaskRomTool* mrt)=0;
 };
 
 

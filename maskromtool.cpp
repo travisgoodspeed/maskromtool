@@ -7,6 +7,8 @@
 #include "romthresholddialog.h"
 #include "aboutdialog.h"
 
+#include "romalignernew.h"
+
 //Decoders should be abstracted more, if we don't farm everything out to zorrom.
 #include "romdecoderascii.h"
 #include "romdecoderpython.h"
@@ -827,9 +829,9 @@ RomBitItem* MaskRomTool::markBitTable(){
     if(alignmentdirty){
         markBits();
         if(!aligner)
-            aligner=new RomAlignerDefault();
+            aligner=new RomAlignerNew();
         alignmentdirty=false;
-        firstbit=aligner->markBitTable(bits);
+        firstbit=aligner->markBitTable(this);
     }
 
     //If the alignment was cancelled, it's dirty.
