@@ -6,7 +6,7 @@
 
 //FIXME: These constants need to be adjustable.
 #define SKIPCOUNTTHRESHOLD 10 //Number of far hops before row count ends.
-#define SHORTHOPTHRESHOLD 300 //Max distance of a short hop.
+#define SHORTHOPTHRESHOLD  50 //Max distance of a short hop.
 
 
 //FIXME: We also need rotation matrix sorting, to avoid tilt bugs.
