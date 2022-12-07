@@ -106,18 +106,26 @@ void RomAlignerNew::markRowStarts(){
      * positions.  This is done by sweeping in from the left
      * while ignoring large gaps in the Y position.
      */
-    qreal shorthop=0;  //should be pretty small until it's not.
+    qreal shorthop;  //should be pretty small until it's not.
+    qreal shorthopthreshold=1000000; //Adjusted later.
     qreal lasty=leftsorted[0]->y();
     int rowcount=0, skipcount=0;
     for(RomBitItem *bit: leftsorted){
-        if(qFabs(bit->y()-lasty)<SHORTHOPTHRESHOLD){ //30 works
+        if(qFabs(bit->y()-lasty)<shorthopthreshold){ //Same column
             rowstarts<<bit;
+            shorthop=qFabs(bit->y()-lasty);
             lasty=bit->y();
             //qDebug()<<"Bit at"<<bit->x()<<bit->y()<<"row"<<rowcount++;
             //bit->setToolTip(QString("Row header."));
             bit->marked=true; //Necessary so we don't double-count.
             skipcount=0;
-        }else{
+
+
+            //We want the long hops to be anything more than ~5 bits.
+            //qDebug()<<"Short hop of"<<shorthop;
+            if(shorthop>0 && shorthopthreshold>shorthop*5)
+                shorthopthreshold=shorthop*5;
+        }else{  //Different column.
             //qDebug()<<"Skipping short hop"<<qFabs(bit->y()-lasty);
             skipcount++;
         }
