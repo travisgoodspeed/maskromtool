@@ -1,5 +1,6 @@
 #include "maskromtool.h"
 #include "romdecoderascii.h"
+#include "romdecodercsv.h"
 #include "romdecodermarc4.h"
 #include "romdecoderjson.h"
 #include "romdecoderpython.h"
@@ -59,6 +60,11 @@ int main(int argc, char *argv[])
         QCoreApplication::translate("main", "Export ASCII bits for use in ZorRom."),
         QCoreApplication::translate("main", "file"));
     parser.addOption(asciiExportOption);
+    // Exporting to ASCII art.
+    QCommandLineOption csvExportOption(QStringList() << "export-csv",
+        QCoreApplication::translate("main", "Export CSV bits for use in Matlab or Excel."),
+        QCoreApplication::translate("main", "file"));
+    parser.addOption(csvExportOption);
     // Exporting to JSON bit positions.
     QCommandLineOption jsonExportOption(QStringList() << "export-json",
         QCoreApplication::translate("main", "Export JSON bit positions."),
@@ -101,6 +107,12 @@ int main(int argc, char *argv[])
     if(parser.isSet(asciiExportOption)){
         qDebug()<<"Exporting to ASCII.";
         RomDecoderAscii exporter;
+        exporter.writeFile(&mrt, parser.value(asciiExportOption));
+    }
+    //Export to CSV.
+    if(parser.isSet(csvExportOption)){
+        qDebug()<<"Exporting to CSV.";
+        RomDecoderCSV exporter;
         exporter.writeFile(&mrt, parser.value(asciiExportOption));
     }
     //Export to JSON bit positions.

@@ -43,8 +43,10 @@ set(PROJECT_SOURCES
         rombitfix.h rombitfix.cpp
         romthresholddialog.h romthresholddialog.cpp romthresholddialog.ui
         aboutdialog.h aboutdialog.cpp aboutdialog.ui
-        romdecoder.h romdecoderascii.h romdecoderascii.cpp
+        romdecoder.h
+        romdecoderascii.h romdecoderascii.cpp
         romdecoderjson.h romdecoderjson.cpp
+        romdecodercsv.h romdecodercsv.cpp
         romdecodermarc4.h romdecodermarc4.cpp
         romdecoderphotograph.h romdecoderphotograph.cpp
         asciidialog.h asciidialog.cpp asciidialog.ui

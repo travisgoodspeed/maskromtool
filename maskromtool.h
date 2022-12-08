@@ -54,7 +54,6 @@ public:
      */
     void keyPressEvent(QKeyEvent *event);
 
-
     void nextMode();                         //Called from the Tab key, this hides or shows bits.
     void setLinesVisible(bool b=true);       //Shows or hides the rows and columns.
     bool bitsVisible=true;                   //Are we currently seeing the bits?
@@ -148,6 +147,7 @@ private slots:
 
     //Export to a file.
     void on_exportASCII_triggered();
+    void on_exportCSV_triggered();
     void on_exportJSONBits_triggered();
     void on_exportPython_triggered();
     void on_exportMARC4_triggered();

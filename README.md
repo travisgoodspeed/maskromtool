@@ -199,6 +199,9 @@ not supported by Mask ROM Tool, you almost certainly want to export
 the bits to ASCII and explore them with these two tools until they
 make sense.
 
+**CSV** exports for Matlab or Octave.  `csvread("foo.csv")` imports
+the data.
+
 **JSON** export of bit positions and values.  This is far more verbose
 than ASCII, but might be useful if you wanted to write your own tool.
 

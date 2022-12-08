@@ -1,19 +1,15 @@
-#include<QDebug>
-#include<QFile>
+#include "romdecodercsv.h"
 
-#include "romdecoderascii.h"
-
-RomDecoderAscii::RomDecoderAscii()
+RomDecoderCSV::RomDecoderCSV()
 {
-    //qDebug()<<"Launching ROM Decoder to ASCII.";
+
 }
 
 
 //This returns a text preview.
-QString RomDecoderAscii::preview(MaskRomTool *m){
+QString RomDecoderCSV::preview(MaskRomTool *m){
     QString ascii="";
     RomBitItem* rowbit = m->markBitTable();
-
 
     //Prints all bits in the row.
     while(rowbit){
@@ -21,6 +17,8 @@ QString RomDecoderAscii::preview(MaskRomTool *m){
         while(bit){
             ascii.append(bit->bitValue()?"1":"0");
             bit=bit->nexttoright;  //Skip down the row.
+            if(bit)
+                ascii.append(",");
         }
         ascii.append("\n");
         rowbit=rowbit->nextrow;  //Skip to the next row.
@@ -30,7 +28,7 @@ QString RomDecoderAscii::preview(MaskRomTool *m){
 }
 
 
-void RomDecoderAscii::writeFile(MaskRomTool *m, QString filename){
+void RomDecoderCSV::writeFile(MaskRomTool *m, QString filename){
     QFile fout(filename);
     fout.open(QIODevice::WriteOnly);
     fout.write(preview(m).toUtf8());
