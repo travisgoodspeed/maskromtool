@@ -9,8 +9,9 @@
 
 #include "romalignernew.h"
 
-//Decoders should be abstracted more, if we don't farm everything out to zorrom.
+//Decoders should be abstracted more, and menus auto-generated.
 #include "romdecoderascii.h"
+#include "romdecodercsv.h"
 #include "romdecoderpython.h"
 #include "romdecoderjson.h"
 #include "romdecodermarc4.h"
@@ -355,9 +356,19 @@ void MaskRomTool::clearViolations(){
 //Exports ASCII for ZORROM/Bitviewer.
 void MaskRomTool::on_exportASCII_triggered(){
     RomDecoderAscii exporter;
-    QString filename = QFileDialog::getSaveFileName(this,tr("Save Bits"),
+    QString filename = QFileDialog::getSaveFileName(this,tr("Export Bits as ASCII"),
                                                     "bits.txt",
                                                     tr("Textfiles (*.txt)"));
+    if(!filename.isEmpty())
+        exporter.writeFile(this,filename);
+}
+
+//Exports CSV for Matlab or Excel.
+void MaskRomTool::on_exportCSV_triggered(){
+    RomDecoderCSV exporter;
+    QString filename = QFileDialog::getSaveFileName(this,tr("Export Bits as CSV"),
+                                                    "bits.csv",
+                                                    tr("CSV (*.csv)"));
     if(!filename.isEmpty())
         exporter.writeFile(this,filename);
 }
