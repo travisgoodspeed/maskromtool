@@ -75,7 +75,12 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
     updateCrosshairs(mouseEvent->buttons()!=Qt::NoButton);
 
     maskRomTool->statusBar()->showMessage(
-                str.asprintf("%05d x %05d", (int) scenepos.x(), (int) scenepos.y()));
+                str.asprintf("%05d x %05d -- %ldkb %ldkB",
+                             (int) scenepos.x(), (int) scenepos.y(),
+                             maskRomTool->bitcount/1024,
+                             maskRomTool->bitcount/1024/8
+                             )
+                );
 }
 
 void RomScene::setRowAngle(qreal angle){
