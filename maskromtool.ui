@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>24</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -61,6 +61,7 @@
      <addaction name="exportPhotograph"/>
      <addaction name="separator"/>
      <addaction name="exportMARC4"/>
+     <addaction name="exportARM6"/>
     </widget>
     <addaction name="openButton"/>
     <addaction name="saveButton"/>
@@ -343,6 +344,11 @@
   <action name="exportCSV">
    <property name="text">
     <string>CSV</string>
+   </property>
+  </action>
+  <action name="exportARM6">
+   <property name="text">
+    <string>ARM6 ROM Bytes</string>
    </property>
   </action>
  </widget>

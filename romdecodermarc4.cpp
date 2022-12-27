@@ -36,7 +36,7 @@ QByteArray RomDecoderMarc4::getbytes(MaskRomTool *m){
         RomBitItem* bit=rowbit;
         uint8_t bytea=0, byteb=0;
         while(bit){
-            //Bits are inteleved, so we grab one of each.
+            //Bits are interleved, so we grab one of each.
             if((bitinrow&1)==0)
                 bytea=(bytea<<1)|(bit->bitValue()^1);
             else

@@ -15,6 +15,7 @@
 #include "romdecoderpython.h"
 #include "romdecoderjson.h"
 #include "romdecodermarc4.h"
+#include "romdecoderarm6.h"
 #include "romdecoderphotograph.h"
 
 //DRC rules.
@@ -397,6 +398,14 @@ void MaskRomTool::on_exportMARC4_triggered(){
     QString filename = QFileDialog::getSaveFileName(this,tr("Save ROM"), tr("marc4rom.bin"));
     if(!filename.isEmpty())
         marc4.writeFile(this, filename);
+}
+
+//Exports a .bin file from a MARC4 ROM.
+void MaskRomTool::on_exportARM6_triggered(){
+    RomDecoderARM6 arm6;
+    QString filename = QFileDialog::getSaveFileName(this,tr("Save ROM"), tr("arm6rom.bin"));
+    if(!filename.isEmpty())
+        arm6.writeFile(this, filename);
 }
 
 //Exports a .png image from the current project.

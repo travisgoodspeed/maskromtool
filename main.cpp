@@ -2,6 +2,7 @@
 #include "romdecoderascii.h"
 #include "romdecodercsv.h"
 #include "romdecodermarc4.h"
+#include "romdecoderarm6.h"
 #include "romdecoderjson.h"
 #include "romdecoderpython.h"
 #include "romdecoderphotograph.h"
@@ -80,6 +81,11 @@ int main(int argc, char *argv[])
         QCoreApplication::translate("main", "Export MARC4 ROM banks, left to right."),
         QCoreApplication::translate("main", "file"));
     parser.addOption(marc4ExportOption);
+    // Exporting an ARM6 ROM.
+    QCommandLineOption arm6ExportOption(QStringList() << "export-arm6",
+        QCoreApplication::translate("main", "Export ARM6L (MYK82) ROM."),
+        QCoreApplication::translate("main", "file"));
+    parser.addOption(arm6ExportOption);
     // Exporting a photo.
     QCommandLineOption photoExportOption(QStringList() << "export-photo",
         QCoreApplication::translate("main", "Export a photograph."),
@@ -138,6 +144,12 @@ int main(int argc, char *argv[])
         qDebug()<<"Exporting MARC4 ROM.  Banks may be in the wrong order.";
         RomDecoderMarc4 exporter;
         exporter.writeFile(&mrt, parser.value(marc4ExportOption));
+    }
+    //Export to ARM6.
+    if(parser.isSet(arm6ExportOption)){
+        qDebug()<<"Exporting ARM6 ROM.";
+        RomDecoderARM6 exporter;
+        exporter.writeFile(&mrt, parser.value(arm6ExportOption));
     }
 
     //We don't return a failure code yet, but will if it comes to that.

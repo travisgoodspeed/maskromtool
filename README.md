@@ -211,6 +211,11 @@ your own parsing scripts.
 **Photograph** export provides a `.png` file of the current project.
 It's useful for documenting your work.
 
+**ARM6** exports bytes from ARM's ARM6L SoC devices, which are encoded
+as sixteen 32-bit words per row, most significant bits on the right.
+This was designed for the MYK82 chip in a Fortezza card, but might
+work elsewhere.
+
 **MARC4** exports for Atmel's 4-bit architecture by the same name.
 For now, this dumps the pages from left to right, so you'll need to
 rearrange the pages manually until
