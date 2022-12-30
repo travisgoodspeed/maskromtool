@@ -135,10 +135,6 @@ other tools, such as
 [Bitviewer](https://github.com/SiliconAnalysis/bitviewer) or
 [ZorRom](https://github.com/SiliconAnalysis/zorrom).
 
-Partial support for OpenGL is available with the `--opengl` switch, or
-through the `Edit` menu.  This is not yet stable and you should fully
-expect it break on large projects.
-
 
 ## CLI Usage
 
@@ -160,10 +156,13 @@ Options:
   --opengl                   Enable OpenGL.  (Not yet stable.)
   -d, --drc                  Run default Design Rule Checks.
   -D, --DRC                  Run all Design Rule Checks.
+  --diff-ascii <file>        Compares against ASCII art, for finding errors.
   -a, --export-ascii <file>  Export ASCII bits for use in ZorRom.
+  --export-csv <file>        Export CSV bits for use in Matlab or Excel.
   --export-json <file>       Export JSON bit positions.
   --export-python <file>     Export Python arrays.
   --export-marc4 <file>      Export MARC4 ROM banks, left to right.
+  --export-arm6 <file>       Export ARM6L (MYK82) ROM.
   --export-photo <file>      Export a photograph.
 
 Arguments:
@@ -174,6 +173,24 @@ Arguments:
 To run without a GUI, pass `-platform offscreen`.  If the program
 crashes under Wayland, force Xorg usage by passing `-platform xcb`.
 
+
+## Correcting Errors
+
+While a few thousand bits might be marked without an error, larger
+projects will inevitably need to manage their mistakes.
+
+A good start is to use the DRC checks and careful configuration of the
+bit thresholds until no obvious errors remain.  Then navigate the
+project and hit the `tab` key to show and hide the annotations, making
+sure that each bit is recognized properly.
+
+When that is insufficient, such as for ROMs that are tens or hundreds
+of kilobits, it helps to annotate the same ROM multiple times,
+preferably from different photographs.  Bit errors will happen in
+annotating each photograph, of course, but they will happen in
+different places.  You can then use the `--diff-ascii` feature against
+the output of `--export-ascii` to compare images, reconciling their
+differences until all of your project files agree.
 
 ## Development
 
