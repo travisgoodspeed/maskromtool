@@ -50,6 +50,7 @@ set(PROJECT_SOURCES
         romdecodermarc4.h romdecodermarc4.cpp
         romdecoderarm6.h romdecoderarm6.cpp
         romdecoderphotograph.h romdecoderphotograph.cpp
+        romencoderdiff.h romencoderdiff.cpp
         asciidialog.h asciidialog.cpp asciidialog.ui
         romaligner.h romaligner.cpp
         romalignernew.h romalignernew.cpp

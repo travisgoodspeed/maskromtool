@@ -17,4 +17,17 @@ public:
     virtual void writeFile(MaskRomTool *m, QString filename)=0;
 };
 
+/* A ROM Importer is the same thing, but in reverse.  It reads something
+ * out of an external file, but might well be comparing it rather than importing
+ * it.
+ */
+
+class RomEncoder
+{
+public:
+    virtual void readFile(MaskRomTool *m, QString filename)=0;
+};
+
+
+
 #endif // ROMDECODER_H

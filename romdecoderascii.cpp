@@ -3,10 +3,7 @@
 
 #include "romdecoderascii.h"
 
-RomDecoderAscii::RomDecoderAscii()
-{
-    //qDebug()<<"Launching ROM Decoder to ASCII.";
-}
+RomDecoderAscii::RomDecoderAscii(){}
 
 
 //This returns a text preview.
@@ -29,7 +26,7 @@ QString RomDecoderAscii::preview(MaskRomTool *m){
     return ascii;
 }
 
-
+//Exports the preview to a file.
 void RomDecoderAscii::writeFile(MaskRomTool *m, QString filename){
     QFile fout(filename);
     fout.open(QIODevice::WriteOnly);

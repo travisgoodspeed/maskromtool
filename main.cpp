@@ -6,6 +6,7 @@
 #include "romdecoderjson.h"
 #include "romdecoderpython.h"
 #include "romdecoderphotograph.h"
+#include "romencoderdiff.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -56,12 +57,19 @@ int main(int argc, char *argv[])
     parser.addOption(DRCOption);
 
 
+    // Diffing against ASCII Art
+    QCommandLineOption asciiDiffOption(QStringList() << "diff-ascii",
+        QCoreApplication::translate("main", "Compares against ASCII art, for finding errors."),
+        QCoreApplication::translate("main", "file"));
+    parser.addOption(asciiDiffOption);
+
+
     // Exporting to ASCII art.
     QCommandLineOption asciiExportOption(QStringList() << "a" << "export-ascii",
         QCoreApplication::translate("main", "Export ASCII bits for use in ZorRom."),
         QCoreApplication::translate("main", "file"));
     parser.addOption(asciiExportOption);
-    // Exporting to ASCII art.
+    // Exporting to CSV table.
     QCommandLineOption csvExportOption(QStringList() << "export-csv",
         QCoreApplication::translate("main", "Export CSV bits for use in Matlab or Excel."),
         QCoreApplication::translate("main", "file"));
@@ -107,6 +115,12 @@ int main(int argc, char *argv[])
     if(parser.isSet(openglOption)){
         qDebug()<<"Enbling OpenGL.";
         mrt.enableOpenGL();
+    }
+
+    if(parser.isSet(asciiDiffOption)){
+        qDebug()<<"Diffing in ASCII against"<<parser.value(asciiDiffOption);
+        RomEncoderDiff differ;
+        differ.readFile(&mrt, parser.value(asciiDiffOption));
     }
 
     //Export to ASCII.
