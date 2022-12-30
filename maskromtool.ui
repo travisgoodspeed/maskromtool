@@ -63,9 +63,16 @@
      <addaction name="exportMARC4"/>
      <addaction name="exportARM6"/>
     </widget>
+    <widget class="QMenu" name="menuImport">
+     <property name="title">
+      <string>Import</string>
+     </property>
+     <addaction name="importDiff"/>
+    </widget>
     <addaction name="openButton"/>
     <addaction name="saveButton"/>
     <addaction name="menuExport"/>
+    <addaction name="menuImport"/>
     <addaction name="actionPrint"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -349,6 +356,11 @@
   <action name="exportARM6">
    <property name="text">
     <string>ARM6 ROM Bytes</string>
+   </property>
+  </action>
+  <action name="importDiff">
+   <property name="text">
+    <string>ASCII Diff</string>
    </property>
   </action>
  </widget>

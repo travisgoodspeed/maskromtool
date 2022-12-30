@@ -17,6 +17,8 @@
 #include "romdecodermarc4.h"
 #include "romdecoderarm6.h"
 #include "romdecoderphotograph.h"
+//Importers too, weird as they are.
+#include "romencoderdiff.h"
 
 //DRC rules.
 #include "romrulecount.h"
@@ -351,6 +353,15 @@ void MaskRomTool::clearViolations(){
     foreach (RomRuleViolation* v, violations){
         removeItem(v);
     }
+}
+
+void MaskRomTool::on_importDiff_triggered(){
+    qDebug()<<"Importing a diff.";
+    RomEncoderDiff differ;
+    QString filename = QFileDialog::getOpenFileName(this, tr("Diff Bits as ASCII"),"",tr("Textfiles (*.txt)"));
+
+    if(!filename.isEmpty())
+        differ.readFile(this, filename);
 }
 
 

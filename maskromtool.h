@@ -154,6 +154,9 @@ private slots:
     void on_exportARM6_triggered();
     void on_exportPhotograph_triggered();
 
+    //Import from a file.  (Loose definition.
+    void on_importDiff_triggered();
+
     //View or hide.
     void on_actionPhotograph_triggered();
     void on_actionRowsColumns_triggered();
