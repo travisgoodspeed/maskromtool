@@ -26,6 +26,11 @@ void RomEncoderDiff::readFile(MaskRomTool *m, QString filename){
     RomBitItem* rowbit = m->markBitTable();  //First bit of current row.
     RomBitItem* bit=rowbit;                  //Current bit of the row.
 
+    if(!rowbit){
+        qDebug()<<"Unable to diff bits when none have been marked.";
+        return;
+    }
+
     //Shotgun parser doesn't check newlines, just bits.
     for (qsizetype i = 0; i < ba.size(); ++i) {
         //File bit to to compare against.
