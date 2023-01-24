@@ -109,3 +109,6 @@ set_target_properties(maskromtool PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(maskromtool)
 endif()
+
+# Install targets in relation to ${CMAKE_INSTALL_PREFIX}/
+install(TARGETS maskromtool DESTINATION bin)
