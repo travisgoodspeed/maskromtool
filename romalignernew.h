@@ -10,6 +10,8 @@ class RomAlignerNew : public RomAligner {
 private:
     QList<RomBitItem *> rowstarts; //All left-most bits of a row.
     QList<RomBitItem *> leftsorted; //All bits sorted from left.
+    QList<RomBitItem *> topsorted; //All bits sorted from left.
+
 
     RomBitItem* linkresults();
     void markRowStarts();
