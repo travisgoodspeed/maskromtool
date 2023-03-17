@@ -145,11 +145,11 @@ void RomAlignerNew::markRowStarts(){
             skipcount=0;
 
             //We want the long hops to be anything more than ~5 bits.
-            qDebug()<<"Short hop of"<<shorthop;
+            //qDebug()<<"Short hop of"<<shorthop;
             //if(shorthop>0 && shorthopthreshold>shorthop*5)
             //    shorthopthreshold=shorthop*5;
         }else{  //Different column.
-            qDebug()<<"Skipping hop"<<qFabs(bit->y()-lasty);
+            //qDebug()<<"Skipping hop"<<qFabs(bit->y()-lasty);
             skipcount++;
         }
         //One or two long hops are normal, but many indicate end of first col.
