@@ -5,8 +5,7 @@
 
 
 //FIXME: These constants need to be adjustable.
-#define SKIPCOUNTTHRESHOLD 10 //Number of far hops before row count ends.
-#define SHORTHOPTHRESHOLD  50 //Max distance of a short hop.
+#define SKIPCOUNTTHRESHOLD 5 //Number of far hops before row count ends.
 
 
 //FIXME: We also need rotation matrix sorting, to avoid tilt bugs.
@@ -110,6 +109,7 @@ void RomAlignerNew::markRemainingBits(){
 
 void RomAlignerNew::markRowStarts(){
     qreal largestgap=1;
+    qreal meangap=10;
     /* First we need to know the distance between bits.  This is rather
      * regular for bits that are evenly spaced, but many roms include
      * a larger jump between the left and right sides.  When oriented
@@ -117,37 +117,39 @@ void RomAlignerNew::markRowStarts(){
      * this class.
      */
     qreal lasty=0;
-    for(RomBitItem *bit: topsorted){
+    qreal maxy=0, miny=0;
+    for(RomBitItem *bit: topsorted){  //Finding gap distance.
         qreal y=bit->y();
+        //Largest gap is only useful when there's a big jump between rows.
         if(lasty>1 && y-lasty>largestgap)
             largestgap=y-lasty;
         lasty=y;
+        if(maxy<y) maxy=y;
+        if(miny==0 || miny>y) miny=y;
     }
-    //qDebug()<<"Largest gap is measured to be"<<largestgap;
+    qreal yspread=qFabs(maxy-miny);
 
+    /* Getting this wrong will completely screw over the number
+     * of columns in the result.  I tried some complicated algorithms
+     * for it, but simply dividing the height by four seems to work for
+     * all of my samples.
+     */
+    qreal shorthopthreshold=yspread/4;
 
     /* Here we create a sorted list of the starts of row start
      * positions.  This is done by sweeping in from the left
      * while ignoring large gaps in the Y position.
      */
-    qreal shorthop;  //should be pretty small until it's not.
-    qreal shorthopthreshold=largestgap*2; //Adjusted later.
     lasty=leftsorted[0]->y();
     int rowcount=0, skipcount=0;
     for(RomBitItem *bit: leftsorted){
         if(qFabs(bit->y()-lasty)<shorthopthreshold){ //Same column
             rowstarts<<bit;
-            shorthop=qFabs(bit->y()-lasty);
             lasty=bit->y();
             //qDebug()<<"Bit at"<<bit->x()<<bit->y()<<"row"<<rowcount++;
             //bit->setToolTip(QString("Row header."));
             bit->marked=true; //Necessary so we don't double-count.
             skipcount=0;
-
-            //We want the long hops to be anything more than ~5 bits.
-            //qDebug()<<"Short hop of"<<shorthop;
-            //if(shorthop>0 && shorthopthreshold>shorthop*5)
-            //    shorthopthreshold=shorthop*5;
         }else{  //Different column.
             //qDebug()<<"Skipping hop"<<qFabs(bit->y()-lasty);
             skipcount++;
