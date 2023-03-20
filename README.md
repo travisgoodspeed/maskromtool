@@ -10,6 +10,12 @@ the GUI documentation below before starting to explore.
 
 ![Screenshot of the tool.](screenshot.png)
 
+## Tutorials
+
+[gbrom-tutorial](https://github.com/travisgoodspeed/gbrom-tutorial)
+teaches you how to begin with photographs of the GameBoy's mask ROM
+and work your way to an accurate ROM image.
+
 ## High Level Design
 
 I've designed the GUI around a `QGraphicsScene`.  The underlying data
