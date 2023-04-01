@@ -14,9 +14,12 @@
 #include <QCommandLineParser>
 #include <QMessageBox>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     QApplication a(argc, argv);
+
+    //Stupid portability bug.  It's a lot faster to name a font that exists on macOS with no GUI.
+    if(a.platformName()=="offscreen")
+        a.setFont(QFont("Helvetica Neue"));
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
