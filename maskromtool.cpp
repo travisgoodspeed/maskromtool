@@ -72,7 +72,7 @@ void MaskRomTool::on_actionOpenGL_triggered(){
 }
 
 void MaskRomTool::enableOpenGL(unsigned int antialiasing){
-    //Enabled OpenGL.  Maybe better performance?
+    //Enabled OpenGL.  Maybe better performance, but it's currently broken.
     QOpenGLWidget *gl = new QOpenGLWidget();
     if(antialiasing>0){
         QSurfaceFormat format;
@@ -84,6 +84,14 @@ void MaskRomTool::enableOpenGL(unsigned int antialiasing){
     //One way street.
     ui->actionOpenGL->setEnabled(false);
     ui->actionOpenGL->setChecked(true);
+}
+
+//Defined as extern in maskromtool.h.
+unsigned int verbose=0;
+//Set the verbose value.
+void MaskRomTool::enableVerbose(unsigned int level){
+    qDebug()<<"Enabling verbose mode level"<<level;
+    verbose=level;
 }
 
 MaskRomTool::~MaskRomTool() {
@@ -126,8 +134,6 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
 
 //Switch between viewing modes.
 void MaskRomTool::nextMode(){
-    //static int mode=0;
-
     setBitsVisible(!bitsVisible);
     setViolationsVisible(bitsVisible);
     ui->actionBits->setChecked(bitsVisible);
@@ -448,6 +454,13 @@ void MaskRomTool::on_thresholdButton_triggered(){
     updateThresholdHistogram();
 }
 
+//Pop a dialog to choose the alignment constraints.
+void MaskRomTool::on_alignconstrainButton_triggered(){
+    qDebug()<<"Choosing alignment constraints.";
+    alignDialog.setMaskRomTool(this);
+    alignDialog.show();
+}
+
 //Updates the histogram, iff the window is visible.
 void MaskRomTool::updateThresholdHistogram(){
     if(!thresholdDialog.isVisible())
@@ -558,6 +571,16 @@ void MaskRomTool::setBitSize(qreal size){
 qreal MaskRomTool::getBitSize(){
     qDebug()<<"Getting a bit size of "<<bitSize;
     return bitSize;
+}
+
+
+//Sets the skip count for the aligner.
+void MaskRomTool::setAlignSkipCountThreshold(uint32_t count){
+    alignSkipThreshold=count;
+}
+//Gets the count.
+void MaskRomTool::getAlignSkipCountThreshold(uint32_t &count){
+    count=alignSkipThreshold;
 }
 
 //Opens *either* an image or a JSON description of lines.
@@ -883,8 +906,11 @@ QJsonObject MaskRomTool::exportJSON(){
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
+     *
+     * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
+     * 2022.09.28 -- First public release.
      */
-    root["00version"]="2022.09.28";
+    root["00version"]="2023.05.05";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -892,7 +918,9 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["green"]=thresholdG;
     settings["blue"]=thresholdB;
     settings["bitsize"]=bitSize;
+    settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold);
     root["settings"]=settings;
+
 
     QJsonArray jrows;
     foreach (RomLineItem* item, rows){
@@ -938,6 +966,8 @@ void MaskRomTool::importJSON(QJsonObject o){
     QJsonValue blue=settings.value("blue");
     setBitThreshold(red.toDouble(0), green.toDouble(0), blue.toDouble(0));
     setBitSize(settings.value("bitsize").toDouble(10));
+    QJsonValue alignskipthreshold=settings.value("alignthreshold");
+    setAlignSkipCountThreshold(alignskipthreshold.toInt(5)); //Default of 5.
 
 
     //Line items.

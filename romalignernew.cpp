@@ -4,21 +4,23 @@
 #include "maskromtool.h"
 
 
-//FIXME: These constants need to be adjustable.
-#define SKIPCOUNTTHRESHOLD 5 //Number of far hops before row count ends.
-
-
 //FIXME: We also need rotation matrix sorting, to avoid tilt bugs.
 static bool leftOf(RomBitItem * left, RomBitItem * right){
-    return (left->x() < right->x());
+    qreal a=left->x();
+    qreal b=right->x();
+    return (a<b);
 }
 static bool above(RomBitItem * top, RomBitItem * bottom){
     return (top->y() < bottom->y());
+}
+static bool below(RomBitItem * top, RomBitItem * bottom){
+    return (top->y() > bottom->y());
 }
 
 //This one should be a lot faster faster.
 //Remove this comment when we know it to be accurate.
 RomBitItem* RomAlignerNew::markBitTable(MaskRomTool* mrt){
+    mrt->getAlignSkipCountThreshold(this->threshold);
     QSet<RomBitItem *> bits=mrt->bits;
 
     //Return null if there are no bits to align.
@@ -54,15 +56,17 @@ RomBitItem* RomAlignerNew::markBitTable(MaskRomTool* mrt){
         topsorted<<bit;
     }
 
-    //We read each row from the left.
-    std::sort(leftsorted.begin(), leftsorted.end(), leftOf);
+    //We read each row from the left, but presort it in case X values are exactly identical.
+    std::sort(leftsorted.begin(), leftsorted.end(), above);  //Keeps things deterministic.
+    std::sort(leftsorted.begin(), leftsorted.end(), leftOf); //Our real sort.
     //We use this to count the gap between rows.
     std::sort(topsorted.begin(), topsorted.end(), above);
 
 
     //Then we find the bits of the leftmost column.
     markRowStarts();
-    //qDebug()<<"Counted"<<rowstarts.count()<<"rows.";
+    if(verbose)
+        qDebug()<<"Counted"<<rowstarts.count()<<"rows.";
 
     //And we grow those bits outward to the right.
     markRemainingBits();
@@ -100,6 +104,7 @@ void RomAlignerNew::markRemainingBits(){
                 leastydist=ydist;
             }
         }
+        //if(verbose) qDebug()<<"Assigning bit to row"<<leastyi;
         rowbits[leastyi]->nexttoright=bit;
         rowbits[leastyi]=bit;
         bit->marked=true;
@@ -116,7 +121,7 @@ void RomAlignerNew::markRowStarts(){
      * off by 90 degrees, this gap confused older implementations of
      * this class.
      */
-    qreal lasty=0;
+    qreal lasty=0, lastx=0;
     qreal maxy=0, miny=0;
     for(RomBitItem *bit: topsorted){  //Finding gap distance.
         qreal y=bit->y();
@@ -141,21 +146,28 @@ void RomAlignerNew::markRowStarts(){
      * while ignoring large gaps in the Y position.
      */
     lasty=leftsorted[0]->y();
+    lastx=leftsorted[0]->x();
     int rowcount=0, skipcount=0;
     for(RomBitItem *bit: leftsorted){
-        if(qFabs(bit->y()-lasty)<shorthopthreshold){ //Same column
+        if(qFabs(bit->y()-lasty)<shorthopthreshold  //Small Y change.
+            //|| (qFabs(bit->x()-lastx)<1)          //Exactly vertical in X.
+            ){
             rowstarts<<bit;
             lasty=bit->y();
-            //qDebug()<<"Bit at"<<bit->x()<<bit->y()<<"row"<<rowcount++;
+            lastx=bit->x();
+            if(verbose)
+                qDebug()<<"Bit at"<<bit->x()<<bit->y()<<"row"<<rowcount++;
             //bit->setToolTip(QString("Row header."));
             bit->marked=true; //Necessary so we don't double-count.
             skipcount=0;
         }else{  //Different column.
-            //qDebug()<<"Skipping hop"<<qFabs(bit->y()-lasty);
+            if(verbose)
+                qDebug()<<"Skipping hop"<<qFabs(bit->y()-lasty)<<"with threshold"<<shorthopthreshold
+                         <<"and x distance"<<(qFabs(bit->x()-lastx));
             skipcount++;
         }
         //One or two long hops are normal, but many indicate end of first col.
-        if(skipcount>SKIPCOUNTTHRESHOLD)
+        if(skipcount>threshold)
             break;
     }
     std::sort(rowstarts.begin(), rowstarts.end(), above);

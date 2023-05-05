@@ -6,7 +6,13 @@
 #include "rombititem.h"
 
 
-
+/* This tool was designed hastily, and the mrt
+ * public symbol is unfortunately one of the
+ * blockers to maintaining multiple projects
+ * in memory simultaneously.
+ *
+ * FIXME Remove this symbol from the global scope.
+ */
 MaskRomTool *mrt;
 
 RomThresholdDialog::RomThresholdDialog() :

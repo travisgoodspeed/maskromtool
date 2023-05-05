@@ -10,6 +10,7 @@
 #include "rombititem.h"
 #include "asciidialog.h"
 #include "romthresholddialog.h"
+#include "romaligndialog.h"
 #include "romaligner.h"
 #include "romruledialog.h"
 
@@ -24,6 +25,8 @@ class RomScene;
 class RomView;
 class RomBitFix;
 
+extern unsigned int verbose;
+
 class MaskRomTool : public QMainWindow
 {
     Q_OBJECT
@@ -32,6 +35,7 @@ public:
     MaskRomTool(QWidget *parent = nullptr);
     ~MaskRomTool();
 
+    void enableVerbose(unsigned int level=1);
     void enableOpenGL(unsigned int antialiasing=0);
 
     //Persistant user settings.
@@ -99,6 +103,11 @@ public:
     //Gets the bit display size.
     qreal getBitSize();
 
+    //Sets the skip count for the aligner.
+    void setAlignSkipCountThreshold(uint32_t count);
+    //Gets the count.
+    void getAlignSkipCountThreshold(uint32_t &count);
+
     //Handy filenames.
     QString imagefilename;
 
@@ -114,6 +123,7 @@ public:
     ASCIIDialog asciiDialog;
     QChart histogramchart;
     RomThresholdDialog thresholdDialog;
+    RomAlignDialog alignDialog;
     RomRuleDialog violationDialog;
 
     //Alignment Strategies
@@ -139,6 +149,7 @@ private slots:
     void on_openButton_triggered();
     void on_saveButton_triggered();
     void on_thresholdButton_triggered();
+    void on_alignconstrainButton_triggered();
     void on_actionRunDRC_triggered();
 
     //View a window.
@@ -172,6 +183,7 @@ private:
     qreal thresholdR, thresholdG, thresholdB;
     qreal bitSize=10;
     bool alignmentdirty=true;
+    uint32_t alignSkipThreshold=5;
 
     //Marks the bit fixes.
     void markFixes();

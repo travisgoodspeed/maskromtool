@@ -12,7 +12,6 @@ RomBitItem::RomBitItem(QPointF pos, qreal size){
 void RomBitItem::setBitSize(qreal s){
     bitSize=s;
     setRect(-s/2, -s/2, s, s);
-
 }
 
 qreal RomBitItem::getBitSize(){

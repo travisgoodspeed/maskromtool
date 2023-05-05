@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>23</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -105,6 +105,7 @@
      <string>Edit</string>
     </property>
     <addaction name="thresholdButton"/>
+    <addaction name="alignconstrainButton"/>
    </widget>
    <widget class="QMenu" name="menuDRC">
     <property name="title">
@@ -361,6 +362,11 @@
   <action name="importDiff">
    <property name="text">
     <string>ASCII Diff</string>
+   </property>
+  </action>
+  <action name="alignconstrainButton">
+   <property name="text">
+    <string>Choose Alignment Constraints</string>
    </property>
   </action>
  </widget>

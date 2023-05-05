@@ -41,7 +41,10 @@ int main(int argc, char *argv[]){
     parser.addPositionalArgument("json", QCoreApplication::translate("main", "JSON lines to open."));
 
 
-
+    //Print verbose debugging messages.
+    QCommandLineOption verboseOption(QStringList() << "V" << "verbose",
+                                  QCoreApplication::translate("main", "Print verbose debugging messages."));
+    parser.addOption(verboseOption);
     // Exit after processing other arguments.
     QCommandLineOption exitOption(QStringList() << "e" << "exit",
                                   QCoreApplication::translate("main", "Exit after processing arguments."));
@@ -114,6 +117,11 @@ int main(int argc, char *argv[]){
     mrt.show();
     for(int i=0; i<args.count(); i++)
         mrt.fileOpen(args[i]);
+
+    if(parser.isSet(verboseOption)){
+        //Don't print anything because the function takes care of it for us.
+        mrt.enableVerbose();
+    }
 
     if(parser.isSet(openglOption)){
         qDebug()<<"Enbling OpenGL.";

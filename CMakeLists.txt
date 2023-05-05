@@ -61,6 +61,8 @@ set(PROJECT_SOURCES
         romdecoderpython.h romdecoderpython.cpp
         romruleambiguous.h romruleambiguous.cpp
         romruledialog.h romruledialog.cpp romruledialog.ui
+        romaligndialog.h romaligndialog.cpp romaligndialog.ui
+
 #        ${TS_FILES}
         ${app_icon_macos}
         ${app_icon_resource_windows}
