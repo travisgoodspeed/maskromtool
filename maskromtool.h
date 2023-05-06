@@ -178,6 +178,10 @@ private slots:
     void on_actionOpenGL_triggered();
 
 
+    void on_actionClearViolations_triggered();
+
+    void on_actionRunAllDRC_triggered();
+
 private:
     Ui::MaskRomTool *ui;
     qreal thresholdR, thresholdG, thresholdB;

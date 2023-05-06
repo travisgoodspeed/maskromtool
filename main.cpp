@@ -69,7 +69,6 @@ int main(int argc, char *argv[]){
         QCoreApplication::translate("main", "file"));
     parser.addOption(asciiDiffOption);
 
-
     // Exporting to ASCII art.
     QCommandLineOption asciiExportOption(QStringList() << "a" << "export-ascii",
         QCoreApplication::translate("main", "Export ASCII bits for use in ZorRom."),

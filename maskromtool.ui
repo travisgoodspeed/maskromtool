@@ -113,6 +113,7 @@
     </property>
     <addaction name="actionRunDRC"/>
     <addaction name="actionRunAllDRC"/>
+    <addaction name="actionClearViolations"/>
     <addaction name="separator"/>
     <addaction name="drcCount"/>
     <addaction name="drcAmbiguous"/>
@@ -263,7 +264,7 @@
   </action>
   <action name="actionRunDRC">
    <property name="text">
-    <string>Evaluate Rules</string>
+    <string>Evaluate Rules (v)</string>
    </property>
   </action>
   <action name="drcCount">
@@ -297,11 +298,14 @@
    </property>
   </action>
   <action name="actionRunAllDRC">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Evaluation All Rules</string>
+    <string>Evaluation All Rules (V)</string>
    </property>
    <property name="visible">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </action>
   <action name="drcSanity">
@@ -367,6 +371,16 @@
   <action name="alignconstrainButton">
    <property name="text">
     <string>Choose Alignment Constraints</string>
+   </property>
+  </action>
+  <action name="actionClearViolations">
+   <property name="text">
+    <string>Clear Violations</string>
+   </property>
+  </action>
+  <action name="actionEvaluate_All_Rules">
+   <property name="text">
+    <string>Evaluate All Rules (V)</string>
    </property>
   </action>
  </widget>

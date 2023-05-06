@@ -337,8 +337,20 @@ bool MaskRomTool::runDRC(bool all){
 }
 //Menu item to run the rules.
 void MaskRomTool::on_actionRunDRC_triggered(){
-    runDRC();
+    runDRC(false);
 }
+
+//Runs all the rules, even those not checked.
+void MaskRomTool::on_actionRunAllDRC_triggered(){
+    runDRC(true);
+}
+
+//This just clears out the pending violations.
+void MaskRomTool::on_actionClearViolations_triggered(){
+    clearViolations();
+}
+
+
 
 //Marks a DRC violation in the scene.
 void MaskRomTool::addViolation(RomRuleViolation* violation){
@@ -1018,7 +1030,5 @@ void MaskRomTool::importJSON(QJsonObject o){
     markBits();
     setBitSize(bitSize);
 }
-
-
 
 
