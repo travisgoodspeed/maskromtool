@@ -1,9 +1,5 @@
 #include "romlineitem.h"
 
-#include<iostream>
-
-using namespace std;
-
 RomLineItem::RomLineItem(int linetype)
 {
     //Remember my type.

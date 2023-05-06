@@ -1,11 +1,8 @@
 #include "romscene.h"
 #include "maskromtool.h"
 
-#include<QGraphicsSceneMouseEvent>
-#include<iostream>
+#include <QGraphicsSceneMouseEvent>
 #include <QtDebug>
-
-using namespace std;
 
 
 RomScene::RomScene(QObject *parent)

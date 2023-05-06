@@ -26,9 +26,6 @@
 #include "romrulesanity.h"
 #include "romruleambiguous.h"
 
-
-#include<iostream>
-
 #include <QFileDialog>
 #include <QKeyEvent>
 #include <QMouseEvent>
