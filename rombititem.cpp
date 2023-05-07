@@ -1,5 +1,6 @@
-#include "rombititem.h"
+#include "maskromtool.h"
 #include "rombitfix.h"
+
 #include <QBrush>
 #include <QDebug>
 
@@ -18,21 +19,22 @@ qreal RomBitItem::getBitSize(){
     return bitSize;
 }
 
-QRgb RomBitItem::bitvalue_raw(QImage &bg){
-    QRgb pixel=bg.pixel(pos().toPoint());
-    return pixel;
+QRgb RomBitItem::bitvalue_raw(MaskRomTool *mrt, QImage &bg){
+    //Colors now come from an adjustable sampler.
+    return mrt->sampler->bitvalue_raw(mrt, bg, pos());
 }
 
+static QBrush truebrush(Qt::GlobalColor::red, Qt::SolidPattern);
+static QBrush falsebrush(Qt::GlobalColor::blue, Qt::SolidPattern);
+
 void RomBitItem::setBrush(){
-    static QBrush truebrush(Qt::GlobalColor::red, Qt::SolidPattern);
-    static QBrush falsebrush(Qt::GlobalColor::blue, Qt::SolidPattern);
     QGraphicsRectItem::setBrush(value?truebrush:falsebrush);
 }
 
-bool RomBitItem::bitvalue_sample(QImage &bg, float red, float green, float blue){
+bool RomBitItem::bitvalue_sample(MaskRomTool *mrt, QImage &bg, float red, float green, float blue){
     if(!fixed){
         //First we grab a fresh sample of the pixel.
-        QRgb pixel=bitvalue_raw(bg);
+        QRgb pixel=bitvalue_raw(mrt, bg);
 
         //Just the values.
         bool r, g, b;

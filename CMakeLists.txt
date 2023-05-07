@@ -52,8 +52,10 @@ set(PROJECT_SOURCES
         romdecoderphotograph.h romdecoderphotograph.cpp
         romencoderdiff.h romencoderdiff.cpp
         asciidialog.h asciidialog.cpp asciidialog.ui
+#Alignment stategies
         romaligner.h romaligner.cpp
         romalignernew.h romalignernew.cpp
+        romaligndialog.h romaligndialog.cpp romaligndialog.ui
         romrule.h romrule.cpp
         romrulecount.h romrulecount.cpp
         romruleduplicate.h romruleduplicate.cpp
@@ -61,8 +63,8 @@ set(PROJECT_SOURCES
         romdecoderpython.h romdecoderpython.cpp
         romruleambiguous.h romruleambiguous.cpp
         romruledialog.h romruledialog.cpp romruledialog.ui
-        romaligndialog.h romaligndialog.cpp romaligndialog.ui
-
+#Sampler Strategies
+        rombitsampler.h rombitsampler.cpp
 #        ${TS_FILES}
         ${app_icon_macos}
         ${app_icon_resource_windows}

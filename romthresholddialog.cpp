@@ -72,7 +72,7 @@ void RomThresholdDialog::refreshStats(){
 
     //Average the values.
     foreach (RomBitItem *bit, mrt->bits){
-        QRgb rgb=bit->bitvalue_raw(mrt->background);
+        QRgb rgb=bit->bitvalue_raw(mrt, mrt->background);
         r=(rgb>>16)&0xFF;
         red+=r;
         g=(rgb>>8)&0xFF;

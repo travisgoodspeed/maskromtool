@@ -60,6 +60,12 @@ MaskRomTool::MaskRomTool(QWidget *parent)
     violationDialog.setMaskRomTool(this);
     RomRuleViolation::bitSize=bitSize;
 
+    //Strategies should be initialized.
+    if(!aligner)
+        aligner=new RomAlignerNew();
+    if(!sampler)
+        sampler=new RomBitSampler();
+
     //We might enable OpenGL here, after it stabilizes.
 }
 
@@ -484,7 +490,7 @@ void MaskRomTool::updateThresholdHistogram(){
 
     //Count the bits of each color.
     foreach(RomBitItem* bit, bits){
-        long pixel=bit->bitvalue_raw(background);
+        long pixel=bit->bitvalue_raw(this, background);
         int r=((pixel>>16)&0xFF);
         int g=((pixel>>8)&0xFF);
         int b=((pixel)&0xFF);
@@ -784,8 +790,8 @@ void MaskRomTool::markBit(QPointF point){
     bit->setVisible(bitsVisible);
     bits.insert(bit);
 
-    bit->bitvalue_raw(background);
-    bit->bitvalue_sample(background, thresholdR, thresholdG, thresholdB);
+    bit->bitvalue_raw(this, background);
+    bit->bitvalue_sample(this, background, thresholdR, thresholdG, thresholdB);
 
     bitcount++;
 }
@@ -876,8 +882,8 @@ void MaskRomTool::markFixes(){
 //Marks up all of the known bits with new samples.
 void MaskRomTool::remarkBits(){
     foreach (RomBitItem* bit, bits){
-        bit->bitvalue_raw(background);
-        bit->bitvalue_sample(background, thresholdR, thresholdG, thresholdB);
+        bit->bitvalue_raw(this, background);
+        bit->bitvalue_sample(this, background, thresholdR, thresholdG, thresholdB);
     }
     //We remark all fixes here, because it's fast.
     markFixes();
@@ -891,8 +897,7 @@ RomBitItem* MaskRomTool::markBitTable(){
     //Make sure all the bits are ready.
     if(alignmentdirty){
         markBits();
-        if(!aligner)
-            aligner=new RomAlignerNew();
+
         alignmentdirty=false;
         firstbit=aligner->markBitTable(this);
     }

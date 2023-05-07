@@ -5,6 +5,7 @@
 #include <QJsonObject>
 
 class RomBitFix;
+class MaskRomTool;
 
 /* This is a graphical item that represents one bit of the ROM.
  * They are short lived, being killed off and regenerated as
@@ -25,11 +26,12 @@ public:
     RomBitItem(QPointF pos, qreal size);
 
     //Sample the color of the bit.
-    QRgb bitvalue_raw(QImage &bg);
+    QRgb bitvalue_raw(MaskRomTool *mrt, QImage &bg);
     //What's the value of the bit?  Includes override and average color.
-    bool bitvalue_sample(QImage &bg, float red, float green, float blue);
+    bool bitvalue_sample(MaskRomTool *mrt, QImage &bg, float red, float green, float blue);
     //What's the last value of the bit?  Does *not* resample.
     bool bitValue();
+    //Is this bit too close to its threshold, or suspicious for some other reason?
     bool bitAmbiguous();
 
     //Applies a bit fix.

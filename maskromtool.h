@@ -12,6 +12,7 @@
 #include "romthresholddialog.h"
 #include "romaligndialog.h"
 #include "romaligner.h"
+#include "rombitsampler.h"
 #include "romruledialog.h"
 
 
@@ -126,8 +127,9 @@ public:
     RomAlignDialog alignDialog;
     RomRuleDialog violationDialog;
 
-    //Alignment Strategies
+    //Selectable Strategies
     RomAligner *aligner=0;
+    RomBitSampler *sampler=0;
 
 
     //Navigation
