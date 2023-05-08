@@ -224,9 +224,12 @@ Most ROMs can be read simply by reading the color of a single pixel at
 the bit's center.  For those, the `Default` sampling algorithm will
 work just fine.
 
+![Normal ROM Bits](screenshots/darkbits.png)
+
 For diffusion ROMs whose bits have better a little too delayered, the
 center of the bit does not have a unique color, but it is surrounded
-by slightly darker lines.
+by slightly darker lines.  The `Wide` algorithm will take the darkest
+color in each channel after sampling its size worth of bits in width.
 
 ![Diffusion ROM Bits](screenshots/diffusion.png)
 
