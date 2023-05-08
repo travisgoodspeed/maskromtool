@@ -28,8 +28,7 @@ class RomBitFix;
 
 extern unsigned int verbose;
 
-class MaskRomTool : public QMainWindow
-{
+class MaskRomTool : public QMainWindow{
     Q_OBJECT
 
 public:
@@ -130,7 +129,13 @@ public:
     //Selectable Strategies
     RomAligner *aligner=0;
     RomBitSampler *sampler=0;
+    QSet<RomBitSampler*> samplers;
 
+    //Sampler functions.
+    void addSampler(RomBitSampler *sampler); //Adds support for a sampler.
+    void chooseSampler(QString name); //Chooses a sampler by name.
+    void setSamplerSize(int size);
+    int getSamplerSize();
 
     //Navigation
     void centerOn(QGraphicsItem* item);

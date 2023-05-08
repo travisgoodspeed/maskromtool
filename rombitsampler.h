@@ -14,7 +14,11 @@ class MaskRomTool;
 class RomBitSampler{
 public:
     RomBitSampler();
-    QRgb bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos);
+    QString name="Default";
+    virtual QRgb bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos);
+    virtual void setSize(int newsize);
+    virtual int getSize();
+    int size=0;  //Zero must remain a legal size.
 };
 
 #endif // ROMBITSAMPLER_H

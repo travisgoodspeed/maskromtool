@@ -8,7 +8,7 @@ the GUI documentation below before starting to explore.
 
 --Travis Goodspeed
 
-![Screenshot of the tool.](screenshot.png)
+![Screenshot of the tool.](screenshots/screenshot.png)
 
 ## Tutorials
 
@@ -217,6 +217,18 @@ not overlap at all or 20 when there is significant overlap.
 
 A better alignment algorithm might fix this, and it is tracked in
 [issue 22](https://github.com/travisgoodspeed/maskromtool/issues/22).
+
+## Sampling Algorithms
+
+Most ROMs can be read simply by reading the color of a single pixel at
+the bit's center.  For those, the `Default` sampling algorithm will
+work just fine.
+
+For diffusion ROMs whose bits have better a little too delayered, the
+center of the bit does not have a unique color, but it is surrounded
+by slightly darker lines.
+
+![Diffusion ROM Bits](screenshots/diffusion.png)
 
 ## Development
 

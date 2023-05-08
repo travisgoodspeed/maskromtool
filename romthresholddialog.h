@@ -29,7 +29,6 @@ private:
     Ui::RomThresholdDialog *ui;
     void refreshStats();
     float average_red=0, average_green=0, average_blue=0;
-    //QChart *chart=0;
     QChartView *chartview=0;
 
 private slots:
@@ -42,6 +41,9 @@ private slots:
     void on_greenEdit_textEdited(const QString &arg1);
     void on_blueEdit_textEdited(const QString &arg1);
     void on_sizeScrollBar_valueChanged(int value);
+    void on_samplerBox_activated(int index);
+    void on_samplesizeScrollBar_actionTriggered(int action);
+    void on_samplesizeEdit_textEdited(const QString &arg1);
 };
 
 #endif // ROMTHRESHOLDDIALOG_H

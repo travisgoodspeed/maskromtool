@@ -65,6 +65,7 @@ set(PROJECT_SOURCES
         romruledialog.h romruledialog.cpp romruledialog.ui
 #Sampler Strategies
         rombitsampler.h rombitsampler.cpp
+        rombitsamplerwide.h rombitsamplerwide.cpp
 #        ${TS_FILES}
         ${app_icon_macos}
         ${app_icon_resource_windows}

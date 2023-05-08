@@ -8,6 +8,7 @@
 #include "aboutdialog.h"
 
 #include "romalignernew.h"
+#include "rombitsamplerwide.h"
 
 //Decoders should be abstracted more, and menus auto-generated.
 #include "romdecoderascii.h"
@@ -61,12 +62,52 @@ MaskRomTool::MaskRomTool(QWidget *parent)
     RomRuleViolation::bitSize=bitSize;
 
     //Strategies should be initialized.
-    if(!aligner)
-        aligner=new RomAlignerNew();
-    if(!sampler)
-        sampler=new RomBitSampler();
+    aligner=new RomAlignerNew();
+    addSampler(new RomBitSampler());
+    addSampler(new RomBitSamplerWide());
 
     //We might enable OpenGL here, after it stabilizes.
+}
+
+//Adds support for a sampler.  Does not select it.
+void MaskRomTool::addSampler(RomBitSampler *sampler){
+    samplers.insert(sampler);
+
+    //The first one to be inserted is the default.
+    if(!this->sampler)
+        this->sampler=sampler;
+}
+
+//Chooses a sampler by name.
+void MaskRomTool::chooseSampler(QString name){
+    //Fast path if we've already selected it.
+    if(sampler->name==name)
+        return;
+
+    //Slow path if we need to find it.
+    foreach(RomBitSampler* sampler, samplers){
+        if(sampler->name==name){
+            this->sampler=sampler;
+            if(verbose)
+                qDebug()<<"Selected sampler"<<sampler->name;
+            remarkBits();
+            return;
+        }
+    }
+
+    //Error path.
+    qDebug()<<"Missing sampler algorithm"<<name;
+    qDebug()<<"Defaulting to sampler algoirthm"<<sampler->name;
+}
+
+void MaskRomTool::setSamplerSize(int size){
+    qDebug()<<"Setting the bit sample size to "<<size;
+    sampler->setSize(size);
+    getSamplerSize();  //Grab it back in case the size was illegal.
+}
+int MaskRomTool::getSamplerSize(){
+    int size=sampler->getSize();
+    return size;
 }
 
 void MaskRomTool::on_actionOpenGL_triggered(){
@@ -464,8 +505,11 @@ void MaskRomTool::on_asciiButton_triggered(){
 
 //Pop a dialog to apply the threshold.
 void MaskRomTool::on_thresholdButton_triggered(){
+    qDebug()<<"Setting MRT.";
     thresholdDialog.setMaskRomTool(this);
+    qDebug()<<"Showing";
     thresholdDialog.show();
+    qDebug()<<"Showing histogram.";
     updateThresholdHistogram();
 }
 
@@ -565,7 +609,8 @@ void MaskRomTool::getBitThreshold(qreal &r, qreal &g, qreal &b){
     g=thresholdG;
     b=thresholdB;
 
-    qDebug()<<"Returning RGB"<<r<<g<<b;
+    if(verbose)
+        qDebug()<<"Returning RGB"<<r<<g<<b;
 }
 
 //Sets the bit display size.
@@ -584,7 +629,6 @@ void MaskRomTool::setBitSize(qreal size){
 }
 //Gets the bit display size.
 qreal MaskRomTool::getBitSize(){
-    qDebug()<<"Getting a bit size of "<<bitSize;
     return bitSize;
 }
 
@@ -921,10 +965,11 @@ QJsonObject MaskRomTool::exportJSON(){
      * we should update this date to indicate the new file format
      * version number.
      *
+     * 2023.05.08 -- Adds 'sampler' and 'samplersize'.
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2023.05.05";
+    root["00version"]="2023.05.08";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -932,7 +977,9 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["green"]=thresholdG;
     settings["blue"]=thresholdB;
     settings["bitsize"]=bitSize;
-    settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold);
+    settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold); //2023.05.05
+    settings["sampler"]=sampler->name;           //2023.05.08
+    settings["samplersize"]=getSamplerSize();    //2023.05.08
     root["settings"]=settings;
 
 
@@ -982,6 +1029,12 @@ void MaskRomTool::importJSON(QJsonObject o){
     setBitSize(settings.value("bitsize").toDouble(10));
     QJsonValue alignskipthreshold=settings.value("alignthreshold");
     setAlignSkipCountThreshold(alignskipthreshold.toInt(5)); //Default of 5.
+
+    //New bit sampler algorithms.
+    QJsonValue sampler=settings.value("sampler");
+    chooseSampler(sampler.toString("Default"));
+    QJsonValue samplersize=settings.value("samplersize");
+    setSamplerSize(samplersize.toInt(0));
 
 
     //Line items.

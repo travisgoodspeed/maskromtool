@@ -62,6 +62,13 @@ int main(int argc, char *argv[]){
     parser.addOption(drcOption);
     parser.addOption(DRCOption);
 
+    //Bit Samplers
+    QCommandLineOption samplerOption(QStringList() << "sampler",
+                                     QCoreApplication::translate("main", "Bit Sampling Algorithm."),
+                                     "Default"
+                                     );
+    parser.addOption(samplerOption);
+
 
     // Diffing against ASCII Art
     QCommandLineOption asciiDiffOption(QStringList() << "diff-ascii",
@@ -125,6 +132,11 @@ int main(int argc, char *argv[]){
     if(parser.isSet(openglOption)){
         qDebug()<<"Enbling OpenGL.";
         mrt.enableOpenGL();
+    }
+
+    //Chooses the sampling algorithm.
+    if(parser.isSet(samplerOption)){
+        mrt.chooseSampler(parser.value(samplerOption));
     }
 
     if(parser.isSet(asciiDiffOption)){
