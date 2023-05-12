@@ -192,16 +192,15 @@ void RomThresholdDialog::on_samplerBox_activated(int index){
     mrt->chooseSampler(ui->samplerBox->currentText());
 }
 
-
-void RomThresholdDialog::on_samplesizeScrollBar_actionTriggered(int action){
-    postThresholds();
-}
-
-
 void RomThresholdDialog::on_samplesizeEdit_textEdited(const QString &arg1){
     bool ok=false;
     int val=arg1.toInt(&ok,10);
     if(ok)
         ui->samplesizeScrollBar->setValue(val);
+}
+
+
+void RomThresholdDialog::on_samplesizeScrollBar_valueChanged(int value){
+    postThresholds();
 }
 

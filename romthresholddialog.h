@@ -42,8 +42,8 @@ private slots:
     void on_blueEdit_textEdited(const QString &arg1);
     void on_sizeScrollBar_valueChanged(int value);
     void on_samplerBox_activated(int index);
-    void on_samplesizeScrollBar_actionTriggered(int action);
     void on_samplesizeEdit_textEdited(const QString &arg1);
+    void on_samplesizeScrollBar_valueChanged(int value);
 };
 
 #endif // ROMTHRESHOLDDIALOG_H
