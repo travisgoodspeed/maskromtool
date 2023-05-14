@@ -965,11 +965,12 @@ QJsonObject MaskRomTool::exportJSON(){
      * we should update this date to indicate the new file format
      * version number.
      *
+     * 2023.05.14 -- Adds 'inverted' bits.
      * 2023.05.08 -- Adds 'sampler' and 'samplersize'.
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2023.05.08";
+    root["00version"]="2023.05.14";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -980,6 +981,7 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold); //2023.05.05
     settings["sampler"]=sampler->name;           //2023.05.08
     settings["samplersize"]=getSamplerSize();    //2023.05.08
+    settings["inverted"]=inverted;               //2023.05.14
     root["settings"]=settings;
 
 
@@ -1029,6 +1031,8 @@ void MaskRomTool::importJSON(QJsonObject o){
     setBitSize(settings.value("bitsize").toDouble(10));
     QJsonValue alignskipthreshold=settings.value("alignthreshold");
     setAlignSkipCountThreshold(alignskipthreshold.toInt(5)); //Default of 5.
+    QJsonValue inverted=settings.value("inverted");
+    this->inverted=inverted.toBool(false); //Defaults to not inverting bits.
 
     //New bit sampler algorithms.
     QJsonValue sampler=settings.value("sampler");

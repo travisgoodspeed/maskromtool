@@ -44,6 +44,7 @@ private slots:
     void on_samplerBox_activated(int index);
     void on_samplesizeEdit_textEdited(const QString &arg1);
     void on_samplesizeScrollBar_valueChanged(int value);
+    void on_checkInverted_stateChanged(int arg1);
 };
 
 #endif // ROMTHRESHOLDDIALOG_H

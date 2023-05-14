@@ -38,6 +38,7 @@ void RomThresholdDialog::setMaskRomTool(MaskRomTool* parent){
 
     //This must come first, or we'll redraw the bits and destroy the thresholds.
     ui->sizeScrollBar->setValue(mrt->getBitSize());
+    ui->checkInverted->setCheckState(mrt->inverted?Qt::CheckState::Checked:Qt::CheckState::Unchecked);
 
     //We've buffered these values, so they won't jump around.
     ui->redScrollBar->setValue((int) r);
@@ -202,5 +203,11 @@ void RomThresholdDialog::on_samplesizeEdit_textEdited(const QString &arg1){
 
 void RomThresholdDialog::on_samplesizeScrollBar_valueChanged(int value){
     postThresholds();
+}
+
+
+void RomThresholdDialog::on_checkInverted_stateChanged(int arg1){
+    //2 means checked, 0 means unchecked.
+    mrt->inverted=(arg1==2);
 }
 

@@ -221,6 +221,19 @@
         </rect>
        </property>
       </widget>
+      <widget class="QCheckBox" name="checkInverted">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>230</y>
+         <width>321</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Inverted Bits</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tabDisplay">
       <attribute name="title">

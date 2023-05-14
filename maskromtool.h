@@ -136,6 +136,7 @@ public:
     void chooseSampler(QString name); //Chooses a sampler by name.
     void setSamplerSize(int size);
     int getSamplerSize();
+    bool inverted=false; //Bits are often inverted by photography.
 
     //Navigation
     void centerOn(QGraphicsItem* item);

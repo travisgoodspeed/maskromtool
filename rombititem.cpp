@@ -63,6 +63,11 @@ bool RomBitItem::bitvalue_sample(MaskRomTool *mrt, QImage &bg, float red, float 
         }
     }
     setBrush();
+
+    //Invert the bit if it's wrong.
+    if(mrt->inverted)
+        value=!value;
+
     return value;
 }
 
