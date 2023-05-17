@@ -240,7 +240,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     QGraphicsLineItem *line;
 
     RomLineItem *rlitem;
-    static QLineF lastrow, lastcol;
+
 
     int key=event->key();
 
@@ -715,7 +715,7 @@ void MaskRomTool::fileOpen(QString filename){
 //Opens an image as the backgound for annotation, and matching .json if it's available.
 void MaskRomTool::on_openButton_triggered(){
     QString newfilename = QFileDialog::getOpenFileName(this, tr("Open Image"), QDir::homePath(),
-                                                       tr("Image Files (*.png *.jpg *.bmp)"));
+                                                       tr("Image Files (*.png *.jpg *.bmp *.tif)"));
 
 
     if(newfilename.isEmpty())
@@ -1059,6 +1059,7 @@ void MaskRomTool::importJSON(QJsonObject o){
         l->read(jrows[i]);
         scene->addItem(l);
         rows.insert(l);
+        lastrow=l->line();
 
         progress.setValue(count++);
     }
@@ -1069,6 +1070,7 @@ void MaskRomTool::importJSON(QJsonObject o){
         c->read(jcols[i]);
         scene->addItem(c);
         cols.insert(c);
+        lastcol=c->line();
 
         progress.setValue(count++);
     }
