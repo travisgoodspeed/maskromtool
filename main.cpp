@@ -43,8 +43,12 @@ int main(int argc, char *argv[]){
 
     //Print verbose debugging messages.
     QCommandLineOption verboseOption(QStringList() << "V" << "verbose",
-                                  QCoreApplication::translate("main", "Print verbose debugging messages."));
+                                     QCoreApplication::translate("main", "Print verbose debugging messages."));
     parser.addOption(verboseOption);
+    //Stress test.
+    QCommandLineOption stressOption(QStringList() << "stress",
+                                     QCoreApplication::translate("main", "Stress test bit marking."));
+    parser.addOption(stressOption);
     // Exit after processing other arguments.
     QCommandLineOption exitOption(QStringList() << "e" << "exit",
                                   QCoreApplication::translate("main", "Exit after processing arguments."));
@@ -134,6 +138,7 @@ int main(int argc, char *argv[]){
         mrt.enableOpenGL();
     }
 
+
     //Chooses the sampling algorithm.
     if(parser.isSet(samplerOption)){
         mrt.chooseSampler(parser.value(samplerOption));
@@ -186,6 +191,13 @@ int main(int argc, char *argv[]){
         qDebug()<<"Exporting ARM6 ROM.";
         RomDecoderARM6 exporter;
         exporter.writeFile(&mrt, parser.value(arm6ExportOption));
+    }
+
+    //Stress test.
+    if(parser.isSet(stressOption)){
+        qDebug()<<"Stressing the loaded project.";
+        for(int i=0; i<10; i++)
+            mrt.markBits();
     }
 
     //We don't return a failure code yet, but will if it comes to that.
