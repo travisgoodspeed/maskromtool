@@ -20,6 +20,18 @@ RomBitFix::RomBitFix(RomBitItem* bit){
     setZValue(-5);
 }
 
+
+int RomBitFix::type() const{
+    /* UserType+0 -- Row
+     * UserType+1 -- Col
+     * UserType+2 -- Bit
+     * UserType+3 -- BitFix
+     * UserType+4 -- RomRuleViolation
+     */
+    return QGraphicsItem::UserType+3;
+}
+
+
 //Takes the bit's size as input.
 void RomBitFix::setBitSize(qreal size){
     //Fixes are a little bigger than bits.

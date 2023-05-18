@@ -156,4 +156,14 @@ QGraphicsItem* RomScene::focusItem(){
 
 void RomScene::setFocusItem(QGraphicsItem* item){
     focusitem=item;
+    if(!item)
+        //No item to mark, so don't worry about investigating it.
+        return;
+    else if(item->type()==QGraphicsItem::UserType)
+        //row
+        maskRomTool->lastrow=((RomLineItem*)item)->line();
+    else if(item->type()==QGraphicsItem::UserType+1)
+        //column
+        maskRomTool->lastcol=((RomLineItem*)item)->line();
+
 }

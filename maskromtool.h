@@ -152,6 +152,8 @@ public:
     RomScene* scene;
     //The view
     RomView* view;
+    //Last row and column.
+    QLineF lastrow, lastcol;
 
 private slots:
     void on_openButton_triggered();
@@ -196,7 +198,7 @@ private:
     qreal bitSize=10;
     bool alignmentdirty=true;
     uint32_t alignSkipThreshold=5;
-    QLineF lastrow, lastcol;
+
 
     //Marks the bit fixes.
     void markFixes();

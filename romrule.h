@@ -17,6 +17,9 @@ public:
     static qreal bitSize;
 
     RomRuleViolation(QPointF position, QString title, QString detail, bool iserror=false);
+
+    //Allows for fast lookups.
+    virtual int type() const override;
 };
 
 

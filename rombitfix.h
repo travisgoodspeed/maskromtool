@@ -37,6 +37,9 @@ public:
 
     //Sets the bit size.
     void setBitSize(qreal size);
+
+    //Allows for fast lookups.
+    virtual int type() const override;
 private:
     bool value=false;
     bool ambiguous=false;

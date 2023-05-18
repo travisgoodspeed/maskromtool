@@ -20,3 +20,16 @@ RomRuleViolation::RomRuleViolation(QPointF position, QString title, QString deta
     setBrush(yellowbrush);
     setZValue(-10);
 }
+
+
+
+int RomRuleViolation::type() const{
+    /* UserType+0 -- Row
+     * UserType+1 -- Col
+     * UserType+2 -- Bit
+     * UserType+3 -- BitFix
+     * UserType+4 -- RomRuleViolation
+     */
+    return QGraphicsItem::UserType+4;
+}
+

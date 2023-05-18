@@ -147,28 +147,33 @@ MaskRomTool::~MaskRomTool() {
 
 //Always call this to remove an item, to keep things clean.
 void MaskRomTool::removeItem(QGraphicsItem* item){
-    if(rows.contains((RomLineItem*) item)){
+    switch(item->type()){
+    case QGraphicsItem::UserType: //row
         rows.remove((RomLineItem*) item);
         alignmentdirty=true;
-    }else if(cols.contains((RomLineItem*) item)){
+        break;
+    case QGraphicsItem::UserType+1: //column
         cols.remove((RomLineItem*) item);
         alignmentdirty=true;
-    }else if(bits.contains((RomBitItem*) item)){
+        break;
+    case QGraphicsItem::UserType+2: //bit
         bits.remove((RomBitItem*) item);
         alignmentdirty=true;
-    }else if(violations.contains((RomRuleViolation*) item)){
+        break;
+    case QGraphicsItem::UserType+3: //bit fix
+        bitfixes.remove((RomBitFix*) item);
+        alignmentdirty=true;
+        break;
+    case QGraphicsItem::UserType+4: //rule violation
         violations.remove((RomRuleViolation*) item);
-        //Violations are commentary; they don't dirty the alignment.
-
         //Gotta remove the violation so that it isn't used after a free.
         violationDialog.removeViolation((RomRuleViolation*) item);
-    }else if(bitfixes.contains((RomBitFix*) item)){
-        bitfixes.remove((RomBitFix*) item);
-        //Bit fixes change the value but not the alignment.
-    }else{
-        qDebug()<<"Asked to remove"<<item<<"but it can't be found.";
-        return;
+        //Violations do not dirty the alignment.
+        break;
+    default:
+        qDebug()<<"Removing unknown type"<<item->type()<<"in object"<<item;
     }
+
     //Remove the item if it's a part of the scene.
     if(item->scene()==scene)
         scene->removeItem(item);
@@ -280,8 +285,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     case Qt::Key_D: //Delete an object.  With Shift, it deletes many.
         if(event->modifiers()&Qt::SHIFT){
             foreach(QGraphicsItem* item, scene->selection){
-                if(rows.contains((RomLineItem*) item) || cols.contains((RomLineItem*) item))
-                    removeItem(item);
+                removeItem(item);
             }
             scene->setFocusItem(0);
             statusBar()->showMessage(tr("Deleted all selected items."));
@@ -751,7 +755,7 @@ RomBitItem* MaskRomTool::getBit(QPointF point){
     QList<QGraphicsItem*> items=scene->items(point);
     RomBitItem* bit=0;
     foreach (QGraphicsItem* item, items){
-        if(bits.contains((RomBitItem*) item))
+        if(item->type()==QGraphicsItem::UserType+2) //Is it a bit?
             bit=(RomBitItem*) item;
     }
     return bit;
@@ -768,7 +772,7 @@ RomBitFix* MaskRomTool::getBitFix(RomBitItem* bit, bool create){
     QList<QGraphicsItem*> items=scene->items(bit->pos());
     RomBitFix* fix=0;
     foreach (QGraphicsItem* item, items){
-        if(bitfixes.contains((RomBitFix*) item))
+        if(item->type()==QGraphicsItem::UserType+3)
             fix=(RomBitFix*) item;
     }
     if(create && !fix){
@@ -852,11 +856,15 @@ void MaskRomTool::markLine(RomLineItem* line){
 
     foreach(QGraphicsItem* item, scene->collidingItems(line)){
         //We are only looking for columns that collide with rows here.  All other collisions are irrelevant.
-        if(line->linetype==RomLineItem::LINEROW && cols.contains((RomLineItem*) item)){
+        if(line->linetype==RomLineItem::LINEROW
+                && item->type()==item->UserType+1  //Is the colliding item a column?
+            ){
             RomLineItem* col=(RomLineItem*) item;
             QPointF point=bitLocation(line, col);
             markBit(point);
-        }else if(line->linetype==RomLineItem::LINECOL && rows.contains((RomLineItem*) item)){
+        }else if(line->linetype==RomLineItem::LINECOL
+                   && item->type()==item->UserType  //Is the colliding item a row?
+                   ){
             RomLineItem* row=(RomLineItem*) item;
             QPointF point=bitLocation(row, line);
             markBit(point);
@@ -870,6 +878,9 @@ void MaskRomTool::markLine(RomLineItem* line){
         break;
     case RomLineItem::LINECOL:
         scene->setColAngle(line->line().angle());
+        break;
+    default:
+        qDebug()<<"Unknown line type"<<line->linetype;
         break;
     }
 }

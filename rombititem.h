@@ -56,6 +56,9 @@ public:
     //Row and columnn are -1 until known by alignment.
     long row=-1, col=-1;
 
+    //Allows for fast lookups.
+    virtual int type() const override;
+
 private:
     bool value=false;     //This is the value.
     bool ambiguous=false; //Do we suspect the value is wrong?

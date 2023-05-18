@@ -24,6 +24,9 @@ public:
 
     //Returns the line in the image's coordinates.
     QLineF globalline();
+
+    //Allows for fast lookups.
+    virtual int type() const override;
 };
 
 #endif // ROMLINEITEM_H

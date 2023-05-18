@@ -9,6 +9,16 @@ RomBitItem::RomBitItem(QPointF pos, qreal size){
     setBitSize(size);
 }
 
+int RomBitItem::type() const{
+    /* UserType+0 -- Row
+     * UserType+1 -- Col
+     * UserType+2 -- Bit
+     * UserType+3 -- BitFix
+     */
+    return QGraphicsItem::UserType+2;
+}
+
+
 //Sets the bit size.
 void RomBitItem::setBitSize(qreal s){
     bitSize=s;

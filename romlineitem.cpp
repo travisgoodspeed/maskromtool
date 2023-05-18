@@ -6,6 +6,16 @@ RomLineItem::RomLineItem(int linetype)
     this->linetype=linetype;
 }
 
+
+int RomLineItem::type() const{
+    /* UserType+0 -- Row
+     * UserType+1 -- Col
+     * UserType+2 -- Bit
+     */
+    return linetype+UserType;
+}
+
+
 QLineF RomLineItem::globalline(){
     QLineF linea=this->line();
 
@@ -41,3 +51,4 @@ void RomLineItem::read(const QJsonValue &json){
     setLine(0, 0, x2-x1, y2-y1);
     setPos(x1, y1);
 }
+
