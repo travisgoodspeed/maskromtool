@@ -72,6 +72,8 @@ public:
     void markBit(QPointF point);
     //Marks bits off of one line.
     void markLine(RomLineItem* line);
+    //Remove bits and a line.
+    void removeLine(RomLineItem* line, bool fromsets=true);
     //Get a bit at a point.
     RomBitItem* getBit(QPointF point);
 

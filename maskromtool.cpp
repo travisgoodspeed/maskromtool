@@ -145,20 +145,47 @@ MaskRomTool::~MaskRomTool() {
 }
 
 
+//Marks all of the bits that are on a line.
+void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
+    /* Regenerating all bits takes forever.  The purpose of this function
+     * is to quickly remove the bits from a single line along with the
+     * line itself.
+     *
+     * If 'fromsets' is true, we're completely removing it.
+     * If 'fromsets' is false, we're just removing the bits and probably moving the line.
+     */
+
+    //qDebug()<<"Removing all bits from a line.";
+    foreach(QGraphicsItem* item, scene->collidingItems(line)){
+        if(item->type()==QGraphicsItem::UserType+2){  //Is it a bit?
+            //qDebug()<<"Removing a bit.";
+            removeItem(item);
+        }
+    }
+
+    //After removing the bits, we've gotta remove the line itself.
+    if(fromsets)
+        switch(line->type()){
+        case QGraphicsItem::UserType: //row
+            rows.remove((RomLineItem*) line);
+            break;
+        case QGraphicsItem::UserType+1: //column
+            cols.remove((RomLineItem*) line);
+            break;
+        }
+}
+
+
 //Always call this to remove an item, to keep things clean.
 void MaskRomTool::removeItem(QGraphicsItem* item){
     switch(item->type()){
     case QGraphicsItem::UserType: //row
-        rows.remove((RomLineItem*) item);
-        alignmentdirty=true;
-        break;
     case QGraphicsItem::UserType+1: //column
-        cols.remove((RomLineItem*) item);
-        alignmentdirty=true;
+        removeLine((RomLineItem*) item);
         break;
     case QGraphicsItem::UserType+2: //bit
         bits.remove((RomBitItem*) item);
-        alignmentdirty=true;
+        //alignmentdirty=true;
         break;
     case QGraphicsItem::UserType+3: //bit fix
         bitfixes.remove((RomBitFix*) item);
@@ -296,15 +323,23 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         }else{
             statusBar()->showMessage(tr("There's no item to delete.  Maybe SHIFT+D?"));
         }
-        markBits();
+
         break;
 
     case Qt::Key_S: //Set Position
         if(event->modifiers()&Qt::CTRL){
             on_saveButton_triggered();
         }else if(scene->focusItem()){
-            scene->focusItem()->setPos(scene->scenepos);
-            markBits();
+            switch(scene->focusItem()->type()){
+            case QGraphicsItem::UserType: //row
+            case QGraphicsItem::UserType+1: //column
+                RomLineItem *line=(RomLineItem*)scene->focusItem();
+                removeLine(line,false);  //Remove the line's bits, but not the line itself.
+                line->setPos(scene->scenepos);
+                markLine(line); //Remark the line.
+            }
+
+
         }
         break;
 
@@ -844,6 +879,7 @@ void MaskRomTool::markBit(QPointF point){
     bitcount++;
 }
 
+
 //Marks all of the bits that are on a line.
 void MaskRomTool::markLine(RomLineItem* line){
     /* This is called in a loop to identify all of the lines,
@@ -893,10 +929,9 @@ void MaskRomTool::markBits(){
     //We're blowing away the alignment here, will need to rebuild it later.
     alignmentdirty=true;
 
-    //First we remove all the old bits.
-    foreach (QGraphicsItem* item, bits){
+    //First we remove all the old bits.  This is very slow.
+    foreach (QGraphicsItem* item, bits)
         removeItem(item);
-    }
 
     bitcount=0;
     setBitsVisible(false);
