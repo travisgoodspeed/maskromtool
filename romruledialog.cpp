@@ -22,7 +22,7 @@ void RomRuleDialog::clearViolations(){
 void RomRuleDialog::addViolation(RomRuleViolation* violation){
     int count=ui->listWidget->count();
     ui->listWidget->addItem(new RomRuleDialogEntry(violation));
-    setWindowTitle(QString::asprintf("%d Rule Violations",count++));
+    setWindowTitle(QString::asprintf("%d Rule Violations",++count));
 }
 void RomRuleDialog::removeViolation(RomRuleViolation* violation){
     //TODO

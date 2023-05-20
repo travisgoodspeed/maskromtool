@@ -55,8 +55,8 @@ void RomEncoderDiff::readFile(MaskRomTool *m, QString filename){
         }else{
             qDebug()<<"Bit at "<<row<<","<<col<<" is wrong.";
             RomRuleViolation* violation=new RomRuleViolation(bit->pos(),
-                                                             QString("Ambiguous bit %1,%2").arg(bit->row).arg(bit->col),
-                                                             "This bit is close to the threshold.  Try fixing it to the value that you see?");
+                                                             QString("Differing bit %1,%2").arg(bit->row).arg(bit->col),
+                                                             "This bit disagrees with the one in the imported file.");
             violation->error=true;
             m->addViolation(violation);
         }
