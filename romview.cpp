@@ -3,13 +3,28 @@
 #include<QMouseEvent>
 #include<QScrollBar>
 #include<QGraphicsItem>
+#include <QPixmapCache>
 
 
 
-
-RomView::RomView(QWidget *parent)
-{
+RomView::RomView(QWidget *parent){
     setMouseTracking(true);
+
+    //I hoped that this would improve performance, but it doesn't seem to.
+    //setCacheMode(QGraphicsView::CacheBackground);
+    //setCacheMode(QGraphicsView::CacheNone);
+    //QPixmapCache::setCacheLimit(1024000);
+
+
+
+    //Update the whole damned box.  Must be slow?
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    //Update the whole bounding box.  Doesn't seem to hurt CLI performance.
+    //setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+    //Never updates the view.  Maybe good for CLI?
+    //setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
+
+
 }
 
 void RomView::centerOn(QGraphicsItem* item){

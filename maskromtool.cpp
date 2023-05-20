@@ -202,8 +202,15 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
     }
 
     //Remove the item if it's a part of the scene.
-    if(item->scene()==scene)
-        scene->removeItem(item);
+    if(item->scene()==scene){
+        /* Documetnation of QGraphicsItem says that it's
+         * faster to remove it first and then destroy it,
+         * but my benchmarking says the opposite.
+         * --Travis
+         */
+
+        //scene->removeItem(item);
+    }
     //Leaking memory would be bad.
     delete item;
 }
@@ -251,6 +258,9 @@ void MaskRomTool::setLinesVisible(bool b){
 void MaskRomTool::setBitsVisible(bool b){
     bitsVisible=b; //Default for new bits.
     foreach (QGraphicsItem* item, bits){
+        item->setVisible(b);
+    }
+    foreach (QGraphicsItem* item, bitfixes){
         item->setVisible(b);
     }
 }
@@ -334,12 +344,8 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
             case QGraphicsItem::UserType: //row
             case QGraphicsItem::UserType+1: //column
                 RomLineItem *line=(RomLineItem*)scene->focusItem();
-                removeLine(line,false);  //Remove the line's bits, but not the line itself.
-                line->setPos(scene->scenepos);
-                markLine(line); //Remark the line.
+                moveLine(line, scene->scenepos);
             }
-
-
         }
         break;
 
@@ -457,12 +463,22 @@ void MaskRomTool::clearViolations(){
 }
 
 void MaskRomTool::on_importDiff_triggered(){
+
+
     qDebug()<<"Importing a diff.";
     RomEncoderDiff differ;
     QString filename = QFileDialog::getOpenFileName(this, tr("Diff Bits as ASCII"),"",tr("Textfiles (*.txt)"));
 
-    if(!filename.isEmpty())
+    if(!filename.isEmpty()){
+        //Remove the old violations.
+        clearViolations();
+
         differ.readFile(this, filename);
+    }
+
+    statusBar()->showMessage(tr("Found %1 bit differences.").arg(violations.count()));
+    if(violations.count()>0)
+        on_actionViolationsDialog_triggered();
 }
 
 
@@ -712,6 +728,8 @@ void MaskRomTool::fileOpen(QString filename){
         }
 
         ui->graphicsView->setBackgroundBrush(background);
+        ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground);
+
         //With the view the same as the image dimensions, we get fancy scrollbars and stuff.
         ui->graphicsView->setSceneRect(0,0,background.width(), background.height());
 
@@ -869,7 +887,6 @@ void MaskRomTool::markBit(QPointF point){
     //This rectangle will be a small box around the pixel.
     RomBitItem *bit=new RomBitItem(point, bitSize);
     scene->addItem(bit);
-    //bit->setRect(point.x()-5, point.y()-5, 10, 10);
     bit->setVisible(bitsVisible);
     bits.insert(bit);
 
@@ -921,6 +938,19 @@ void MaskRomTool::markLine(RomLineItem* line){
     }
 }
 
+//Moves a line to a new position.
+void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
+    bool bitswerevisible=bitsVisible;
+    setBitsVisible(true);
+
+    removeLine(line,false);  //Remove the line's bits, but not the line itself.
+    line->setPos(newpoint);
+    markLine(line); //Remark the line.
+
+    //Restore visibility.
+    setBitsVisible(bitswerevisible);
+}
+
 //Mark up all of the bits where rows and columns collide.
 void MaskRomTool::markBits(){
     static long lastbitcount=50000;
@@ -945,7 +975,6 @@ void MaskRomTool::markBits(){
 
     //Show the bits if--and only if--we've set that style.
     setBitsVisible(bitswerevisible);
-
 
     qDebug()<<"Marked"<<bitcount<<"bits.";
     lastbitcount=bitcount;

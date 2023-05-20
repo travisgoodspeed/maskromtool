@@ -74,6 +74,9 @@ public:
     void markLine(RomLineItem* line);
     //Remove bits and a line.
     void removeLine(RomLineItem* line, bool fromsets=true);
+    //Moves a line to a new location.
+    void moveLine(RomLineItem* line, QPointF newpoint);
+
     //Get a bit at a point.
     RomBitItem* getBit(QPointF point);
 
@@ -93,7 +96,7 @@ public:
     //Marks the table of bits, returns top-left entry.
     RomBitItem* markBitTable();
 
-
+    //Opens an image file (and its json) or just the json.
     void fileOpen(QString filename);
 
     //Sets the threshold.  Expect this to change in later revisions.

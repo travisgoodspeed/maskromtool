@@ -16,6 +16,20 @@ RomScene::RomScene(QObject *parent)
     yline.setPen(QPen(Qt::gray));
     xline2.setPen(QPen(Qt::gray));
     yline2.setPen(QPen(Qt::gray));
+
+
+    //Linear size doesn't help.
+    //setItemIndexMethod(ItemIndexMethod::NoIndex);
+
+    //Tree method is default, but doesn't seem to change performance until it's too big.
+    //setItemIndexMethod(ItemIndexMethod::BspTreeIndex);
+    /* Setting the tree depth helps in large projects, faster than letting it grow.
+     * Default 55s for MYK82 test cases.
+     * 5 -- 55s
+     * 10 -- 54s for MYK82 test cases.
+     * 20 -- Too long.
+     */
+    //setBspTreeDepth(2);  //Maybe a decent depth helps initial performance?
 }
 
 //Update the crosshairs to the new position.

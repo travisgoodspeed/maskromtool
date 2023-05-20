@@ -71,12 +71,12 @@ bool RomBitItem::bitvalue_sample(MaskRomTool *mrt, QImage &bg, float red, float 
             ambiguous |= (!g && G>-ambiguitythreshold);
             ambiguous |= (!b && B>-ambiguitythreshold);
         }
+
+        //Invert the bit if it's wrong.
+        if(mrt->inverted)
+            value=!value;
     }
     setBrush();
-
-    //Invert the bit if it's wrong.
-    if(mrt->inverted)
-        value=!value;
 
     return value;
 }
