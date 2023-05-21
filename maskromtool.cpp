@@ -726,6 +726,7 @@ void MaskRomTool::fileOpen(QString filename){
             msgBox.exec();
             return;
         }
+        setWindowTitle("MaskRomTool "+imagefilename);
 
         ui->graphicsView->setBackgroundBrush(background);
         ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground);
