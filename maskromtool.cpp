@@ -278,9 +278,6 @@ void MaskRomTool::centerOn(QGraphicsItem* item){
 
 //We might be a GUI, but keyboards are where it's add!
 void MaskRomTool::keyPressEvent(QKeyEvent *event){
-    QGraphicsTextItem *text;
-    QGraphicsLineItem *line;
-
     RomLineItem *rlitem;
 
 

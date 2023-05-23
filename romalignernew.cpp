@@ -13,9 +13,11 @@ static bool leftOf(RomBitItem * left, RomBitItem * right){
 static bool above(RomBitItem * top, RomBitItem * bottom){
     return (top->y() < bottom->y());
 }
+/*
 static bool below(RomBitItem * top, RomBitItem * bottom){
     return (top->y() > bottom->y());
 }
+*/
 
 //This one should be a lot faster faster.
 //Remove this comment when we know it to be accurate.
@@ -81,7 +83,8 @@ void RomAlignerNew::markRemainingBits(){
      * This begins sorted in Y.
      */
     int rowcount=rowstarts.count();
-    RomBitItem* rowbits[rowcount];
+    RomBitItem** rowbits=new RomBitItem*[rowcount];
+
     for(int i=0; i<rowstarts.count(); i++)
         rowbits[i]=rowstarts[i];
 
@@ -89,7 +92,6 @@ void RomAlignerNew::markRemainingBits(){
      * bit to the bin with the nearest Y coordinate.  X's are known
      * to be in order because of the sort.
      */
-    long bitcount=0;
     for(RomBitItem *bit: leftsorted){
         if(bit->marked) //Skip bits we've already passed.
             continue;   //such as start bits.
@@ -108,13 +110,13 @@ void RomAlignerNew::markRemainingBits(){
         rowbits[leastyi]->nexttoright=bit;
         rowbits[leastyi]=bit;
         bit->marked=true;
-        bitcount++;
     }
+
+    delete[] rowbits;
 }
 
 void RomAlignerNew::markRowStarts(){
     qreal largestgap=1;
-    qreal meangap=10;
     /* First we need to know the distance between bits.  This is rather
      * regular for bits that are evenly spaced, but many roms include
      * a larger jump between the left and right sides.  When oriented
