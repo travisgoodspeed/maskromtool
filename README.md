@@ -16,6 +16,24 @@ the GUI documentation below before starting to explore.
 teaches you how to begin with photographs of the GameBoy's mask ROM
 and work your way to an accurate ROM image.
 
+## Building
+
+In Debian Bullseye (11.x),
+```
+% sudo apt install make gcc g++ cmake git qt6-base-dev qt6-charts-dev \
+qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats-plugins
+% git clone https://github.com/travisgoodspeed/maskromtool/
+% cd maskromtool
+% mkdir build; cd build
+% make -j 8 && sudo make install
+```
+
+In Windows and macOS, use the [Qt for Open
+Source](https://www.qt.io/download-qt-installer-oss) installer, being
+sure to include the Charts and Image Formats extensions.  Then open
+`CMakeLists.txt` as a project.  `Ctrl+B` will then compile
+`maskromtool`.
+
 ## High Level Design
 
 I've designed the GUI around a `QGraphicsScene`.  The underlying data
