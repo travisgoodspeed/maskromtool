@@ -16,7 +16,7 @@ REM Compile the .exe into Release\
 msbuild maskromtool.sln /property:Configuration=Release -maxcpucount
 
 REM Add the required Qt libraries.
-ROM Use --pdb to include debugging symbols.
+REM Use --pdb to include debugging symbols.
 windeployqt Release
 echo moving the release
 move Release ..\
