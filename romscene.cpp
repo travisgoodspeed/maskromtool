@@ -85,12 +85,16 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
     updateCrosshairs(mouseEvent->buttons()!=Qt::NoButton);
 
+    /* Whenever the mouse moves, we also update the status bar
+     * to show our position and size.
+     */
     maskRomTool->statusBar()->showMessage(
-                str.asprintf("%05d x %05d -- %ldkb %ldkB",
-                             (int) scenepos.x(), (int) scenepos.y(),
-                             maskRomTool->bitcount/1024,
-                             maskRomTool->bitcount/1024/8
-                             )
+                str.asprintf("%05d x %05d -- %2lld violations -- %ldkb %ldkB",
+                     (int) scenepos.x(), (int) scenepos.y(),
+                     maskRomTool->violations.size(),
+                     maskRomTool->bitcount/1024,
+                     maskRomTool->bitcount/1024/8
+                   )
                 );
 }
 
