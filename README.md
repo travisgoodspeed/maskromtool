@@ -197,6 +197,11 @@ Arguments:
 To run without a GUI, pass `-platform offscreen`.  If the program
 crashes under Wayland, force Xorg usage by passing `-platform xcb`.
 
+On Windows, it's awkward for an executable to have a GUI while
+retaining a log on the CLI.  We solve this by producing two
+executables; please use `maskromtool.exe` for the GUI and
+`maskromtoolcli.exe` for the CLI.
+
 
 ## Correcting Bit Errors
 
