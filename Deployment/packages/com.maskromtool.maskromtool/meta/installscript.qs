@@ -1,7 +1,7 @@
 function Component(){
     //Install to C:\maskromtool\ on Windows, /opt/maskromtool on unix.
     if (installer.value("os") === "win") {
-        installer.setValue("TargetDir", "c:\maskromtool");
+        installer.setValue("TargetDir", "c:\\maskromtool");
     }else{
         installer.setValue("TargetDir", "/opt/maskromtool");
     }
