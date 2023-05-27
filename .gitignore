@@ -74,7 +74,8 @@ build
 CMakeLists.txt.user
 
 
-## Windows stuff
+## Windows and installer stuff
 build
 Release
 maskromtool
+MaskRomToolInstaller

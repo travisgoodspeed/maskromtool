@@ -1,20 +1,22 @@
 function Component(){
-  //Empty constructor
+    //Install to C:\maskromtool\ on Windows, /opt/maskromtool on unix.
+    if (installer.value("os") === "win") {
+        installer.setValue("TargetDir", "c:\maskromtool");
+    }else{
+        installer.setValue("TargetDir", "/opt/maskromtool");
+    }
+
+    
 }
 
 Component.prototype.createOperations=function(){
-  //Default operation installs the files.
-  component.createOperations();
-  
-  if(systemInfo.productType === "windows") {
-    //installer.setValue("TargetDir", "c:\maskromtool");
-    component.addOperation("CreateShortcut", "@TargetDir@/maskromtool.exe",
-      "@StartMenuDir@/maskromtool.lnk");
+    //Default operation installs the files.
+    component.createOperations();
+    
 
-    //This gets auto-removed for some reason.
-    //component.addOperation("CreateShortcut", "@TargetDir@/maintenancetool.exe",
-    //  "@StartMenuDir@/maintenancetool.lnk");
-  }else{  //Linux and macOS.
-    installer.setValue("TargetDir", "/opt/maskromtool");
-  }
+    //Windows entries in the Start menu.
+    if (installer.value("os") === "win") {
+        component.addOperation("CreateShortcut", "@TargetDir@/maskromtool.exe",
+                               "@StartMenuDir@/maskromtool.lnk");
+    }
 }

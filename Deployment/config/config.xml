@@ -5,5 +5,5 @@
   <Title>Mask ROM Tool Installer</Title>
   <Publisher>Travis Goodspeed</Publisher>
   <StartMenuDir>Mask ROM Tool</StartMenuDir>
-  <TargetDir>c:\MaskRomTool</TargetDir>
+  <TargetDir>maskromtool</TargetDir>
 </Installer>
