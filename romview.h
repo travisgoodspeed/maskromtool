@@ -14,6 +14,7 @@ public:
     RomView(QWidget *parent = nullptr);
 
     void centerOn(QGraphicsItem* item);
+    void centerOn(const QPointF &p);
 
     //Double click to select an item.
     void mouseDoubleClickEvent(QMouseEvent *event);

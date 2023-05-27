@@ -145,7 +145,7 @@ public:
 
     //Navigation
     void centerOn(QGraphicsItem* item);
-
+    QPointF home; //Selectable home position, controlled by the H key.
 
     //DRC
     bool runDRC(bool all=false);

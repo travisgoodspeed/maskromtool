@@ -3,8 +3,7 @@
 #include<QMouseEvent>
 #include<QScrollBar>
 #include<QGraphicsItem>
-#include <QPixmapCache>
-
+#include<QPixmapCache>
 
 
 RomView::RomView(QWidget *parent){
@@ -33,6 +32,10 @@ void RomView::centerOn(QGraphicsItem* item){
         return;
 
     QGraphicsView::centerOn(item->pos());
+}
+
+void RomView::centerOn(const QPointF &p){
+    QGraphicsView::centerOn(p);
 }
 
 //This selects an item when double-clicked.

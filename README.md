@@ -116,10 +116,12 @@ The most recent object is already selected, so you can remove a
 mistake with `D` or adjust its position a little with `S`.
 
 ```
+Tab     -- Show/Hide bits.
 Q       -- Zoom to zero.
 A       -- Zoom in.
 Z       -- Zoom out.
-Tab     -- Show/Hide bits.
+H       -- Jump to home position.
+SHIFT+H -- Set the home position.
 
 D       -- Delete the one selected object.
 SHIFT+D -- Delete all selected objects.

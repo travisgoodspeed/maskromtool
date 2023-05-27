@@ -279,12 +279,17 @@ void MaskRomTool::centerOn(QGraphicsItem* item){
 //We might be a GUI, but keyboards are where it's add!
 void MaskRomTool::keyPressEvent(QKeyEvent *event){
     RomLineItem *rlitem;
-
-
     int key=event->key();
 
     switch(key){
     //Zoom/view keys.
+    case Qt::Key_H: //Home button.
+        if(event->modifiers()&Qt::SHIFT){ //Set home.
+            home=scene->scenepos;
+        }else{ //Jump to home when no modifiers are held.
+            ui->graphicsView->centerOn(home);
+        }
+        break;
     case Qt::Key_Q: //Reset Zoom
         ui->graphicsView->resetTransform();
         ui->graphicsView->totalScaleFactor=1;
@@ -384,7 +389,8 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         markLine(rlitem);
         break;
 
-    //These operator on the loaded data.
+
+    //These operate on the loaded data.
     case Qt::Key_M:  //Mark Bits.
         markBits();
         if(asciiDialog.isVisible())
@@ -392,6 +398,8 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         statusBar()->showMessage(tr("Marked bits."));
         break;
     }
+
+
 }
 
 //Direction function to run the rules, called by CLI and GUI.
