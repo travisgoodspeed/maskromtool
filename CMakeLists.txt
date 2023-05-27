@@ -73,33 +73,11 @@ set(PROJECT_SOURCES
 
 
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(maskromtool
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET maskromtool APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-else()
-    if(ANDROID)
-        add_library(maskromtool SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(maskromtool
-            ${PROJECT_SOURCES}
-        )
-    endif()
-
-    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-endif()
-
+qt_add_executable(maskromtool
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+)
+qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
 
 
@@ -111,9 +89,18 @@ set_target_properties(maskromtool PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(maskromtool)
+
+# On Windows, we want a second CLI for the console.
+if(WIN32)
+    qt_add_executable(maskromtoolcli
+        MANUAL_FINALIZATION
+        ${PROJECT_SOURCES}
+    )
+    target_link_libraries(maskromtoolcli PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
+    qt_finalize_executable(maskromtoolcli)
+    install(TARGETS maskromtoolcli DESTINATION bin)
 endif()
 
+qt_finalize_executable(maskromtool)
 # Install targets in relation to ${CMAKE_INSTALL_PREFIX}/
 install(TARGETS maskromtool DESTINATION bin)

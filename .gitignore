@@ -72,3 +72,8 @@ Thumbs.db
 *.exe
 build
 CMakeLists.txt.user
+
+
+## Windows stuff
+build
+Release
