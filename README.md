@@ -10,11 +10,16 @@ the GUI documentation below before starting to explore.
 
 ![Screenshot of the tool.](screenshots/screenshot.png)
 
-## Tutorials
+## Examples
 
 [gbrom-tutorial](https://github.com/travisgoodspeed/gbrom-tutorial)
 teaches you how to begin with photographs of the GameBoy's mask ROM
 and work your way to an accurate ROM image.
+
+[MYK82 ROM](https://github.com/travisgoodspeed/myk82rom) holds a
+completed dump of the ROM from the MYK82 chip in a Fortezza Card.
+This is the successor to the Clipper Chip, and the repository includes
+not just all ROM bits but also reshoots for error correction.
 
 ## Building
 
