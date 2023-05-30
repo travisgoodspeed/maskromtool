@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
   <Name>Mask ROM Tool</Name>
-  <Version>2023-05-27</Version>
+  <Version>2023-05-30</Version>
   <Title>Mask ROM Tool Installer</Title>
   <Publisher>Travis Goodspeed</Publisher>
   <StartMenuDir>Mask ROM Tool</StartMenuDir>
