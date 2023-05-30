@@ -39,6 +39,10 @@ sure to include the Charts and Image Formats extensions.  Then open
 `CMakeLists.txt` as a project.  `Ctrl+B` will then compile
 `maskromtool`.
 
+For the convenience of Windows users, we have also made some [Prebuilt
+Releases](https://github.com/travisgoodspeed/maskromtool/releases).
+These might be produced for other operating systems in the future.
+
 ## High Level Design
 
 I've designed the GUI around a `QGraphicsScene`.  The underlying data
