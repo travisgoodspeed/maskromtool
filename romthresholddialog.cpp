@@ -51,8 +51,10 @@ void RomThresholdDialog::setMaskRomTool(MaskRomTool* parent){
     //Populate the chooser box with each sampler algorithm.
     ui->samplesizeScrollBar->setValue(samplersize);
     ui->samplesizeEdit->setText(QString::number(samplersize));
-    foreach(RomBitSampler* sampler, mrt->samplers){
-        ui->samplerBox->addItem(sampler->name);
+    if(ui->samplerBox->count()==0){ //Only update the first time.
+        foreach(RomBitSampler* sampler, mrt->samplers){
+            ui->samplerBox->addItem(sampler->name);
+        }
     }
     ui->samplerBox->setCurrentText(mrt->sampler->name);
 
