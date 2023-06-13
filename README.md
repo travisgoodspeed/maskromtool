@@ -23,11 +23,18 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Building
 
-In Debian Bullseye (11.x),
+This tool works in Windows, Linux and MacOS, using QT6 with the
+QtCharts extension.  Be sure to manually enable QtCharts in the [QT
+Unified
+Installer](https://download.qt.io/official_releases/online_installers/),
+as it's not enabled by default!
+
+Building the tool is easiest from the CLI.  In Debian Bullseye (11.x),
 ```
 % sudo apt install make gcc g++ cmake git qt6-base-dev qt6-charts-dev \
 qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats-plugins
 % git clone https://github.com/travisgoodspeed/maskromtool/
+...
 % cd maskromtool
 % mkdir build; cd build
 % make -j 8 && sudo make install
@@ -37,7 +44,9 @@ In Windows and macOS, use the [Qt for Open
 Source](https://www.qt.io/download-qt-installer-oss) installer, being
 sure to include the Charts and Image Formats extensions.  Then open
 `CMakeLists.txt` as a project.  `Ctrl+B` will then compile
-`maskromtool`.
+`maskromtool`.  If you have a problem with your import, such as
+choosing the wrong Qt installation, delete `CMakeLists.txt.user` and
+reopen the project to try again.
 
 For the convenience of Windows users, we have also made some [Prebuilt
 Releases](https://github.com/travisgoodspeed/maskromtool/releases).
@@ -63,37 +72,6 @@ export as ASCII, for use in other tools.
 To identify errors, a set of Design Rule Checks (DRC) will critique
 the open project.  While the primary interface is the GUI, a CLI is
 also available for scripting and testing.
-
-## Building
-
-This tool works in Windows, Linux and MacOS, using QT5 or QT6 with the
-QtCharts extension.  Be sure to manually enable QtCharts in the [QT
-Unified
-Installer](https://download.qt.io/official_releases/online_installers/),
-as it's not enabled by default!
-
-Building the tool is easiest from the CLI.
-
-```
-air% git clone https://github.com/travisgoodspeed/maskromtool/
-Cloning into 'maskromtool'...
-...
-Resolving deltas: 100% (236/236), done.
-air% cd maskromtool 
-air% mkdir build
-air% cd build
-air% cmake .. && make clean all
-```
-
-To build the project from QT Creator, simply clone the repository and
-then open the `CMakeLists.txt` as a project.  The rest of the code
-should load and compile if you remembered to install the QtCharts
-extension.  If you have a problem with your import, such as choosing
-the wrong Qt installation, delete `CMakeLists.txt.user` and reopen
-the project to try again.
-
-Development is performed in QT6, and sometimes QT5 incompatibilities
-will slip in.  Please report these as bugs.
 
 ## GUI Usage
 
