@@ -41,7 +41,7 @@ sure to include the Charts and Image Formats extensions.  Then open
 
 For the convenience of Windows users, we have also made some [Prebuilt
 Releases](https://github.com/travisgoodspeed/maskromtool/releases).
-These might be produced for other operating systems in the future.
+Prebuilt executables for macOS are coming soon.
 
 ## High Level Design
 
@@ -75,7 +75,7 @@ as it's not enabled by default!
 Building the tool is easiest from the CLI.
 
 ```
-air% git clone git@github.com:travisgoodspeed/maskromtool.git
+air% git clone https://github.com/travisgoodspeed/maskromtool/
 Cloning into 'maskromtool'...
 ...
 Resolving deltas: 100% (236/236), done.
@@ -156,9 +156,10 @@ threshold between a one and a zero.  You can configure this with
 `View` / `Choose Bit Threshold`.
 
 Even the best bits won't all be perfectly marked, so use `SHIFT+F` to
-force bit values where you see that the software is wrong.  The `DRC`
-menu contains Design Rule Checks that will highlight problems in your project,
-such as weak bits or broken alignment.
+force bit values where you see that the software is wrong.  `SHIFT+A`
+is similar, and marks a bit as being ambiguous or damaged.  The `DRC`
+menu contains Design Rule Checks that will highlight problems in your
+project, such as weak bits or broken alignment.
 
 The crosshairs will adjust themselves to your most recently placed row
 and column.  This should let them tilt a little to match the reality
@@ -291,8 +292,9 @@ not supported by Mask ROM Tool, you almost certainly want to export
 the bits to ASCII and explore them with these two tools until they
 make sense.
 
-**CSV** exports for Matlab or Octave.  `csvread("foo.csv")` imports
-the data.
+**CSV** exports as a Comma Separated Value file.  In Matlab or Octave,
+`csvread("foo.csv")` imports the data.  In Excel, you can just open
+the file.
 
 **JSON** export of bit positions and values.  This is far more verbose
 than ASCII, but might be useful if you wanted to write your own tool.

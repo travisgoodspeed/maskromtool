@@ -3,9 +3,8 @@
 #include "rombititem.h"
 #include "rombitfix.h"
 
+
 RomBitFix::RomBitFix(RomBitItem* bit){
-    //Color should be green when fixed.
-    static QBrush fixbrush(Qt::GlobalColor::green, Qt::SolidPattern);
 
     //We take a null bit only for JSON imports.
     if(bit){ //Real fix.
@@ -16,8 +15,16 @@ RomBitFix::RomBitFix(RomBitItem* bit){
         //We have to start somewhere.
         setBitSize(10);
     }
-    setBrush(fixbrush);
+    updateColor();
     setZValue(-5);
+}
+
+//Sets the color to indicate ambiguity.
+void RomBitFix::updateColor(){
+    //Green if fixed, Cyan if ambiguous.
+    static QBrush fixbrush(Qt::GlobalColor::green, Qt::SolidPattern);
+    static QBrush ambigbrush(Qt::GlobalColor::cyan, Qt::SolidPattern);
+    setBrush(ambiguous?ambigbrush:fixbrush);
 }
 
 
@@ -55,6 +62,7 @@ void RomBitFix::setValue(bool value){
 }
 void RomBitFix::setAmbiguious(bool ambiguous){
     this->ambiguous=ambiguous;
+    updateColor();
 }
 
 //Dumps the state out to JSON.
@@ -72,4 +80,5 @@ void RomBitFix::read(const QJsonValue &json){
     value=json["value"].toBool();
     ambiguous=json["ambiguous"].toBool();
     setPos(x, y);
+    updateColor();
 }

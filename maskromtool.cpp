@@ -27,6 +27,7 @@
 #include "romrulesanity.h"
 #include "romruleambiguous.h"
 
+//Qt libraries.  Faster to include in .cpp than .h.
 #include <QFileDialog>
 #include <QKeyEvent>
 #include <QMouseEvent>

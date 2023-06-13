@@ -15,6 +15,10 @@ class RomBitItem;
  * the fix is ambiguous, it means that the operator does not
  * know what the bit ought to be, so the fixed value might
  * also be wrong.
+ *
+ * Fixes are marked as Green if Forced and Cyan if ambiguous.
+ * The choice of the fix is then reflected in the bit render,
+ * as the usual red or blue.
  */
 
 class RomBitFix : public QGraphicsRectItem
@@ -43,6 +47,7 @@ public:
 private:
     bool value=false;
     bool ambiguous=false;
+    void updateColor(); //Updates the color.
 };
 
 #endif // ROMBITFIX_H
