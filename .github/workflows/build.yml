@@ -1,123 +1,215 @@
-name: CI build
+name: Build
 
-on: [push, pull_request]
+env: 
+  # Multi-threaded compilation for MSVC
+  CL: /MP
 
-env:
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-
+on: [workflow_dispatch, push]
+    
 jobs:
-  build:
+  Build:
     strategy:
       fail-fast: false
       matrix:
-        version:
-          - 6.6.0
-        platform:
-          - gcc_64
-          - msvc2019
-          - mingw81_32
-          - clang_64
-
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        version: [6.5.1]
         include:
-          - platform: gcc_64
-            os: ubuntu-latest
-          - platform: msvc2019
-            os: windows-2019
-          - platform: mingw81_32
-            os: windows-latest
-          - platform: clang_64
-            os: macos-latest
+        - os: windows-latest
+          os-caption: Windows
+        - os: ubuntu-latest
+          os-caption: Ubuntu
+        - os: macos-latest
+          os-caption: MacOS
 
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@master
-        with:
-          submodules: recursive
-      - uses: actions/setup-python@master
-        with:
-          python-version: '3.10'
-          
-      - name: actions/cache qt
-        uses: actions/cache@master
-        id: cache
-        with:
-          path: qt/${{matrix.version}}/${{matrix.platform}}
-          key: qt-${{matrix.version}}-${{matrix.platform}}
+    - name: Clone Project
+      uses: actions/checkout@v2.4.2
 
-      - name: Add msbuild to PATH
-        if: matrix.platform == 'msvc2019'
-        uses: microsoft/setup-msbuild@main
+    - name: Fetch Git Info
+      shell: bash
+      working-directory: ${{github.workspace}}
+      run: |
+        git_hash=$(git rev-parse --short "$GITHUB_SHA")
+        git_branch=${GITHUB_REF##*/}
+        echo "$git_hash" >> ./res/git/git_hash.txt
+        echo "$git_branch" >> ./res/git/git_branch.txt
+      
+    - name: Setup externals
+      run: |
+        mkdir ./3rd
+        mkdir ./3rd/bass
+        mkdir ./3rd/discord-rpc
+        mkdir ./3rd/openssl
         
-      - uses: Skycoder42/action-setup-qt@master
-        id: qt
-        with:
-          version: ${{matrix.version}}
-          platform: ${{matrix.platform}}
+    - name: Install OpenSSL (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        curl -L https://mirror.firedaemon.com/OpenSSL/openssl-1.1.1q.zip -o openssl.zip
+        unzip -d ./openssl -o ./openssl.zip
+        cp ./openssl/openssl-1.1/x64/bin/*.dll ./3rd
 
-      - name: qmake
-        run: |
-          qmake QMAKE_CXXFLAGS+="-fno-sized-deallocation" DEFINES+=DISCORD CONFIG+=install_ok QT_PLATFORM=${{matrix.platform}}
+    - name: Install BASS (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        curl http://www.un4seen.com/files/bass24.zip -o ./bass.zip
+        unzip -d ./bass -o ./bass.zip
+        cp ./bass/c/bass.h ./3rd/bass
+        cp ./bass/c/x64/bass.lib ./3rd
+        cp ./bass/x64/bass.dll ./3rd
 
-      - name: build
-        run: |
-          ${{steps.qt.outputs.make}}
+        curl http://www.un4seen.com/files/bassopus24.zip -o ./bassopus.zip
+        unzip -d ./bass -o ./bassopus.zip
+        cp ./bass/c/bassopus.h ./3rd/bass
+        cp ./bass/c/x64/bassopus.lib ./3rd
+        cp ./bass/x64/bassopus.dll ./3rd
 
-      - name: Deploy Windows
-        if: contains(matrix.os, 'windows')
-        working-directory: ${{github.workspace}}/bin/
-        shell: bash
-        run: |
-          windeployqt --no-quick-import --no-translations --no-virtualkeyboard --no-compiler-runtime --no-webkit2 --no-opengl-sw .
-          rm ./imageformats/qtiff.dll
-          rm ./imageformats/qjpeg.dll
-          rm ./imageformats/qicns.dll
-          rm ./imageformats/qico.dll
-          rm ./imageformats/qsvg.dll
-          rm ./imageformats/qtga.dll
-          rm ./imageformats/qwbmp.dll
-          rm ./Qt5Svg.dll
-          rm -r iconengines
-          rm -r bearer
-          rm -r styles
+    - name: Install BASS (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        curl http://www.un4seen.com/files/bass24-linux.zip -o ./bass.zip
+        unzip -d ./bass -o ./bass.zip
+        cp ./bass/bass.h ./3rd/bass/bass.h
+        cp ./bass/x64/libbass.so ./3rd/libbass.so
 
-      - name: Copy MingW DLL
-        if: matrix.platform == 'mingw81_32'
-        working-directory: ${{github.workspace}}/bin/
-        shell: bash
-        run: |
-          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libgcc_s_dw2-1.dll .
-          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libstdc++-6.dll .
-          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libwinpthread-1.dll .
+        curl http://www.un4seen.com/files/bassopus24-linux.zip -o ./bassopus.zip
+        unzip -d ./bass -o ./bassopus.zip
+        cp ./bass/bassopus.h ./3rd/bass/bassopus.h
+        cp ./bass/x64/libbassopus.so ./3rd/libbassopus.so
 
-      - name: Deploy Linux
-        if: matrix.platform == 'gcc_64'
-        working-directory: ${{github.workspace}}/bin/
-        shell: bash
-        run: |
-          cp ../scripts/launch.sh .
-          mkdir -p imageformats
-          cp ../QtApng/plugins/imageformats/libqapng.so ./imageformats/libqapng.so
-          chmod +x launch.sh
-          chmod +x masktromtool
-          tar -cf maskromtool ./*
-          rm -rf imageformats
-          rm *.so
-          rm *.sh
-          rm maskromtool
+    - name: Install BASS (MacOS)
+      if: contains(matrix.os, 'macos')
+      run: |
+        curl http://www.un4seen.com/files/bass24-osx.zip -o ./bass.zip
+        unzip -d ./bass -o ./bass.zip
+        cp ./bass/bass.h ./3rd/bass
+        cp ./bass/libbass.dylib ./3rd
 
-      - name: Deploy Mac
-        if: matrix.os == 'macos-latest'
-        working-directory: ${{github.workspace}}/bin/
-        shell: bash
-        run: |
-          macdeployqt maskromtool.app
-          cp ../QtApng/plugins/imageformats/libqapng.dylib ./maskromtool.app/Contents/PlugIns/imageformats/
-          mv *.dylib ./maskromtool.app/Contents/Frameworks
-          hdiutil create -volname "maskromtool" -srcfolder "./maskromtool.app" -ov -format UDZO "maskromtool.dmg"
-          rm -r ./maskromtool.app/
+        curl http://www.un4seen.com/files/bassopus24-osx.zip -o ./bassopus.zip
+        unzip -d ./bass -o ./bassopus.zip
+        cp ./bass/bassopus.h ./3rd/bass
+        cp ./bass/libbassopus.dylib ./3rd
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: maskromtool-${{matrix.os}}-${{matrix.platform}}
-          path: ${{github.workspace}}/bin/
+    - name: Install Discord-RPC (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        curl -L https://github.com/discordapp/discord-rpc/releases/download/v3.4.0/discord-rpc-win.zip -o ./discord-rpc.zip
+        unzip ./discord-rpc.zip
+        cp ./discord-rpc/win64-dynamic/include/discord_register.h ./3rd/discord-rpc
+        cp ./discord-rpc/win64-dynamic/include/discord_rpc.h ./3rd/discord-rpc
+        cp ./discord-rpc/win64-dynamic/bin/discord-rpc.dll ./3rd
+        cp ./discord-rpc/win64-dynamic/lib/discord-rpc.lib ./3rd
+
+    - name: Install Discord-RPC (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        curl -L https://github.com/discordapp/discord-rpc/releases/download/v3.4.0/discord-rpc-linux.zip -o ./discord-rpc.zip
+        unzip ./discord-rpc.zip
+        cp ./discord-rpc/linux-dynamic/include/discord_register.h ./3rd/discord-rpc/discord_register.h
+        cp ./discord-rpc/linux-dynamic/include/discord_rpc.h ./3rd/discord-rpc/discord_rpc.h
+        cp ./discord-rpc/linux-dynamic/lib/libdiscord-rpc.so ./3rd/libdiscord-rpc.so
+
+    - name: Install Discord-RPC (MacOS)
+      if: contains(matrix.os, 'macos')
+      run: |
+        curl -L https://github.com/discordapp/discord-rpc/releases/download/v3.4.0/discord-rpc-osx.zip -o ./discord-rpc.zip
+        unzip ./discord-rpc.zip
+        cp ./discord-rpc/osx-dynamic/include/discord_register.h ./3rd/discord-rpc
+        cp ./discord-rpc/osx-dynamic/include/discord_rpc.h ./3rd/discord-rpc
+        cp ./discord-rpc/osx-dynamic/lib/libdiscord-rpc.dylib ./3rd
+
+    - name: Update packages (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade
+        
+    - name: Install Qt (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        sudo apt-get install qt5-default libqt5designer5 qttools5-dev libqt5multimedia5 libqt5multimedia5-plugins libqt5multimediawidgets5 qtmultimedia5-dev
+        
+    - name: Install Qt (Others)
+      if: contains(matrix.os, 'ubuntu') != true
+      uses: jurplel/install-qt-action@v2.14.0
+      with:
+        version: ${{matrix.version}}
+        
+    - name: Configure MSVC (Windows)
+      if: contains(matrix.os, 'windows')
+      uses: ilammy/msvc-dev-cmd@v1
+      
+    - name: Clone QtApng
+      uses: actions/checkout@v2
+      with:
+        repository: Skycoder42/QtApng
+        path: ./qtapng
+        
+    - name: Build QtApng (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        cd ./qtapng
+        qmake
+        nmake
+        
+    - name: Build QtApng (Others)
+      if: contains(matrix.os, 'windows') != true
+      run: |
+        cd ./qtapng
+        qmake
+        make -j3
+
+    - name: Make Project
+      run: |
+        cp ./data/.qmake.conf .
+        qmake
+
+    - name: Build Project (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        nmake
+
+    - name: Build Project (Others)
+      if: contains(matrix.os, 'windows') != true
+      run: |
+        make -j3
+    
+    - name: Packing (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        cd ./bin
+        windeployqt dro-client.exe --compiler-runtime --no-quick-import --no-translations
+        cp ../qtapng/plugins/imageformats/qapng.dll ./imageformats
+        cp ../3rd/*.dll .
+        cd ..
+    
+    - name: Packing (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        cd ./bin
+        mkdir ./depends
+        cp ../3rd/*.so ./depends
+        mkdir ./imageformats
+        cp ../qtapng/plugins/imageformats/libqapng.so ./imageformats
+        cp ../data/dro-client.sh .
+        cp ../data/README-LINUX.md ./README.md
+        cd ..
+    
+    - name: Packing (MacOS)
+      if: contains(matrix.os, 'macos')
+      run: |
+        cd ./bin
+        mv ./dro-client.app "./Danganronpa Online.app"
+        macdeployqt "./Danganronpa Online.app"
+        cp ../qtapng/plugins/imageformats/libqapng.dylib "./Danganronpa Online.app/Contents/PlugIns/imageformats"
+        cp ../3rd/*.dylib "./Danganronpa Online.app/Contents/Frameworks"
+        hdiutil create -volname "Danganronpa Online" -srcfolder "./Danganronpa Online.app" -ov -format UDZO "Danganronpa Online.dmg"
+        rm -rf "./Danganronpa Online.app"
+        cp ../data/README-MACOS.txt ./README.txt
+        cd ..
+        
+    - name: Create Artifact
+      uses: actions/upload-artifact@v2
+      with:
+         name: "Danganronpa Online (${{matrix.os-caption}})"
+         path: ./bin
