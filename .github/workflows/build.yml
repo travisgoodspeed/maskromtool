@@ -1,0 +1,123 @@
+name: CI build
+
+on: [push, pull_request]
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - 6.6.0
+        platform:
+          - gcc_64
+          - msvc2019
+          - mingw81_32
+          - clang_64
+
+        include:
+          - platform: gcc_64
+            os: ubuntu-latest
+          - platform: msvc2019
+            os: windows-2019
+          - platform: mingw81_32
+            os: windows-latest
+          - platform: clang_64
+            os: macos-latest
+
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@master
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@master
+        with:
+          python-version: '3.10'
+          
+      - name: actions/cache qt
+        uses: actions/cache@master
+        id: cache
+        with:
+          path: qt/${{matrix.version}}/${{matrix.platform}}
+          key: qt-${{matrix.version}}-${{matrix.platform}}
+
+      - name: Add msbuild to PATH
+        if: matrix.platform == 'msvc2019'
+        uses: microsoft/setup-msbuild@main
+        
+      - uses: Skycoder42/action-setup-qt@master
+        id: qt
+        with:
+          version: ${{matrix.version}}
+          platform: ${{matrix.platform}}
+
+      - name: qmake
+        run: |
+          qmake QMAKE_CXXFLAGS+="-fno-sized-deallocation" DEFINES+=DISCORD CONFIG+=install_ok QT_PLATFORM=${{matrix.platform}}
+
+      - name: build
+        run: |
+          ${{steps.qt.outputs.make}}
+
+      - name: Deploy Windows
+        if: contains(matrix.os, 'windows')
+        working-directory: ${{github.workspace}}/bin/
+        shell: bash
+        run: |
+          windeployqt --no-quick-import --no-translations --no-virtualkeyboard --no-compiler-runtime --no-webkit2 --no-opengl-sw .
+          rm ./imageformats/qtiff.dll
+          rm ./imageformats/qjpeg.dll
+          rm ./imageformats/qicns.dll
+          rm ./imageformats/qico.dll
+          rm ./imageformats/qsvg.dll
+          rm ./imageformats/qtga.dll
+          rm ./imageformats/qwbmp.dll
+          rm ./Qt5Svg.dll
+          rm -r iconengines
+          rm -r bearer
+          rm -r styles
+
+      - name: Copy MingW DLL
+        if: matrix.platform == 'mingw81_32'
+        working-directory: ${{github.workspace}}/bin/
+        shell: bash
+        run: |
+          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libgcc_s_dw2-1.dll .
+          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libstdc++-6.dll .
+          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libwinpthread-1.dll .
+
+      - name: Deploy Linux
+        if: matrix.platform == 'gcc_64'
+        working-directory: ${{github.workspace}}/bin/
+        shell: bash
+        run: |
+          cp ../scripts/launch.sh .
+          mkdir -p imageformats
+          cp ../QtApng/plugins/imageformats/libqapng.so ./imageformats/libqapng.so
+          chmod +x launch.sh
+          chmod +x masktromtool
+          tar -cf maskromtool ./*
+          rm -rf imageformats
+          rm *.so
+          rm *.sh
+          rm maskromtool
+
+      - name: Deploy Mac
+        if: matrix.os == 'macos-latest'
+        working-directory: ${{github.workspace}}/bin/
+        shell: bash
+        run: |
+          macdeployqt maskromtool.app
+          cp ../QtApng/plugins/imageformats/libqapng.dylib ./maskromtool.app/Contents/PlugIns/imageformats/
+          mv *.dylib ./maskromtool.app/Contents/Frameworks
+          hdiutil create -volname "maskromtool" -srcfolder "./maskromtool.app" -ov -format UDZO "maskromtool.dmg"
+          rm -r ./maskromtool.app/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: maskromtool-${{matrix.os}}-${{matrix.platform}}
+          path: ${{github.workspace}}/bin/
