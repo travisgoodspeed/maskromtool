@@ -51,11 +51,13 @@ jobs:
     - name: Build Project (Windows)
       if: contains(matrix.os, 'windows')
       run: |
+        cd build
         nmake
 
     - name: Build Project (Others)
       if: contains(matrix.os, 'windows') != true
       run: |
+        cd build
         make -j3
     
     - name: Packing (Windows)
