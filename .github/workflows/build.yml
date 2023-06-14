@@ -60,6 +60,12 @@ jobs:
         cd build
         make -j3
         
+    - name: Packing (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        mkdir release
+        cp ./build/maskromtool ./release/
+        
     - name: Packing (Windows)
       if: contains(matrix.os, 'windows')
       run: |
@@ -74,7 +80,6 @@ jobs:
         mkdir release
         cp -rf build/maskromtool.app release/
         macdeployqt release/maskromtool.app -sign-for-notarization="Developer ID Application: Travis Goodspeed"
-        codesign --verify --verbose  release/maskromtool.app
         hdiutil create -volname "maskromtool" -srcfolder "./release/maskromtool.app" -ov -format UDZO "./release/maskromtool.dmg"
         rm -rf "./release/maskromtool.app"
     
