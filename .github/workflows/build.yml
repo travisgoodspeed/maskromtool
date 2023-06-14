@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - 6.6.0
+          - 6.5.1
         platform:
           - gcc_64
           - msvc2019
