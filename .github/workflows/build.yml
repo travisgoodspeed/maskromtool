@@ -52,16 +52,34 @@ jobs:
       if: contains(matrix.os, 'windows')
       run: |
         cd build
-        nmake
+        msbuild maskromtool.sln /property:Configuration=Release -maxcpucount
 
     - name: Build Project (Others)
       if: contains(matrix.os, 'windows') != true
       run: |
         cd build
         make -j3
+        
+    - name: Packing (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        mkdir release
+        cd build
+        windeployqt Release
+        move Release ..\
+    
+    - name: Packing (MacOS)
+      if: contains(matrix.os, 'macos')
+      run: |
+        mkdir release
+        cp -rf build/maskromtool.app release/
+        macdeployqt release/maskromtool.app -sign-for-notarization="Developer ID Application: Travis Goodspeed"
+        codesign --verify --verbose  release/maskromtool.app
+        hdiutil create -volname "maskromtool" -srcfolder "./release/maskromtool.app" -ov -format UDZO "./release/maskromtool.dmg"
+        rm -rf "./release/maskromtool.app"
     
     - name: Create Artifact
       uses: actions/upload-artifact@v2
       with:
          name: "maskromtool (${{matrix.os-caption}})"
-         path: .
+         path: ./release/
