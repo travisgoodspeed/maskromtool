@@ -30,11 +30,9 @@ jobs:
       if: contains(matrix.os, 'ubuntu')
       run: |
         sudo apt-get update
-        sudo apt-get upgrade
-        sudo apt-get install make gcc g++ cmake git qt6-base-dev qt6-charts-dev qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats-plugins
+        sudo apt-get install make gcc g++ cmake git
         
     - name: Install Qt (Others)
-      if: contains(matrix.os, 'ubuntu') != true
       uses: jurplel/install-qt-action@v3
       with:
         version: ${{matrix.version}}
