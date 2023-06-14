@@ -1,123 +1,86 @@
-name: CI build
+name: Build
 
-on: [push, pull_request]
+env: 
+  # Multi-threaded compilation for MSVC
+  CL: /MP
 
-env:
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-
+on: [workflow_dispatch, push]
+    
 jobs:
-  build:
+  Build:
     strategy:
       fail-fast: false
       matrix:
-        version:
-          - 6.5.1
-        platform:
-          - gcc_64
-          - msvc2019
-          - mingw81_32
-          - clang_64
-
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        version: [6.5.1]
         include:
-          - platform: gcc_64
-            os: ubuntu-latest
-          - platform: msvc2019
-            os: windows-2019
-          - platform: mingw81_32
-            os: windows-latest
-          - platform: clang_64
-            os: macos-latest
+        - os: windows-latest
+          os-caption: Windows
+        - os: ubuntu-latest
+          os-caption: Ubuntu
+        - os: macos-latest
+          os-caption: MacOS
 
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@master
-        with:
-          submodules: recursive
-      - uses: actions/setup-python@master
-        with:
-          python-version: '3.10'
-          
-      - name: actions/cache qt
-        uses: actions/cache@master
-        id: cache
-        with:
-          path: qt/${{matrix.version}}/${{matrix.platform}}
-          key: qt-${{matrix.version}}-${{matrix.platform}}
+    - name: Clone Project
+      uses: actions/checkout@v2.4.2
 
-      - name: Add msbuild to PATH
-        if: matrix.platform == 'msvc2019'
-        uses: microsoft/setup-msbuild@main
+    - name: Update packages (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get install make gcc g++ cmake git qt6-base-dev qt6-charts-dev qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats-plugins
         
-      - uses: Skycoder42/action-setup-qt@master
-        id: qt
-        with:
-          version: ${{matrix.version}}
-          platform: ${{matrix.platform}}
+    - name: Install Qt (Others)
+      if: contains(matrix.os, 'ubuntu') != true
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{matrix.version}}
+        modules: qtcharts
+        
+    - name: Configure MSVC (Windows)
+      if: contains(matrix.os, 'windows')
+      uses: ilammy/msvc-dev-cmd@v1
+      
+    - name: Make Project
+      run: |
+        mkdir build
+        cd build
+        cmake ..
 
-      - name: qmake
-        run: |
-          qmake QMAKE_CXXFLAGS+="-fno-sized-deallocation" DEFINES+=DISCORD CONFIG+=install_ok QT_PLATFORM=${{matrix.platform}}
+    - name: Build Project (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        nmake
 
-      - name: build
-        run: |
-          ${{steps.qt.outputs.make}}
-
-      - name: Deploy Windows
-        if: contains(matrix.os, 'windows')
-        working-directory: ${{github.workspace}}/bin/
-        shell: bash
-        run: |
-          windeployqt --no-quick-import --no-translations --no-virtualkeyboard --no-compiler-runtime --no-webkit2 --no-opengl-sw .
-          rm ./imageformats/qtiff.dll
-          rm ./imageformats/qjpeg.dll
-          rm ./imageformats/qicns.dll
-          rm ./imageformats/qico.dll
-          rm ./imageformats/qsvg.dll
-          rm ./imageformats/qtga.dll
-          rm ./imageformats/qwbmp.dll
-          rm ./Qt5Svg.dll
-          rm -r iconengines
-          rm -r bearer
-          rm -r styles
-
-      - name: Copy MingW DLL
-        if: matrix.platform == 'mingw81_32'
-        working-directory: ${{github.workspace}}/bin/
-        shell: bash
-        run: |
-          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libgcc_s_dw2-1.dll .
-          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libstdc++-6.dll .
-          cp D:/a/travisgoodspeed/maskromtool/.cache/qt/Tools/mingw810_32/bin/libwinpthread-1.dll .
-
-      - name: Deploy Linux
-        if: matrix.platform == 'gcc_64'
-        working-directory: ${{github.workspace}}/bin/
-        shell: bash
-        run: |
-          cp ../scripts/launch.sh .
-          mkdir -p imageformats
-          cp ../QtApng/plugins/imageformats/libqapng.so ./imageformats/libqapng.so
-          chmod +x launch.sh
-          chmod +x masktromtool
-          tar -cf maskromtool ./*
-          rm -rf imageformats
-          rm *.so
-          rm *.sh
-          rm maskromtool
-
-      - name: Deploy Mac
-        if: matrix.os == 'macos-latest'
-        working-directory: ${{github.workspace}}/bin/
-        shell: bash
-        run: |
-          macdeployqt maskromtool.app
-          cp ../QtApng/plugins/imageformats/libqapng.dylib ./maskromtool.app/Contents/PlugIns/imageformats/
-          mv *.dylib ./maskromtool.app/Contents/Frameworks
-          hdiutil create -volname "maskromtool" -srcfolder "./maskromtool.app" -ov -format UDZO "maskromtool.dmg"
-          rm -r ./maskromtool.app/
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: maskromtool-${{matrix.os}}-${{matrix.platform}}
-          path: ${{github.workspace}}/bin/
+    - name: Build Project (Others)
+      if: contains(matrix.os, 'windows') != true
+      run: |
+        make -j3
+    
+    - name: Packing (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        cd ./bin
+        windeployqt maskromtool.exe --compiler-runtime --no-quick-import --no-translations
+    
+    - name: Packing (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        cd ./bin
+    
+    - name: Packing (MacOS)
+      if: contains(matrix.os, 'macos')
+      run: |
+        cd ./bin
+        macdeployqt "./maskromtool.app"
+        hdiutil create -volname "maskromtool" -srcfolder "./maskromtool.app" -ov -format UDZO "maskromtool.dmg"
+        rm -rf "./maskromtool.app"
+        
+    - name: Create Artifact
+      uses: actions/upload-artifact@v2
+      with:
+         name: "maskromtool (${{matrix.os-caption}})"
+         path: ./bin
