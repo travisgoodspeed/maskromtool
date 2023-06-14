@@ -71,7 +71,7 @@ jobs:
       run: |
         mkdir release
         cd build
-        windeployqt Release
+        windeployqt --no-compiler-runtime Release
         move Release ..\
     
     - name: Packing (MacOS)
