@@ -60,20 +60,8 @@ jobs:
         cd build
         make -j3
     
-    - name: Packing (Windows)
-      if: contains(matrix.os, 'windows')
-      run: |
-        windeployqt maskromtool.exe --compiler-runtime --no-quick-import --no-translations
-    
-    - name: Packing (MacOS)
-      if: contains(matrix.os, 'macos')
-      run: |
-        macdeployqt "./maskromtool.app"
-        hdiutil create -volname "maskromtool" -srcfolder "./maskromtool.app" -ov -format UDZO "maskromtool.dmg"
-        rm -rf "./maskromtool.app"
-        
     - name: Create Artifact
       uses: actions/upload-artifact@v2
       with:
          name: "maskromtool (${{matrix.os-caption}})"
-         path: ./bin
+         path: .
