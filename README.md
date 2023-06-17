@@ -48,9 +48,9 @@ sure to include the Charts and Image Formats extensions.  Then open
 choosing the wrong Qt installation, delete `CMakeLists.txt.user` and
 reopen the project to try again.
 
-For the convenience of Windows users, we have also made some [Prebuilt
+For the convenience of Windows and macOS users, we have also made some
+[Prebuilt
 Releases](https://github.com/travisgoodspeed/maskromtool/releases).
-Prebuilt executables for macOS are coming soon.
 
 ## High Level Design
 
