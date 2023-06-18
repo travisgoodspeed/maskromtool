@@ -102,7 +102,6 @@ void MaskRomTool::chooseSampler(QString name){
 }
 
 void MaskRomTool::setSamplerSize(int size){
-    qDebug()<<"Setting the bit sample size to "<<size;
     sampler->setSize(size);
     getSamplerSize();  //Grab it back in case the size was illegal.
 }

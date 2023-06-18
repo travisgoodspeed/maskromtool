@@ -129,6 +129,13 @@ void RomThresholdDialog::on_averageButton_clicked(){
 }
 
 void RomThresholdDialog::postThresholds(){
+    //Updates the sampler box.
+    if(ui->samplerBox->currentText()!=""){
+        mrt->chooseSampler(ui->samplerBox->currentText());
+        mrt->setSamplerSize(ui->samplesizeScrollBar->value());
+        ui->samplesizeEdit->setText(QString::number((int)ui->samplesizeScrollBar->value()));
+    }
+
     //Sends the thresholds back to MRT.
     mrt->setBitThreshold(ui->redScrollBar->value(),
                          ui->greenScrollBar->value(),
@@ -141,13 +148,6 @@ void RomThresholdDialog::postThresholds(){
 
     //Updates the text size.
     mrt->setBitSize(ui->sizeScrollBar->value());
-
-    //Updates the sampler box.
-    if(ui->samplerBox->currentText()!=""){
-        mrt->chooseSampler(ui->samplerBox->currentText());
-        mrt->setSamplerSize(ui->samplesizeScrollBar->value());
-        ui->samplesizeEdit->setText(QString::number((int)ui->samplesizeScrollBar->value()));
-    }
 
     //Redraws the bits.
     mrt->remarkBits();
@@ -198,8 +198,10 @@ void RomThresholdDialog::on_samplerBox_activated(int index){
 void RomThresholdDialog::on_samplesizeEdit_textEdited(const QString &arg1){
     bool ok=false;
     int val=arg1.toInt(&ok,10);
-    if(ok)
+    if(ok){
         ui->samplesizeScrollBar->setValue(val);
+        postThresholds();
+    }
 }
 
 

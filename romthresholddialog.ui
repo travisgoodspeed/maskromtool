@@ -191,8 +191,14 @@
          <height>16</height>
         </rect>
        </property>
+       <property name="minimum">
+        <number>2</number>
+       </property>
        <property name="maximum">
-        <number>255</number>
+        <number>25</number>
+       </property>
+       <property name="pageStep">
+        <number>5</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -203,7 +209,7 @@
         <rect>
          <x>20</x>
          <y>200</y>
-         <width>58</width>
+         <width>31</width>
          <height>18</height>
         </rect>
        </property>
@@ -234,6 +240,22 @@
         <string>Inverted Bits</string>
        </property>
       </widget>
+      <zorder>redLabel_3</zorder>
+      <zorder>redLabel_2</zorder>
+      <zorder>blueLabel</zorder>
+      <zorder>greenLabel</zorder>
+      <zorder>redLabel</zorder>
+      <zorder>redScrollBar</zorder>
+      <zorder>greenScrollBar</zorder>
+      <zorder>blueScrollBar</zorder>
+      <zorder>averageButton</zorder>
+      <zorder>redEdit</zorder>
+      <zorder>greenEdit</zorder>
+      <zorder>blueEdit</zorder>
+      <zorder>samplerBox</zorder>
+      <zorder>samplesizeScrollBar</zorder>
+      <zorder>samplesizeEdit</zorder>
+      <zorder>checkInverted</zorder>
      </widget>
      <widget class="QWidget" name="tabDisplay">
       <attribute name="title">
