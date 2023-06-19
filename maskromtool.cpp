@@ -399,13 +399,15 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         break;
     }
 
-
 }
 
 //Direction function to run the rules, called by CLI and GUI.
 bool MaskRomTool::runDRC(bool all){
     //Clear the field for new violations.
     clearViolations();
+
+    //We'll crash if the bits aren't aligned.
+    markBits();
 
     statusBar()->showMessage(tr("Running the Design Rule Checks. (DRC)"));
 

@@ -18,9 +18,10 @@ void RomRuleAmbiguous::evaluate(MaskRomTool *mrt){
     RomBitItem* bitfirst=bit;               //First bit in the current row.
     while(bit){
         if(bit->bitAmbiguous() && !bit->isFixed()){
-            RomRuleViolation* violation=new RomRuleViolation(bit->pos(),
-                                                             QString("Ambiguous bit %1,%2").arg(bit->row).arg(bit->col),
-                                                             "This bit is close to the threshold.  Try fixing it to the value that you see?");
+            RomRuleViolation* violation=
+                new RomRuleViolation(bit->pos(),
+                                     QString("Ambiguous bit %1,%2").arg(bit->row).arg(bit->col),
+                                     "This bit is close to the threshold.  Try fixing it with Shift+F?");
             violation->error=false;
             mrt->addViolation(violation);
         }
