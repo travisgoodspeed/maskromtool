@@ -149,7 +149,7 @@ void RomAlignerNew::markRowStarts(){
      */
     lasty=leftsorted[0]->y();
     lastx=leftsorted[0]->x();
-    int rowcount=0, skipcount=0;
+    unsigned int rowcount=0, skipcount=0;
     for(RomBitItem *bit: leftsorted){
         if(qFabs(bit->y()-lasty)<shorthopthreshold  //Small Y change.
             //|| (qFabs(bit->x()-lastx)<1)          //Exactly vertical in X.

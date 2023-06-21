@@ -805,7 +805,7 @@ QLineF MaskRomTool::lineFromLineItem(QGraphicsLineItem *a){
 //Returns the collision point of two lines, if one exists.
 QPointF MaskRomTool::bitLocation(QGraphicsLineItem *a, QGraphicsLineItem *b){
     QPointF toret;
-    QLineF::IntersectionType type;
+    //QLineF::IntersectionType type;
     lineFromLineItem(a).intersects(lineFromLineItem(b), &toret);
 
     return toret;
