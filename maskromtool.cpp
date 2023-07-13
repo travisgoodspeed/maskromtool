@@ -984,7 +984,8 @@ void MaskRomTool::markBits(){
     //Show the bits if--and only if--we've set that style.
     setBitsVisible(bitswerevisible);
 
-    qDebug()<<"Marked"<<bitcount<<"bits.";
+    if(verbose)
+        qDebug()<<"Marked"<<bitcount<<"bits.";
     lastbitcount=bitcount;
 }
 
