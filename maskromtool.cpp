@@ -1195,5 +1195,7 @@ void MaskRomTool::importJSON(QJsonObject o){
 
 void MaskRomTool::on_actionSecond_triggered(){
     second.show();
+    //Resize is necessary to show the scrollbars properly.
+    second.resize(1024,768);
 }
 
