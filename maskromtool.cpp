@@ -1,5 +1,6 @@
 #include "maskromtool.h"
 #include "maskromtool_autogen/include/ui_maskromtool.h"
+#include "romsecond.h"
 #include "romlineitem.h"
 #include "rombititem.h"
 #include "rombitfix.h"
@@ -54,6 +55,8 @@ MaskRomTool::MaskRomTool(QWidget *parent)
      * if you are looking for the CLI argument parsing.
      */
 
+
+    //Set up the main window.
     ui->setupUi(this);
     scene=new RomScene();
     scene->maskRomTool=this;
@@ -66,6 +69,9 @@ MaskRomTool::MaskRomTool(QWidget *parent)
     aligner=new RomAlignerNew();
     addSampler(new RomBitSampler());
     addSampler(new RomBitSamplerWide());
+
+    //Set up the second view.
+    second.view->setScene(scene);
 
     //We might enable OpenGL here, after it stabilizes.
 }
@@ -225,10 +231,11 @@ void MaskRomTool::nextMode(){
 
 void MaskRomTool::on_actionPhotograph_triggered(){
     static QBrush whitebrush(Qt::GlobalColor::white, Qt::SolidPattern);
-    if(ui->actionPhotograph->isChecked())
-        ui->graphicsView->setBackgroundBrush(background);
-    else
-        ui->graphicsView->setBackgroundBrush(whitebrush);
+    if(ui->actionPhotograph->isChecked()){
+        view->setBackgroundBrush(background);
+    }else{
+        view->setBackgroundBrush(whitebrush);
+    }
 }
 void MaskRomTool::on_actionRowsColumns_triggered(){
     setLinesVisible(ui->actionRowsColumns->isChecked());
@@ -725,7 +732,8 @@ void MaskRomTool::fileOpen(QString filename){
 #endif
 
         //We load the image as a background, so it's not really a part of the scene.
-        qDebug()<<"Loading background image: "<<imagefilename;
+        if(verbose)
+            qDebug()<<"Loading background image: "<<imagefilename;
         background=QImage(imagefilename);
         if(background.isNull()){
             QMessageBox msgBox;
@@ -734,12 +742,16 @@ void MaskRomTool::fileOpen(QString filename){
             return;
         }
         setWindowTitle("MaskRomTool "+imagefilename);
+        second.setWindowTitle("Second view of "+imagefilename);
 
-        ui->graphicsView->setBackgroundBrush(background);
-        ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground);
+        view->setBackgroundBrush(background);
+        view->setCacheMode(QGraphicsView::CacheBackground);
+        second.view->setBackgroundBrush(background);
+        second.view->setCacheMode(QGraphicsView::CacheBackground);
 
         //With the view the same as the image dimensions, we get fancy scrollbars and stuff.
-        ui->graphicsView->setSceneRect(0,0,background.width(), background.height());
+        view->setSceneRect(0,0,background.width(), background.height());
+        second.view->setSceneRect(0,0,background.width(), background.height());
 
         qDebug()<<"Loaded background image of "
                <<background.width()<<","<<background.height();
@@ -1179,4 +1191,9 @@ void MaskRomTool::importJSON(QJsonObject o){
     setBitSize(bitSize);
 }
 
+
+
+void MaskRomTool::on_actionSecond_triggered(){
+    second.show();
+}
 

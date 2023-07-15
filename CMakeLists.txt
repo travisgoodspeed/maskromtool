@@ -37,6 +37,7 @@ set(PROJECT_SOURCES
         main.cpp
         maskromtool.cpp maskromtool.h maskromtool.ui
         romview.h romview.cpp
+        romsecond.h romsecond.cpp romsecond.ui
         romscene.h romscene.cpp
         romlineitem.h romlineitem.cpp
         rombititem.h rombititem.cpp

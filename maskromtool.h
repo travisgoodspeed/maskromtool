@@ -14,6 +14,7 @@
 #include "romaligner.h"
 #include "rombitsampler.h"
 #include "romruledialog.h"
+#include "romsecond.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -130,6 +131,7 @@ public:
     RomThresholdDialog thresholdDialog;
     RomAlignDialog alignDialog;
     RomRuleDialog violationDialog;
+    RomSecond second;
 
     //Selectable Strategies
     RomAligner *aligner=0;
@@ -196,6 +198,8 @@ private slots:
     void on_actionClearViolations_triggered();
 
     void on_actionRunAllDRC_triggered();
+
+    void on_actionSecond_triggered();
 
 private:
     Ui::MaskRomTool *ui;

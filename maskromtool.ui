@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>24</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -83,6 +83,7 @@
     <addaction name="asciiButton"/>
     <addaction name="actionViolationsDialog"/>
     <addaction name="actionOpenGL"/>
+    <addaction name="actionSecond"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -381,6 +382,11 @@
   <action name="actionEvaluate_All_Rules">
    <property name="text">
     <string>Evaluate All Rules (V)</string>
+   </property>
+  </action>
+  <action name="actionSecond">
+   <property name="text">
+    <string>Second View</string>
    </property>
   </action>
  </widget>
