@@ -21,6 +21,15 @@ completed dump of the ROM from the MYK82 chip in a Fortezza Card.
 This is the successor to the Clipper Chip, and the repository includes
 not just all ROM bits but also reshoots for error correction.
 
+## Changelog
+
+Next Release -- Secondary display support.  Tall sampling.  Fixes
+crash when hitting `V` after deleting a line.
+
+2023-06-17 -- Added macOS on X86_64 and ARM64.
+
+2023-05-30 -- First Windows release.
+
 ## Building
 
 This tool works in Windows, Linux and MacOS, using QT6 with the
@@ -158,7 +167,7 @@ parameters, and the `--exit` switch if you'd prefer the GUI not stay
 open for interactive use.
 
 ```
-% maskromtool --help
+dell% maskromtool --help
 Usage: maskromtool [options] image json
 Mask ROM Tool
 
@@ -166,10 +175,13 @@ Options:
   -h, --help                 Displays help on commandline options.
   --help-all                 Displays help including Qt specific options.
   -v, --version              Displays version information.
+  -V, --verbose              Print verbose debugging messages.
+  --stress                   Stress test bit marking.
   -e, --exit                 Exit after processing arguments.
   --opengl                   Enable OpenGL.  (Not yet stable.)
   -d, --drc                  Run default Design Rule Checks.
   -D, --DRC                  Run all Design Rule Checks.
+  --sampler <Default>        Bit Sampling Algorithm.
   --diff-ascii <file>        Compares against ASCII art, for finding errors.
   -a, --export-ascii <file>  Export ASCII bits for use in ZorRom.
   --export-csv <file>        Export CSV bits for use in Matlab or Excel.
@@ -242,7 +254,8 @@ work just fine.
 For diffusion ROMs whose bits have better a little too delayered, the
 center of the bit does not have a unique color, but it is surrounded
 by slightly darker lines.  The `Wide` algorithm will take the darkest
-color in each channel after sampling its size worth of bits in width.
+color in each channel after sampling its size worth of bits in width,
+and `Tall` does the same but vertically.
 
 ![Diffusion ROM Bits](screenshots/diffusion.png)
 
