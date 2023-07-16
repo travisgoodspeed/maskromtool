@@ -10,6 +10,7 @@
 
 #include "romalignernew.h"
 #include "rombitsamplerwide.h"
+#include "rombitsamplertall.h"
 
 //Decoders should be abstracted more, and menus auto-generated.
 #include "romdecoderascii.h"
@@ -69,6 +70,7 @@ MaskRomTool::MaskRomTool(QWidget *parent)
     aligner=new RomAlignerNew();
     addSampler(new RomBitSampler());
     addSampler(new RomBitSamplerWide());
+    addSampler(new RomBitSamplerTall());
 
     //Set up the second view.
     second.view->setScene(scene);

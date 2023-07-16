@@ -1,21 +1,21 @@
-#include "rombitsamplerwide.h"
+#include "rombitsamplertall.h"
 #include <QDebug>
 
-RomBitSamplerWide::RomBitSamplerWide(){
-    name="Wide";
+RomBitSamplerTall::RomBitSamplerTall(){
+    name="Tall";
 }
 
 
-QRgb RomBitSamplerWide::bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos){
+QRgb RomBitSamplerTall::bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos){
     //Start with the brightest, then fall to the darkest.
     uint16_t r=0xff,g=0xff,b=0xff; //Samples from each pixel.
     uint16_t R=0xff,G=0xff,B=0xff; //Darkest sample we've seen yet.
 
     QPoint point=pos.toPoint();
-    int xpos=point.x();
+    int ypos=point.y();
 
-    for(int x=xpos-size/2; x<xpos+size/2; x++){
-        point.setX(x);
+    for(int y=ypos-size/2; y<ypos+size/2; y++){
+        point.setY(y);
         QRgb rgb=bg.pixel(point);
 
         //Extract the bits.

@@ -67,6 +67,7 @@ set(PROJECT_SOURCES
 #Sampler Strategies
         rombitsampler.h rombitsampler.cpp
         rombitsamplerwide.h rombitsamplerwide.cpp
+        rombitsamplertall.h rombitsamplertall.cpp
 #        ${TS_FILES}
         ${app_icon_macos}
         ${app_icon_resource_windows}
