@@ -4,6 +4,7 @@
 #include <QDialog>
 
 class RomView;
+class MaskRomTool;
 
 namespace Ui {
 class RomSecond;
@@ -17,7 +18,11 @@ public:
     explicit RomSecond(QWidget *parent = nullptr);
     ~RomSecond();
     //The view
-    RomView* view;
+    RomView* view=0;
+
+    //Needed to forward keypress events to main window.
+    MaskRomTool* mrt=0;
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     Ui::RomSecond *ui;

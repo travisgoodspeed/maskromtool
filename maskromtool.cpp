@@ -1194,8 +1194,8 @@ void MaskRomTool::importJSON(QJsonObject o){
 
 
 void MaskRomTool::on_actionSecond_triggered(){
-    second.show();
-    //Resize is necessary to show the scrollbars properly.
-    second.resize(1024,768);
+    second.mrt=this;         //Apply a backreference for sharing keystrokes.
+    second.show();           //Show the window.
+    second.resize(1024,768); //Resizing it makes scrollbars visible.
 }
 
