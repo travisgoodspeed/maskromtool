@@ -576,11 +576,8 @@ void MaskRomTool::on_asciiButton_triggered(){
 
 //Pop a dialog to apply the threshold.
 void MaskRomTool::on_thresholdButton_triggered(){
-    qDebug()<<"Setting MRT.";
     thresholdDialog.setMaskRomTool(this);
-    qDebug()<<"Showing";
     thresholdDialog.show();
-    qDebug()<<"Showing histogram.";
     updateThresholdHistogram();
 }
 

@@ -23,7 +23,7 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Changelog
 
-Next Release -- Secondary display support.  Tall sampling.  Fixes
+2023-07-20 -- Secondary display support.  Tall sampling.  Fixes
 crash when hitting `V` after deleting a line.
 
 2023-06-17 -- Added macOS on X86_64 and ARM64.
