@@ -34,6 +34,10 @@ public:
     void setFocusItem(QGraphicsItem* item);
     MaskRomTool* maskRomTool=0;
 
+    //Reasonable defaults, adjustable when background image is set.
+    qreal linesizex=10000;
+    qreal linesizey=10000;
+
 private:
     bool crosshairVisible=true;
     QGraphicsItem* focusitem=0;
@@ -43,6 +47,8 @@ private:
     qreal rowAngle=180, colAngle=90;
     //Updates the crosshairs.
     void updateCrosshairs(bool dragging=false);
+
+
 };
 
 #endif // ROMSCENE_H

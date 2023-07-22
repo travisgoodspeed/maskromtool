@@ -743,6 +743,9 @@ void MaskRomTool::fileOpen(QString filename){
             msgBox.exec();
             return;
         }
+        //Adjust the crosshair sizes in the scene.
+        scene->linesizex=background.height();
+        scene->linesizey=background.width();
         setWindowTitle("MaskRomTool "+imagefilename);
         second.setWindowTitle("Second view of "+imagefilename);
 

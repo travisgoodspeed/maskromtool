@@ -4,7 +4,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QtDebug>
 
-
 RomScene::RomScene(QObject *parent)
     : QGraphicsScene{parent}
 {
@@ -45,10 +44,9 @@ void RomScene::updateCrosshairs(bool dragging){
      * row or column.  Nifty, huh?
      */
 
-
-    //First, the horizontal line.
+    //The horizontal line.
     xline.setPos(scenepos.x(), scenepos.y());
-    xline.setLine(-10000,0,10000,0);
+    xline.setLine(-linesizex,0,linesizex,0);
     QLineF l=xline.line();
     l.setAngle(rowAngle);
     xline.setLine(l);
@@ -60,9 +58,9 @@ void RomScene::updateCrosshairs(bool dragging){
     if(!dragging)
         xline2.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
 
-    //Then, the vertical line.
+    //The vertical line.
     yline.setPos(scenepos.x(), scenepos.y());
-    yline.setLine(0,-10000,0,10000);
+    yline.setLine(0,-linesizey,0,linesizey);
     l=xline.line();
     l.setAngle(colAngle);
     yline.setLine(l);
