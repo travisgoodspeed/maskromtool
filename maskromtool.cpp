@@ -131,7 +131,10 @@ void MaskRomTool::enableOpenGL(unsigned int antialiasing){
         format.setSamples(antialiasing);
         gl->setFormat(format);
     }
+    gl->setMouseTracking(true); //Required to track all mouse clicks.
     view->setViewport(gl);
+
+    second.enableOpenGL(antialiasing);
 
     //One way street.
     ui->actionOpenGL->setEnabled(false);

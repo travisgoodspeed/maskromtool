@@ -23,6 +23,8 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Changelog
 
+Upcoming -- OpenGL is now functional.
+
 2023-07-20 -- Secondary display support.  Tall sampling.  Fixes
 crash when hitting `V` after deleting a line.
 

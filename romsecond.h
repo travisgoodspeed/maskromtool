@@ -24,6 +24,9 @@ public:
     MaskRomTool* mrt=0;
     void keyPressEvent(QKeyEvent *event);
 
+    //Only call this from the matching function in MRT.
+    void enableOpenGL(unsigned int antialiasing);
+
 private:
     Ui::RomSecond *ui;
 };
