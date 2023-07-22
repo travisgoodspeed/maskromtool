@@ -23,7 +23,7 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Changelog
 
-Upcoming -- OpenGL is now functional.
+Upcoming -- OpenGL is now functional.  GatoROM included for bit decoding.
 
 2023-07-20 -- Secondary display support.  Tall sampling.  Fixes
 crash when hitting `V` after deleting a line.
@@ -312,6 +312,12 @@ ROMs](http://adamsblog.rfidiot.org/2013/01/fun-with-masked-roms.html)
 for more details on the format.
 
 Pull requests for new export formats are more than welcome.
+
+## Included Tools
+
+[GatoROM](GATOREADME.md) is included as a command line decoder and
+solver for bit arrangements.  Please see its own README file for
+documentation.
 
 ## Related Tools
 
