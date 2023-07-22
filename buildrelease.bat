@@ -3,7 +3,7 @@ rmdir /s /q build
 rmdir /s /q Release
 
 REM Import the Qt and VS2022 paths.
-set PATH=C:\Qt\Tools\CMake_64\bin;C:\Qt\6.5.1\msvc2019_64\bin;%PATH%
+set PATH=C:\Qt\Tools\CMake_64\bin;C:\Qt\6.5.2\msvc2019_64\bin;%PATH%
 REM "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsMSBuildCmd"
 
