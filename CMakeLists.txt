@@ -106,3 +106,32 @@ endif()
 qt_finalize_executable(maskromtool)
 # Install targets in relation to ${CMAKE_INSTALL_PREFIX}/
 install(TARGETS maskromtool DESTINATION bin)
+
+
+
+
+add_executable(gatorom
+  # Base Class
+  gatorom.h gatorom.cpp
+  # Solver and strategies.
+  gatosolver.h gatosolver.cpp
+  gatograderbytes.h gatograderbytes.cpp
+  gatograderstring.h gatograderstring.cpp
+  # Decoders that are new to GatoRom.
+  gatodecoderinfo.h gatodecoderinfo.cpp  # Just info, no details.
+  gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder
+  gatodecodermsp430.h gatodecodermsp430.cpp # MSP430 ROM
+  gatodecodertlcsfont.h gatodecodertlcsfont.cpp # TMP47C434N Font ROM
+  # Decoder named after Zorrom strategies.
+  gatodecodercolsdownr.h gatodecodercolsdownr.cpp   # Top-to-bottom then left to right, 8-bits.
+  gatodecodercolsdownl.h gatodecodercolsdownl.cpp
+  gatodecodercolsleft.h gatodecodercolsleft.cpp     # Left to right, then top to bottom, 8-bits.
+  gatodecodercolsright.h gatodecodercolsright.cpp
+  gatodecodersqueezelr.h gatodecodersqueezelr.cpp   # Even bits from left, odd bits from right.
+  # CLI
+  gatomain.cpp
+)
+target_link_libraries(gatorom Qt${QT_VERSION_MAJOR}::Core)
+
+install(TARGETS gatorom
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
