@@ -278,6 +278,9 @@ definitions thoroughly.
 
 ## ROM Decoders
 
+Many of these will soon be rewritten now that [GatoROM](GATOREADME.md)
+has been linked into the executable.
+
 **ASCII** exports for
 [Bitviewer](https://github.com/SiliconAnalysis/bitviewer) and
 [ZorRom](https://github.com/SiliconAnalysis/zorrom).  If your chip is

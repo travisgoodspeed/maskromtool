@@ -32,9 +32,31 @@ set_source_files_properties(${app_icon_macos} PROPERTIES
 set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/maskromtool.rc")
 
 
+# Sources of the GatoROM library, but not its main.
+set(GATOROM_SOURCES
+    # Base Class
+    gatorom.h gatorom.cpp
+    # Solver and strategies.
+    gatosolver.h gatosolver.cpp
+    gatograderbytes.h gatograderbytes.cpp
+    gatograderstring.h gatograderstring.cpp
+    # Decoders that are new to GatoRom.
+    gatodecoderinfo.h gatodecoderinfo.cpp  # Just info, no details.
+    gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder
+    gatodecodermsp430.h gatodecodermsp430.cpp # MSP430 ROM
+    gatodecodertlcsfont.h gatodecodertlcsfont.cpp # TMP47C434N Font ROM
+    # Decoder named after Zorrom strategies.
+    gatodecodercolsdownr.h gatodecodercolsdownr.cpp   # Top-to-bottom then left to right, 8-bits.
+    gatodecodercolsdownl.h gatodecodercolsdownl.cpp
+    gatodecodercolsleft.h gatodecodercolsleft.cpp     # Left to right, then top to bottom, 8-bits.
+    gatodecodercolsright.h gatodecodercolsright.cpp
+    gatodecodersqueezelr.h gatodecodersqueezelr.cpp   # Even bits from left, odd bits from right.
+)
 
-set(PROJECT_SOURCES
+set(MRT_SOURCES
+# Handles CLI args.
         main.cpp
+# Main classes.
         maskromtool.cpp maskromtool.h maskromtool.ui
         romview.h romview.cpp
         romsecond.h romsecond.cpp romsecond.ui
@@ -68,6 +90,8 @@ set(PROJECT_SOURCES
         rombitsampler.h rombitsampler.cpp
         rombitsamplerwide.h rombitsamplerwide.cpp
         rombitsamplertall.h rombitsamplertall.cpp
+# Additional libraries.
+        ${GATOROM_SOURCES}
 #        ${TS_FILES}
         ${app_icon_macos}
         ${app_icon_resource_windows}
@@ -77,7 +101,7 @@ set(PROJECT_SOURCES
 
 qt_add_executable(maskromtool
     MANUAL_FINALIZATION
-    ${PROJECT_SOURCES}
+    ${MRT_SOURCES}
 )
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
@@ -96,7 +120,7 @@ set_target_properties(maskromtool PROPERTIES
 if(WIN32)
     qt_add_executable(maskromtoolcli
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
+        ${MRT_SOURCES}
     )
     target_link_libraries(maskromtoolcli PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
     qt_finalize_executable(maskromtoolcli)
@@ -111,23 +135,7 @@ install(TARGETS maskromtool DESTINATION bin)
 
 
 add_executable(gatorom
-  # Base Class
-  gatorom.h gatorom.cpp
-  # Solver and strategies.
-  gatosolver.h gatosolver.cpp
-  gatograderbytes.h gatograderbytes.cpp
-  gatograderstring.h gatograderstring.cpp
-  # Decoders that are new to GatoRom.
-  gatodecoderinfo.h gatodecoderinfo.cpp  # Just info, no details.
-  gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder
-  gatodecodermsp430.h gatodecodermsp430.cpp # MSP430 ROM
-  gatodecodertlcsfont.h gatodecodertlcsfont.cpp # TMP47C434N Font ROM
-  # Decoder named after Zorrom strategies.
-  gatodecodercolsdownr.h gatodecodercolsdownr.cpp   # Top-to-bottom then left to right, 8-bits.
-  gatodecodercolsdownl.h gatodecodercolsdownl.cpp
-  gatodecodercolsleft.h gatodecodercolsleft.cpp     # Left to right, then top to bottom, 8-bits.
-  gatodecodercolsright.h gatodecodercolsright.cpp
-  gatodecodersqueezelr.h gatodecodersqueezelr.cpp   # Even bits from left, odd bits from right.
+  ${GATOROM_SOURCES}
   # CLI
   gatomain.cpp
 )

@@ -18,14 +18,13 @@ GatoGraderString::GatoGraderString(QString setting){
     qDebug()<<"Solving for a string of:"<<setting;
 
     for(int i=0; i<settings.length(); i++){
-        ba.append(settings[i].toLong(&okay,16));
+        long l=settings[i].toLong(&okay,16);
+        ba.append((char) l);
         if(!okay){
-            qDebug()<<"Invalid hex byte:"<<settings[i];
-        }else{
-
+            qDebug()<<"Invalid hex byte:"<<l;
         }
     }
-    target=QByteArrayView(ba);
+    target=ba;
 }
 
 /* 100 if we contain the string.
@@ -34,7 +33,6 @@ GatoGraderString::GatoGraderString(QString setting){
  * Middle grounds would be useful here.
  */
 int GatoGraderString::grade(QByteArray ba){
-    qDebug()<<"Hunting for"<<target.length()<<"bytes";
     if(ba.contains(target))
         return 100;
     return 0;

@@ -17,7 +17,7 @@ public:
     GatoGraderString(QString setting);
     int grade(QByteArray ba);
 private:
-    QByteArrayView target; //String that we're hunting for.
+    QByteArray target; //String that we're hunting for.
 };
 
 #endif // GATOGRADERSTRING_H

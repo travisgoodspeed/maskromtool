@@ -26,6 +26,7 @@
 
 //Graders for the solver.
 #include "gatograderbytes.h"
+#include "gatograderstring.h"
 
 
 /* This is a quick CLI wrapper for GatoROM, which you might run on textfiles
@@ -143,11 +144,17 @@ int main(int argc, char *argv[]) {
                                    );
     parser.addOption(solveOption);
     QCommandLineOption bytesOption(QStringList()<<"solve-bytes",
-                                   "Bytes as a hint to the solver.",
+                                   "Bytes as a hint to the solver. 0:31,1:fe,2:ff",
                                    "bytes",
                                    ""
                                    );
     parser.addOption(bytesOption);
+    QCommandLineOption stringOption(QStringList()<<"solve-string",
+                                   "Byte string as a hint to the solver. 31,fe,ff",
+                                   "bytes",
+                                   ""
+                                   );
+    parser.addOption(stringOption);
 
     
     //Actually read the arguments.
@@ -255,10 +262,14 @@ int main(int argc, char *argv[]) {
             GatoGrader *grader=0;
 
             QString bytes=parser.value(bytesOption);
+            QString string=parser.value(stringOption);
+
             if(bytes.length()>0){
                 grader=new GatoGraderBytes(bytes);
+            }else if(string.length()>0){
+                grader=new GatoGraderString(string);
             }else{
-                qDebug()<<"No solver criteria has been specified.  Try --solve-bytes.";
+                qDebug()<<"No solver criteria has been specified.  Try --solve-bytes or --solve-string.";
                 return 1;
             }
 
