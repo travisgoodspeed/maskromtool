@@ -15,14 +15,13 @@ GatoGraderString::GatoGraderString(QString setting){
     QByteArray ba;
     bool okay;
 
-    qDebug()<<"Solving for a string of:"<<setting;
-
     for(int i=0; i<settings.length(); i++){
         long l=settings[i].toLong(&okay,16);
-        ba.append((char) l);
-        if(!okay){
+        if(okay)
+            ba.append((char) l);
+        else
             qDebug()<<"Invalid hex byte:"<<l;
-        }
+
     }
     target=ba;
 }
