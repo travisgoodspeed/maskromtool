@@ -728,8 +728,10 @@ void MaskRomTool::fileOpen(QString filename){
 
         //This is necessary in QT6, but isn't defined in QT5.
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        qDebug()<<"Allocation limit was "<<QImageReader::allocationLimit()<<"MB";
-        qDebug()<<"Disabling allocation limit.";
+        if(verbose){
+            qDebug()<<"Allocation limit was "<<QImageReader::allocationLimit()<<"MB";
+            qDebug()<<"Disabling allocation limit.";
+        }
         QImageReader::setAllocationLimit(0);
 #endif
 
@@ -758,7 +760,8 @@ void MaskRomTool::fileOpen(QString filename){
         view->setSceneRect(0,0,background.width(), background.height());
         second.view->setSceneRect(0,0,background.width(), background.height());
 
-        qDebug()<<"Loaded background image of "
+        if(verbose)
+            qDebug()<<"Loaded background image of "
                <<background.width()<<","<<background.height();
         progress.close();
     }
@@ -771,7 +774,8 @@ void MaskRomTool::fileOpen(QString filename){
         file.setFileName(filename);
 
     if(!file.open(QIODevice::ReadOnly)){
-        qDebug() << "Json file couldn't be opened/found.  Starting from scratch.";
+        if(verbose)
+            qDebug() << "Json file couldn't be opened/found.  Starting from scratch.";
         return;
     }
 
@@ -1186,8 +1190,8 @@ void MaskRomTool::importJSON(QJsonObject o){
         progress.setValue(count++);
     }
 
-
-    qDebug()<<"Done loading, now marking bits.";
+    if(verbose)
+        qDebug()<<"Done loading, now marking bits.";
 
     progress.close();
 
