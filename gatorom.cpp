@@ -268,7 +268,7 @@ void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
     uint32_t outsize=(rows>cols?rows:cols);
     Q_ASSERT(outsize>0);
 
-    qDebug()<<"Allocating "<<outsize<<"rows and columns";
+    //qDebug()<<"Allocating "<<outsize<<"rows and columns";
 
     /* The output matrix is large enough to fit the rotated or unrotated
      */

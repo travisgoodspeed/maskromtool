@@ -25,7 +25,8 @@ dell%
 ```
 
 In GatoRom, these raw binaries are also supported.  Simply pass
-`--seanriddle 128` to explain the file format from the CLI, or use the
-`GatoROM(QByteArray input, uint32_t width)` constructor in C++.
+`--seanriddle 128` to explain the 128-bit wide raw binary format to
+the CLI, or use the `GatoROM(QByteArray input, uint32_t width)`
+constructor in C++.
 
 --Travis
