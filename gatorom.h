@@ -40,7 +40,11 @@ public:
 //Represents an entire ROM, both input and output.
 class GatoROM{
 public:
+    //Initiates around a standard ASCII art of the bits.
     GatoROM(QString input);
+    //Initiates around a raw binary in Sean Riddle's style.
+    GatoROM(QByteArray input, uint32_t width);
+
 
     //Before any processing at all.
     GatoBit*** inputbits=0;
@@ -72,6 +76,9 @@ public:
 
     int zorrommode=0; //Compatibility with Zorrom's bugs.
 private:
+    //Loads ASCII art text into the structure.
+    void loadFromString(QString str);
+    //Allocates the input size, plus a little extra for rotations.
     void setInputSize(const uint32_t rows, const uint32_t cols);
     GatoBit **input=0;  //2D Array of input bits, rows then cols.
     int flippedx=0;     //Is X flipped?

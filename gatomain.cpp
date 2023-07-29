@@ -79,6 +79,13 @@ int main(int argc, char *argv[]) {
                                     );
     parser.addOption(randomOption);
 
+    //Randomizing without an input file.
+    QCommandLineOption seanriddleOption(QStringList()<<"rawwidth"<<"seanriddle",
+                                    "Width of a raw binary input, in Sean Riddle's style.",
+                                    "width"
+                                    );
+    parser.addOption(seanriddleOption);
+
 
     //Info about the ROM.
     QCommandLineOption infoOption(QStringList()<<"I"<<"info",
@@ -164,13 +171,24 @@ int main(int argc, char *argv[]) {
     GatoROM *gr=0;
 
     const QStringList args = parser.positionalArguments();
-    if(args.count()==1){
+
+    if(args.count()==1 && parser.isSet(seanriddleOption)){  //Raw binary mode.
+        QFile input(args[0]);
+        input.open(QFile::ReadOnly);
+        byteArray=input.readAll();
+        bool okay=false;
+        gr=new GatoROM(byteArray,parser.value(seanriddleOption).toInt(&okay));
+        if(!okay){
+            qDebug()<<"Not a valid row length:"<<parser.value(seanriddleOption);
+            exit(1);
+        }
+    }else if(args.count()==1){                              //Main ASCII art mode.
         //Open the file.
         QFile input(args[0]);
         input.open(QFile::ReadOnly);
         byteArray=input.readAll();
         gr=new GatoROM(QString(byteArray));
-    }else if(parser.isSet(randomOption)){
+    }else if(parser.isSet(randomOption)){                   //Fake a random ROM.
         //Initialize a random generator.
         QRandomGenerator *rng=QRandomGenerator::global();
         int rows=16*(rng->generate()%16);
@@ -194,6 +212,7 @@ int main(int argc, char *argv[]) {
     }
 
 
+    //However we've opened a rom, now we can operate on it.
     if(gr){
         //Compatibility.
         if(parser.isSet(zorromOption))

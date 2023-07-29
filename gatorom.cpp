@@ -25,8 +25,11 @@ QString GatoROM::description(){
 }
 
 
-//Instantiates the library around an ASCII input string.
+//Initiates around a standard ASCII art of the bits.
 GatoROM::GatoROM(QString input){
+    loadFromString(input);
+}
+void GatoROM::loadFromString(QString input){
     uint32_t rows=0, cols=0;
     uint32_t thisrowlen=0;
 
@@ -51,20 +54,22 @@ GatoROM::GatoROM(QString input){
         }
     }
 
-    //qDebug()<<"Imported size is"<<rows<<"x"<<cols;
-
     //This allocates the input buffer, and overallocates the output buffer.
     setInputSize(rows, cols);
 
     //Now we populate them.
     uint32_t row=0, col=0;
+    Q_ASSERT(inputbits);
     for(int i=0; i<input.length(); i++){
         //qDebug()<<"Setting row "<<row<<", col"<<col<<"to value"<<input.at(i).toLatin1();
+
         switch(input.at(i).toLatin1()){
         case '1':
+            Q_ASSERT(inputbits[row]);
             inputbits[row][col++]=new GatoBit(true);
             break;
         case '0':
+            Q_ASSERT(inputbits[row]);
             inputbits[row][col++]=new GatoBit(false);
             break;
             //In the default case, we don't increment the count.
@@ -78,6 +83,29 @@ GatoROM::GatoROM(QString input){
 
     //Begin with a basic output buffer.
     reset();
+}
+
+//Initiates around a raw binary in Sean Riddle's style.
+GatoROM::GatoROM(QByteArray input, uint32_t width){
+    /* Sean Riddle shares his dumps in binary, with the most
+     * significant bit first.  They don't describe their own width,
+     * so it's necessary to supply that as an extra parameter.
+     */
+
+    QString result="";
+
+    int bitcount=0;
+    for(int i=0; i<input.length(); i++){
+        for(int bitmask=0x80; bitmask>0; bitmask>>=1){
+            //Append the bit.
+            result.append(input[i]&bitmask?"1":"0");
+            //Is it the end of a row?
+            if(++bitcount%width==0)
+                result.append("\n");
+        }
+    }
+
+    loadFromString(result);
 }
 
 //Decodes the ROM using the configured decoder.
@@ -235,9 +263,12 @@ QString GatoROM::exportString(bool pretty){
 //Allocates the input buffer, given known dimensions.
 void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
     if(inputbits)
-        qDebug()<<"WARNING: GatoRom input buffer is not empty.";
+        qDebug()<<"WARNING: GatoRom input buffer is not empty.  Maybe leaking memory?";
 
     uint32_t outsize=(rows>cols?rows:cols);
+    Q_ASSERT(outsize>0);
+
+    qDebug()<<"Allocating "<<outsize<<"rows and columns";
 
     /* The output matrix is large enough to fit the rotated or unrotated
      */
