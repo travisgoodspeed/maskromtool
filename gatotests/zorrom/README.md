@@ -5,7 +5,7 @@ John McMaster pioneered open source decoding of mask ROM bits with
 shame not to be compatible with it.
 
 This collection was produced by first randomizing a bitstream in
-GatoROM, then decoding with an intentionally bad wildcard in ZorROM so
+Gatorom, then decoding with an intentionally bad wildcard in Zorrom so
 that all potential decodings were created.
 
 ```
@@ -19,8 +19,11 @@ dell% ./solver.py --bytes 0x00 --all ascii.txt out
 dell%
 ```
 
-Ideally we can decode all of these.  Until then, we'll treat the gaps
-as warnings rather than errors so that we know what's missing.
+The `Makefile` in this directory solves each and every one of these,
+with one slight variation: Zorrom flips the image before rotating it,
+while Gatorom usually performs rotations before flips.  To account for
+this, either add 180 degrees to your rotation or pass the `-z` flag to
+enable Zorrom compatibility.
 
 --Travis
 
