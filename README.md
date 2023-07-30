@@ -137,7 +137,7 @@ SHIFT+A -- Force a bit's ambiguity.  (Again to flip.)
 
 M       -- Remark all of the bits.
 V       -- Run the Design Rule Checks.
-SHIFT+V -- Run all the Design Rule Checks.
+SHIFT+V -- Clear the DRC violations.
 ```
 
 When you first begin to mark bits, the software won't yet know the

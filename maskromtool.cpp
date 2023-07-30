@@ -329,7 +329,10 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         }
         break;
     case Qt::Key_V: //DRC
-        runDRC(event->modifiers()&Qt::SHIFT);
+        if(!(event->modifiers()&Qt::SHIFT))
+            runDRC(false);  //Just run the normal DRC, no key combo for the long one.
+        else
+            clearViolations(); //Clear out the violations for now.
         break;
 
     //Modify the focus object.
