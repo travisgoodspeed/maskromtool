@@ -34,46 +34,69 @@ Usage: gatorom [options] bitstream
 Gato ROM: A Decoder for Mask ROM Bits
 
 Options:
-  -h, --help               Displays help on commandline options.
-  --help-all               Displays help including Qt specific options.
-  -v, --version            Displays version information.
-  -r, --rotate <degrees>   Rotates the image in multiples of 90 degrees.
-  --flipx                  Flips the bits along the X axis.
-  --flipy                  Flips the bits along the Y axis.
-  -i, --invert             Inverts the bits.
-  -o, --output <out.bin>   Output file.
-  --random                 Randomize a ROM.
-  -I, --info               Info about input.
-  --decode-arm6            Decodes the ROM as ARM6 (MYK82).
-  --decode-msp430          Decodes the ROM as MSP430. (Broken.)
-  --decode-tlcs47font      Decodes as a TMP47C434N Font.
-  --decode-cols-downr      Decodes the ROM first down then right like a
-                           Gameboy.
-  --decode-cols-downl      Decodes the ROM first down then left.
-  --decode-cols-left       Decodes the ROM left-to-right.
-  --decode-cols-right      Decodes the ROM right-to-left.
-  --decode-squeeze-lr      Decodes even bits from the left, odd bits from right
-                           like in the TMS32C15.
-  -z, --zorrom             Zorrom compatibility mode, with flipx before
-                           rotation.
-  -a, --print-bits         Prints ASCII art of the transformed bits.
-  -A, --print-pretty-bits  Prints ASCII art with spaces.
+  -h, --help                        Displays help on commandline options.
+  --help-all                        Displays help including Qt specific
+                                    options.
+  -v, --version                     Displays version information.
+  -r, --rotate <degrees>            Rotates the image in multiples of 90
+                                    degrees.
+  --flipx                           Flips the bits along the X axis.
+  --flipy                           Flips the bits along the Y axis.
+  -i, --invert                      Inverts the bits.
+  -o, --output <out.bin>            Output file.
+  --random                          Randomize a ROM.
+  --rawwidth, --seanriddle <width>  Width of a raw binary input, in Sean
+                                    Riddle's style.
+  -I, --info                        Info about input.
+  --decode-arm6                     Decodes the ROM as ARM6 (MYK82).
+  --decode-msp430                   Decodes the ROM as MSP430. (Broken.)
+  --decode-tlcs47font               Decodes as a TMP47C434N Font.
+  --decode-cols-downr               Decodes the ROM first down then right like
+                                    a Gameboy.
+  --decode-cols-downl               Decodes the ROM first down then left.
+  --decode-cols-left                Decodes the ROM left-to-right.
+  --decode-cols-right               Decodes the ROM right-to-left.
+  --decode-squeeze-lr               Decodes even bits from the left, odd bits
+                                    from right like in the TMS32C15.
+  -z, --zorrom                      Zorrom compatibility mode, with flipx
+                                    before rotation.
+  -a, --print-bits                  Prints ASCII art of the transformed bits.
+  -A, --print-pretty-bits           Prints ASCII art with spaces.
+  --solve                           Solves for an unknown format.
+  --solve-bytes <bytes>             Bytes as a hint to the solver.
+                                    0:31,1:fe,2:ff
+  --solve-string <bytes>            Byte string as a hint to the solver.
+                                    31,fe,ff
 
 Arguments:
-  bitstream                ASCII art of ROM to decode.
+  bitstream                         ASCII art of ROM to decode.
 ```
 
 
 ## Specific Examples
 
-These are examples from specific chips.  I should probably add
-thumbnails here, to make clear what the rotation is.
+These are examples from specific chips, and the rotation might vary by
+your photography.  Plenty more examples are in the Makefiles inside
+[gatotests/](gatotests/).
 
 ```
 # Gameboy DMG_ROM requires inversion and cols-downr.
 gatorom gameboy.txt -o gameboy.bin --decode-cols-downr --flipx --invert
 # Same ROM from the solver, knowing only that the first two bytes are `0x31`,`0xfe`
 gatorom --solve --solve-bytes 0:0x31,1:0xfe gameboy.txt
+```
+
+Sean Riddle has an [excellent
+collection](https://seanriddle.com/decap.html) of ROM photographs and
+bit dumps.  He provides his raw dumps as binary bytes rather than as
+ASCII art bits, and you can use the `--seanriddle <width>` flag to
+adjust the input format.  Here's a solver solution for thge MC6805P2
+ROM in his dump of the [Milton
+Game](https://seanriddle.com/mc6805p2.html).
+
+```
+gatorom --seanriddle 256 miltonraw.bin -o solved.bin \
+        --solve --solve-bytes "0:23,1:05,2:06"
 ```
 
 ## Library Usage
@@ -104,3 +127,4 @@ Zorrom performs flips before rotation, while Gatorom rotates first
 before flips.  When flipping X, you will need to adjust your rotation
 by 180 degrees or pass the `-z` parameter to enable Zorrom
 compatibility mode.
+
