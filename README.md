@@ -23,7 +23,8 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Changelog
 
-Upcoming -- OpenGL is now functional.  GatoROM included for bit decoding.
+Upcoming -- OpenGL is now functional and default.  GatoROM included
+for bit decoding.
 
 2023-07-20 -- Secondary display support.  Tall sampling.  Fixes
 crash when hitting `V` after deleting a line.
@@ -180,7 +181,6 @@ Options:
   -V, --verbose              Print verbose debugging messages.
   --stress                   Stress test bit marking.
   -e, --exit                 Exit after processing arguments.
-  --opengl                   Enable OpenGL.  (Not yet stable.)
   -d, --drc                  Run default Design Rule Checks.
   -D, --DRC                  Run all Design Rule Checks.
   --sampler <Default>        Bit Sampling Algorithm.

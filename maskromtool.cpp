@@ -75,7 +75,8 @@ MaskRomTool::MaskRomTool(QWidget *parent)
     //Set up the second view.
     second.view->setScene(scene);
 
-    //We might enable OpenGL here, after it stabilizes.
+    //Enable OpenGL without antialiasing, now that it's stable.
+    enableOpenGL(0);
 }
 
 //Adds support for a sampler.  Does not select it.

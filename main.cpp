@@ -53,10 +53,13 @@ int main(int argc, char *argv[]){
     QCommandLineOption exitOption(QStringList() << "e" << "exit",
                                   QCoreApplication::translate("main", "Exit after processing arguments."));
     parser.addOption(exitOption);
-    // OpenGL isn't yet stable enough to be standard.
+
+
+    /* We used to have an option for OpenGL.  Deprecated now that it's default.
     QCommandLineOption openglOption(QStringList() << "opengl",
                                   QCoreApplication::translate("main", "Enable OpenGL.  (Not yet stable.)"));
     parser.addOption(openglOption);
+     */
 
     // Design Rule Check
     QCommandLineOption drcOption(QStringList() << "d" << "drc",
@@ -132,12 +135,6 @@ int main(int argc, char *argv[]){
         //Don't print anything because the function takes care of it for us.
         mrt.enableVerbose();
     }
-
-    if(parser.isSet(openglOption)){
-        qDebug()<<"Enbling OpenGL.";
-        mrt.enableOpenGL();
-    }
-
 
     //Chooses the sampling algorithm.
     if(parser.isSet(samplerOption)){
