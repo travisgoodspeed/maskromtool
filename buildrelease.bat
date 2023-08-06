@@ -22,4 +22,22 @@ echo moving the release
 move Release ..\
 cd ..
 
-echo Finishing packing Release\
+echo Finishing packing Release.  Now making installer.
+
+
+REM Including the path.
+set PATH=C:\Qt\Tools\QtInstallerFramework\4.5\bin;C:\Qt\Tools\CMake_64\bin;C:\Qt\6.5.2\msvc2019_64\bin;C:\Qt\Tools\QtInstallerFramework\4.6\bin;%PATH%
+
+REM Copying packages.
+xcopy/y/s Release\* Deployment\packages\com.maskromtool.maskromtool\data\
+
+cd Deployment
+echo Building the installer executable.
+binarycreator.exe -c config\config.xml -p packages -f MaskRomToolInstaller
+move MaskRomToolInstaller.exe maskromtool-win-x86_64.exe
+copy C:\Qt\vcredist\vcredist_msvc2019_x64.exe vcredist_msvc2019_x64.exe
+
+REM Zip the redist with the installer.
+tar -a -c -f maskrmtool-win-x86_64.zip maskromtool-win-x86_64.exe vcredist_msvc2019_x64.exe
+
+cd ..
