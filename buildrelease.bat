@@ -38,6 +38,6 @@ move MaskRomToolInstaller.exe maskromtool-win-x86_64.exe
 copy C:\Qt\vcredist\vcredist_msvc2019_x64.exe vcredist_msvc2019_x64.exe
 
 REM Zip the redist with the installer.
-tar -a -c -f maskrmtool-win-x86_64.zip maskromtool-win-x86_64.exe vcredist_msvc2019_x64.exe
+tar -a -c -f maskromtool-win-x86_64.zip maskromtool-win-x86_64.exe vcredist_msvc2019_x64.exe
 
 cd ..
