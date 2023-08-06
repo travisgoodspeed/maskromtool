@@ -40,7 +40,7 @@ public:
 private:
     GatoROM *rom;
     GatoGrader *grader;
-    GatoDecoder *decoders[8];
+    GatoDecoder *decoders[16];
 };
 
 #endif // GATOSOLVER_H

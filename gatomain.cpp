@@ -16,6 +16,7 @@
 #include "gatodecoderarm6.h"  //MYK82 Fortezza
 #include "gatodecodermsp430.h"
 #include "gatodecodertlcsfont.h"
+#include "gatodecodercolsdownlswap.h" // NEC uCOM4
 
 //Zorrom compatibility.
 #include "gatodecodercolsdownr.h"
@@ -106,6 +107,10 @@ int main(int argc, char *argv[]) {
                                   "Decodes as a TMP47C434N Font."
                                   );
     parser.addOption(tlcsfontOption);
+    QCommandLineOption colsdownlswapOption(QStringList()<<"decode-cols-downl-swap",
+                                      "Decodes as a uCOM4 ROM."
+                                      );
+    parser.addOption(colsdownlswapOption);
 
     //Decoders for Zorrom compatibility.
     QCommandLineOption colsdownrOption(QStringList()<<"decode-cols-downr",
@@ -246,6 +251,8 @@ int main(int argc, char *argv[]) {
             gr->decoder=new GatoDecoderMSP430();
         else if(parser.isSet(tlcsfontOption))
             gr->decoder=new GatoDecoderTLCSFont();
+        else if(parser.isSet(colsdownlswapOption))
+            gr->decoder=new GatoDecoderColsDownLSwap();
         else if(parser.isSet(colsdownrOption))
             gr->decoder=new GatoDecoderColsDownR();
         else if(parser.isSet(colsdownlOption))

@@ -45,6 +45,7 @@ set(GATOROM_SOURCES
     gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder
     gatodecodermsp430.h gatodecodermsp430.cpp # MSP430 ROM
     gatodecodertlcsfont.h gatodecodertlcsfont.cpp # TMP47C434N Font ROM
+    gatodecodercolsdownlswap.h gatodecodercolsdownlswap.cpp # Used in NEC uCOM4 Micros
     # Decoder named after Zorrom strategies.
     gatodecodercolsdownr.h gatodecodercolsdownr.cpp   # Top-to-bottom then left to right, 8-bits.
     gatodecodercolsdownl.h gatodecodercolsdownl.cpp

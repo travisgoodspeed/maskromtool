@@ -11,6 +11,7 @@
 #include "gatodecodersqueezelr.h"
 #include "gatodecodertlcsfont.h"
 #include "gatodecodermsp430.h"
+#include "gatodecodercolsdownlswap.h"  //NEC uCOM4
 
 
 GatoSolver::GatoSolver(GatoROM *rom, GatoGrader *grader){
@@ -29,6 +30,16 @@ GatoSolver::GatoSolver(GatoROM *rom, GatoGrader *grader){
     decoders[5]=new GatoDecoderARM6();
     decoders[6]=new GatoDecoderTLCSFont();
     decoders[7]=new GatoDecoderMSP430();
+    decoders[8]=new GatoDecoderColsDownLSwap(); //NEC uCOM4
+    //Remainder of table must be null.
+    decoders[9]=0;
+    decoders[10]=0;
+    decoders[11]=0;
+    decoders[12]=0;
+    decoders[13]=0;
+    decoders[14]=0;
+    decoders[15]=0;
+
 }
 
 
@@ -50,7 +61,7 @@ struct statefield {
     //unsigned char flipy : 1;
     unsigned char rotation : 2;
     unsigned char invert : 1;
-    unsigned char decoder : 3;  //Always the last thing we iterate.
+    unsigned char decoder : 4;  //Always the last thing we iterate.
     unsigned char toohigh : 1;  //Zero until the others have overflowed.
 };
 
@@ -71,7 +82,6 @@ bool GatoSolver::applyState(){
 
 
     while(!state->toohigh){  //Overflow condition.
-
         switch(state->rotation){
         case 0:
             rom->rotate(0,true);
