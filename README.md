@@ -23,7 +23,7 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Changelog
 
-Upcoming -- OpenGL is now functional and default.  GatoROM included
+2023-08-06 -- OpenGL is now functional and default.  GatoROM included
 for bit decoding.
 
 2023-07-20 -- Secondary display support.  Tall sampling.  Fixes
