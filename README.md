@@ -253,7 +253,7 @@ work just fine.
 
 ![Normal ROM Bits](screenshots/darkbits.png)
 
-For diffusion ROMs whose bits have better a little too delayered, the
+For diffusion ROMs whose bits have been a little too delayered, the
 center of the bit does not have a unique color, but it is surrounded
 by slightly darker lines.  The `Wide` algorithm will take the darkest
 color in each channel after sampling its size worth of bits in width,
