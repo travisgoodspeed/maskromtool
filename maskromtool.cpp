@@ -49,7 +49,7 @@
 using namespace std;
 
 
-MaskRomTool::MaskRomTool(QWidget *parent)
+MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     : QMainWindow(parent)
     , ui(new Ui::MaskRomTool) {
     /* This only constructs the GUI.  See main.cpp
@@ -76,7 +76,8 @@ MaskRomTool::MaskRomTool(QWidget *parent)
     second.view->setScene(scene);
 
     //Enable OpenGL without antialiasing, now that it's stable.
-    enableOpenGL(0);
+    if(opengl)
+        enableOpenGL(0);
 }
 
 //Adds support for a sampler.  Does not select it.

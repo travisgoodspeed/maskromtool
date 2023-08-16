@@ -55,11 +55,11 @@ int main(int argc, char *argv[]){
     parser.addOption(exitOption);
 
 
-    /* We used to have an option for OpenGL.  Deprecated now that it's default.
-    QCommandLineOption openglOption(QStringList() << "opengl",
-                                  QCoreApplication::translate("main", "Enable OpenGL.  (Not yet stable.)"));
-    parser.addOption(openglOption);
-     */
+    // We used to have an option for OpenGL.  Deprecated now that it's default.
+    QCommandLineOption disableOpenglOption(QStringList() << "disable-opengl",
+                                  QCoreApplication::translate("main", "Disable OpenGL."));
+    parser.addOption(disableOpenglOption);
+
 
     // Design Rule Check
     QCommandLineOption drcOption(QStringList() << "d" << "drc",
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]){
 
     const QStringList args = parser.positionalArguments();
 
-    MaskRomTool mrt;
+    MaskRomTool mrt(0,!parser.isSet(disableOpenglOption));
     mrt.show();
     for(int i=0; i<args.count(); i++)
         mrt.fileOpen(args[i]);

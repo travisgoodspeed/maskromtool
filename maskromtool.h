@@ -33,7 +33,7 @@ class MaskRomTool : public QMainWindow{
     Q_OBJECT
 
 public:
-    MaskRomTool(QWidget *parent = nullptr);
+    MaskRomTool(QWidget *parent = nullptr, bool opengl=true);
     ~MaskRomTool();
 
     void enableVerbose(unsigned int level=1);

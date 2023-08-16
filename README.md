@@ -21,7 +21,9 @@ completed dump of the ROM from the MYK82 chip in a Fortezza Card.
 This is the successor to the Clipper Chip, and the repository includes
 not just all ROM bits but also reshoots for error correction.
 
-## Changelog
+## Release Changelog
+
+`master` -- CLI option to disable OpenGL.
 
 2023-08-06 -- OpenGL is now functional and default.  GatoROM included
 for bit decoding.
