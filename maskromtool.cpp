@@ -126,7 +126,7 @@ void MaskRomTool::on_actionOpenGL_triggered(){
 }
 
 void MaskRomTool::enableOpenGL(unsigned int antialiasing){
-    //Enabled OpenGL.  Maybe better performance, but it's currently broken.
+    //Enabled OpenGL.
     QOpenGLWidget *gl = new QOpenGLWidget();
     if(antialiasing>0){
         QSurfaceFormat format;

@@ -126,7 +126,9 @@ int main(int argc, char *argv[]){
 
     const QStringList args = parser.positionalArguments();
 
-    MaskRomTool mrt(0,!parser.isSet(disableOpenglOption));
+    MaskRomTool mrt(0,
+                    //OpenGL is on by default, unless the platform is offscreen.
+                    !parser.isSet(disableOpenglOption) && !a.platformName().contains("offscreen"));
     mrt.show();
     for(int i=0; i<args.count(); i++)
         mrt.fileOpen(args[i]);
@@ -211,7 +213,10 @@ int main(int argc, char *argv[]){
             msgBox.setText("The wayland driver is unstable.  Please pass '-platform xcb' to maskromtool to use Xorg instead.");
             msgBox.exec();
         }
-        return a.exec();
+
+        //We never launch the GUi for offscreen, because it should always exit.
+        if(!a.platformName().contains("offscreen"))
+            return a.exec();
     }
 
     //We're exiting here, so the return code should indicate the numer of DRC violations.
