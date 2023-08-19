@@ -73,6 +73,9 @@ public:
 
     //Returns an English description of the current ROM state.
     QString description();
+    //Returns the first eight bytes as a preview.
+    QString preview();
+
 
     int zorrommode=0; //Compatibility with Zorrom's bugs.
 private:

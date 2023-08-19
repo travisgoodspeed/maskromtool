@@ -301,8 +301,11 @@ int main(int argc, char *argv[]) {
 
             GatoSolver solver(gr, grader);
             for(solver.init(); !solver.finished(); solver.next()){
-                if(solver.grade()>0)
-                    std::cout<<"Grade "<<solver.grade()<<"   \t"<<gr->description().toStdString()<<"\n";
+                if(solver.grade()>0){
+                    std::cout<<"Grade "<<solver.grade()<<"   \t"
+                              <<gr->preview().toStdString()<<"\t"
+                              <<gr->description().toStdString()<<"\n";
+                }
 
                 //Perfect solutions go to the output file.
                 if(solver.grade()==100 && parser.value(outputOption)!=""){

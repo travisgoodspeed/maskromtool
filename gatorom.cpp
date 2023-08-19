@@ -24,6 +24,18 @@ QString GatoROM::description(){
     return d;
 }
 
+//Returns the first eight bytes as a preview.
+QString GatoROM::preview(){
+    QString p="";
+    QByteArray b=decode();
+
+    for(int i=0; i<8 && i<b.length(); i++){
+        p+=QString::asprintf("%02x ", (uint8_t) b[i]);
+    }
+
+    return p;
+}
+
 
 //Initiates around a standard ASCII art of the bits.
 GatoROM::GatoROM(QString input){
