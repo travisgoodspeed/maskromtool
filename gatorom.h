@@ -21,6 +21,11 @@
 #include <QString>
 #include <QByteArray>
 
+/* We try to avoid GUI dependencies, but printing is a
+ * necessary exception.
+ */
+class QPrinter;
+
 class GatoDecoder;
 
 
@@ -65,6 +70,8 @@ public:
 
     //Exports the output as ASCII art.
     QString exportString(bool pretty=true);
+    //Prints the bits.  Can be handy for manual decoding.
+    void print(QPrinter &printer);
     //Decodes the ROM using the configured decoder.
     QByteArray decode();
     QByteArray decoded; //Output bytes, produced by decode().

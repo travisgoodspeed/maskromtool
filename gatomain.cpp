@@ -1,8 +1,12 @@
 #include <QCoreApplication>
+#include <QApplication>
 #include <QCommandLineParser>
 #include <QFile>
 #include <QByteArray>
 #include <QRandomGenerator>
+
+#include <QPrintDialog>
+#include <QPrinter>
 
 #include <iostream>
 #include <string>
@@ -35,7 +39,8 @@
  */
 
 int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
+    //QCoreApplication a(argc, argv);
+    QApplication a(argc,argv);
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Gato ROM: A Decoder for Mask ROM Bits");
@@ -93,6 +98,19 @@ int main(int argc, char *argv[]) {
                                     "Info about input."
                                     );
     parser.addOption(infoOption);
+
+    //Print with a dialog.
+    QCommandLineOption printOption(QStringList()<<"print",
+                                   "Print with a GUI dialog."
+                                   );
+    parser.addOption(printOption);
+    //Print to a file.
+    QCommandLineOption printpdfOption(QStringList()<<"printpdf",
+                                   "Print to a PDF file.",
+                                   "file.pdf"
+                                   );
+    parser.addOption(printpdfOption);
+
 
     //Decoder itself.
     QCommandLineOption arm6Option(QStringList()<<"decode-arm6",
@@ -316,6 +334,19 @@ int main(int argc, char *argv[]) {
                     outfile.close();
                 }
             }
+        }
+
+        if(parser.isSet(printOption)){
+            QPrinter printer;
+
+            QPrintDialog dialog(&printer);
+            dialog.setWindowTitle("Print Document");
+            if (dialog.exec() == QDialog::Accepted)
+                gr->print(printer);
+        }else if(parser.isSet(printpdfOption)){
+            QPrinter printer(QPrinter::HighResolution);
+            printer.setOutputFileName(parser.value(printpdfOption));
+            gr->print(printer);
         }
 
         //Done with the file.

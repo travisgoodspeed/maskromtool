@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools Charts)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Charts)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport)
 
 # We currently only support English, so we define this file but we do
 # not link it.  That can, of course, be changed if/when we get around
@@ -36,6 +36,8 @@ set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/maskromtool.rc")
 set(GATOROM_SOURCES
     # Base Class
     gatorom.h gatorom.cpp
+    # Printing
+    gatoprinter.h gatoprinter.cpp
     # Solver and strategies.
     gatosolver.h gatosolver.cpp
     gatograderbytes.h gatograderbytes.cpp
@@ -105,7 +107,7 @@ qt_add_executable(maskromtool
     ${MRT_SOURCES}
 )
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
+target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport)
 
 
 set_target_properties(maskromtool PROPERTIES
@@ -123,7 +125,7 @@ if(WIN32)
         MANUAL_FINALIZATION
         ${MRT_SOURCES}
     )
-    target_link_libraries(maskromtoolcli PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
+    target_link_libraries(maskromtoolcli PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport)
     qt_finalize_executable(maskromtoolcli)
     install(TARGETS maskromtoolcli DESTINATION bin)
 endif()
@@ -139,8 +141,9 @@ add_executable(gatorom
   ${GATOROM_SOURCES}
   # CLI
   gatomain.cpp
+  gatoprinter.h gatoprinter.cpp
 )
-target_link_libraries(gatorom Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(gatorom Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::PrintSupport)
 
 install(TARGETS gatorom
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

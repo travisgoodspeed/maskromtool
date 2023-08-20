@@ -1,6 +1,8 @@
 #include <QDebug>
+#include <QPrinter>
 
 #include "gatorom.h"
+#include "gatoprinter.h"
 
 GatoBit::GatoBit(bool v){
     this->val=v;
@@ -22,6 +24,12 @@ QString GatoROM::description(){
         d.append("--flipx ");
 
     return d;
+}
+
+//Prints the bits.  Can be handy for manual decoding.
+void GatoROM::print(QPrinter &printer){
+    GatoPrinter p(this);
+    p.print(printer);
 }
 
 //Returns the first eight bytes as a preview.
