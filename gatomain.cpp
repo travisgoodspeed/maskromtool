@@ -340,7 +340,7 @@ int main(int argc, char *argv[]) {
             QPrinter printer;
 
             QPrintDialog dialog(&printer);
-            dialog.setWindowTitle("Print Document");
+            dialog.setWindowTitle("Print Bits");
             if (dialog.exec() == QDialog::Accepted)
                 gr->print(printer);
         }else if(parser.isSet(printpdfOption)){

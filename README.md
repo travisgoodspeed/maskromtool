@@ -23,7 +23,7 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Release Changelog
 
-`master` -- CLI option to disable OpenGL.
+`master` -- CLI option to disable OpenGL.  Printing support.
 
 2023-08-06 -- OpenGL is now functional and default.  GatoROM included
 for bit decoding.

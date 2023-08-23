@@ -26,6 +26,7 @@ class RomRuleViolation;
 class RomScene;
 class RomView;
 class RomBitFix;
+class GatoROM;
 
 extern unsigned int verbose;
 
@@ -96,6 +97,8 @@ public:
 
     //Marks the table of bits, returns top-left entry.
     RomBitItem* markBitTable();
+    //Marks the table of bits, returning it as a GatoROM object.
+    GatoROM gatorom();
 
     //Opens an image file (and its json) or just the json.
     void fileOpen(QString filename);
@@ -181,6 +184,9 @@ private slots:
     void on_exportMARC4_triggered();
     void on_exportARM6_triggered();
     void on_exportPhotograph_triggered();
+
+    //printing
+    void on_actionPrint_triggered();
 
     //Import from a file.  (Loose definition.
     void on_importDiff_triggered();

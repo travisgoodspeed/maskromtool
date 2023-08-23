@@ -1,4 +1,5 @@
 #include "maskromtool.h"
+#include "gatorom.h"
 #include "maskromtool_autogen/include/ui_maskromtool.h"
 #include "romsecond.h"
 #include "romlineitem.h"
@@ -45,6 +46,10 @@
 #include <QtMath>
 #include <QProgressDialog>
 
+//Printing
+#include <QPrinter>
+#include <QPrintDialog>
+
 
 using namespace std;
 
@@ -78,6 +83,25 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     //Enable OpenGL without antialiasing, now that it's stable.
     if(opengl)
         enableOpenGL(0);
+}
+
+//Returns a GatoROM structure of the bits.
+GatoROM MaskRomTool::gatorom(){
+    //FIXME: This works well enough to print, but doesn't return links to MRT objects.
+    RomDecoderAscii exporter;
+    QString ascii=exporter.preview(this);
+    return GatoROM(ascii);
+}
+
+//Prints the bits.
+void MaskRomTool::on_actionPrint_triggered(){
+    GatoROM gr=gatorom();
+    QPrinter printer;
+
+    QPrintDialog dialog(&printer);
+    dialog.setWindowTitle("Print Bits");
+    if (dialog.exec() == QDialog::Accepted)
+        gr.print(printer);
 }
 
 //Adds support for a sampler.  Does not select it.
