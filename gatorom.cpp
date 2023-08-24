@@ -15,6 +15,8 @@ bool GatoBit::getVal(){
 QString GatoROM::description(){
     QString d="";
 
+    if(zorrommode)
+        d.append("-z ");
     if(decoder)
         d.append("--decode-"+decoder->name+" ");
     if(inverted)
@@ -22,6 +24,7 @@ QString GatoROM::description(){
     d.append("-r "+QString::number(angle)+" ");
     if(flippedx)
         d.append("--flipx ");
+
 
     return d;
 }
