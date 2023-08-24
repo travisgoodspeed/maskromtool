@@ -69,7 +69,10 @@ set(MRT_SOURCES
         rombitfix.h rombitfix.cpp
         romthresholddialog.h romthresholddialog.cpp romthresholddialog.ui
         aboutdialog.h aboutdialog.cpp aboutdialog.ui
+        asciidialog.h asciidialog.cpp asciidialog.ui
+# Decoders
         romdecoder.h
+        romdecodergato.h romdecodergato.cpp
         romdecoderascii.h romdecoderascii.cpp
         romdecoderjson.h romdecoderjson.cpp
         romdecodercsv.h romdecodercsv.cpp
@@ -77,7 +80,6 @@ set(MRT_SOURCES
         romdecoderarm6.h romdecoderarm6.cpp
         romdecoderphotograph.h romdecoderphotograph.cpp
         romencoderdiff.h romencoderdiff.cpp
-        asciidialog.h asciidialog.cpp asciidialog.ui
 #Alignment stategies
         romaligner.h romaligner.cpp
         romalignernew.h romalignernew.cpp
@@ -105,6 +107,7 @@ set(MRT_SOURCES
 qt_add_executable(maskromtool
     MANUAL_FINALIZATION
     ${MRT_SOURCES}
+
 )
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport)

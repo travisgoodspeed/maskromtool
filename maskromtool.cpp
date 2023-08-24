@@ -21,6 +21,7 @@
 #include "romdecodermarc4.h"
 #include "romdecoderarm6.h"
 #include "romdecoderphotograph.h"
+#include "romdecodergato.h"
 //Importers too, weird as they are.
 #include "romencoderdiff.h"
 
@@ -88,9 +89,8 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
 //Returns a GatoROM structure of the bits.
 GatoROM MaskRomTool::gatorom(){
     //FIXME: This works well enough to print, but doesn't return links to MRT objects.
-    RomDecoderAscii exporter;
-    QString ascii=exporter.preview(this);
-    return GatoROM(ascii);
+    RomDecoderGato exporter;
+    return exporter.gatorom(this);
 }
 
 //Prints the bits.

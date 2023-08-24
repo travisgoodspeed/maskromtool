@@ -286,9 +286,11 @@ void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
         qDebug()<<"WARNING: GatoRom input buffer is not empty.  Maybe leaking memory?";
 
     uint32_t outsize=(rows>cols?rows:cols);
-    Q_ASSERT(outsize>0);
 
-    //qDebug()<<"Allocating "<<outsize<<"rows and columns";
+    if(!outsize){
+        qDebug()<<"gatorom.cpp: Output array would be zero, growing to 1x1 for sanity.";
+        outsize=1;
+    }
 
     /* The output matrix is large enough to fit the rotated or unrotated
      */
