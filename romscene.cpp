@@ -172,14 +172,25 @@ QGraphicsItem* RomScene::focusItem(){
 
 void RomScene::setFocusItem(QGraphicsItem* item){
     focusitem=item;
+    
+    //reset line focus first, would be nice if we knew the last one that was in focus
+    for(QSet<RomLineItem*>::iterator i = maskRomTool->rows.begin(), end = maskRomTool->rows.end(); i != end; ++i){
+        ((QGraphicsLineItem*)*i)->setPen((QPen)nullptr);
+    }
+    for(QSet<RomLineItem*>::iterator i = maskRomTool->cols.begin(), end = maskRomTool->cols.end(); i != end; ++i){
+        ((QGraphicsLineItem*)*i)->setPen((QPen)nullptr);
+    }
     if(!item)
         //No item to mark, so don't worry about investigating it.
         return;
-    else if(item->type()==QGraphicsItem::UserType)
+    else if(item->type()==QGraphicsItem::UserType){
         //row
         maskRomTool->lastrow=((RomLineItem*)item)->line();
-    else if(item->type()==QGraphicsItem::UserType+1)
+        ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+    }
+    else if(item->type()==QGraphicsItem::UserType+1){
         //column
         maskRomTool->lastcol=((RomLineItem*)item)->line();
-
+        ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+    }
 }
