@@ -31,6 +31,40 @@ RomScene::RomScene(QObject *parent)
     //setBspTreeDepth(2);  //Maybe a decent depth helps initial performance?
 }
 
+void RomScene::keyPressEvent(QKeyEvent *event){
+
+    RomLineItem *rlitem;
+    QPointF dpos;
+
+    switch(event->key()){
+    // selected item translation via arrow keys
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+    case Qt::Key_Left:
+    case Qt::Key_Right:
+            if(focusItem()){
+                switch(focusItem()->type()){
+                    case QGraphicsItem::UserType: //row
+                    case QGraphicsItem::UserType+1: //column
+                        rlitem = (RomLineItem*)focusItem();
+                        dpos = QPointF(0,0);
+                        switch(event->key()){
+                            case Qt::Key_Up: dpos.setY(-1);break;
+                            case Qt::Key_Down: dpos.setY(1);break;
+                            case Qt::Key_Left: dpos.setX(-1);break;
+                            case Qt::Key_Right: dpos.setX(1);break;
+                        }
+                        maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
+                        break;
+                }
+            break;
+        }else{// no selected item, default arrows handler will move the whole scene
+            QGraphicsScene::keyPressEvent(event);
+        }
+    }
+}
+
+
 //Update the crosshairs to the new position.
 void RomScene::updateCrosshairs(bool dragging){
     /* If our images were perfect, the crosshairs would be perfectly vertical
