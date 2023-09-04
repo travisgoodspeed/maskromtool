@@ -223,10 +223,10 @@ void RomScene::setFocusItem(QGraphicsItem* item){
     
     //reset line focus first, would be nice if we knew the last one that was in focus
     for(QSet<RomLineItem*>::iterator i = maskRomTool->rows.begin(), end = maskRomTool->rows.end(); i != end; ++i){
-        ((QGraphicsLineItem*)*i)->setPen((QPen)nullptr);
+        ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
     }
     for(QSet<RomLineItem*>::iterator i = maskRomTool->cols.begin(), end = maskRomTool->cols.end(); i != end; ++i){
-        ((QGraphicsLineItem*)*i)->setPen((QPen)nullptr);
+        ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
     }
     if(!item)
         //No item to mark, so don't worry about investigating it.
