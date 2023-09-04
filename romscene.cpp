@@ -128,6 +128,20 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
                      maskRomTool->bitcount/1024/8
                    )
                 );
+    //here instead of on release so we can have preview
+    if(mouseEvent->buttons()==Qt::RightButton){
+        QPointF dpos = mouseEvent->scenePos() - presspos;
+        RomLineItem *rlitem = (RomLineItem *)focusItem();
+        if(rlitem){
+            switch(rlitem->type()){
+                case QGraphicsItem::UserType: //row
+                case QGraphicsItem::UserType+1: //column
+                    maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
+                    presspos = scenepos; // update because we already moved it
+                    break;
+            }
+        }
+    }
 }
 
 void RomScene::setRowAngle(qreal angle){
@@ -142,9 +156,9 @@ void RomScene::setColAngle(qreal angle){
 //Store the last pressed mouse position.
 void RomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
     //This could be handy in the selection.
-    if(mouseEvent->buttons()&Qt::LeftButton){
+    //if(mouseEvent->buttons()&Qt::LeftButton){
         presspos=mouseEvent->scenePos();
-    }
+    //}
 }
 
 //Store the last pressed mouse position.
