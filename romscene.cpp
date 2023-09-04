@@ -61,6 +61,9 @@ void RomScene::keyPressEvent(QKeyEvent *event){
         }else{// no selected item, default arrows handler will move the whole scene
             QGraphicsScene::keyPressEvent(event);
         }
+        break;
+    default:
+        QGraphicsScene::keyPressEvent(event);
     }
 }
 
