@@ -70,6 +70,7 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     ui->graphicsView->setScene(scene);
     view=ui->graphicsView;
     violationDialog.setMaskRomTool(this);
+    decodeDialog.setMaskRomTool(this);
     RomRuleViolation::bitSize=bitSize;
 
     //Strategies should be initialized.
@@ -613,6 +614,11 @@ void MaskRomTool::on_thresholdButton_triggered(){
     updateThresholdHistogram();
 }
 
+//Shows the decoder dialog.
+void MaskRomTool::on_decoderButton_triggered(){
+    decodeDialog.show();
+}
+
 //Pop a dialog to choose the alignment constraints.
 void MaskRomTool::on_alignconstrainButton_triggered(){
     qDebug()<<"Choosing alignment constraints.";
@@ -1099,12 +1105,13 @@ QJsonObject MaskRomTool::exportJSON(){
      * we should update this date to indicate the new file format
      * version number.
      *
+     * 2023.09.04 -- Adds 'gatorom' with string description.
      * 2023.05.14 -- Adds 'inverted' bits.
      * 2023.05.08 -- Adds 'sampler' and 'samplersize'.
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2023.05.14";
+    root["00version"]="2023.09.04";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -1116,6 +1123,7 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["sampler"]=sampler->name;           //2023.05.08
     settings["samplersize"]=getSamplerSize();    //2023.05.08
     settings["inverted"]=inverted;               //2023.05.14
+    settings["gatorom"]=gr.description();        //2023.09.04
     root["settings"]=settings;
 
 
@@ -1167,6 +1175,9 @@ void MaskRomTool::importJSON(QJsonObject o){
     setAlignSkipCountThreshold(alignskipthreshold.toInt(5)); //Default of 5.
     QJsonValue inverted=settings.value("inverted");
     this->inverted=inverted.toBool(false); //Defaults to not inverting bits.
+    QJsonValue grsetting=settings.value("gatorom");
+    this->gr.configFromDescription(grsetting.toString(""));
+    decodeDialog.setMaskRomTool(this);
 
     //New bit sampler algorithms.
     QJsonValue sampler=settings.value("sampler");
