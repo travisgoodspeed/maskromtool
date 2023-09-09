@@ -53,6 +53,7 @@ qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats
 ...
 % cd maskromtool
 % mkdir build; cd build
+% cmake ..
 % make -j 8 && sudo make install
 ```
 
