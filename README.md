@@ -39,7 +39,7 @@ crash when hitting `V` after deleting a line.
 
 ## Building
 
-This tool works in Windows, Linux and MacOS, using QT6 with the
+This tool works in Windows, Linux, FreeBSD and MacOS, using QT6 with the
 QtCharts extension.  Be sure to manually enable QtCharts in the [QT
 Unified
 Installer](https://download.qt.io/official_releases/online_installers/),
