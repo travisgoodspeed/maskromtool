@@ -23,9 +23,8 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Release Changelog
 
-`master` -- CLI option to disable OpenGL.
-[Printing](https://github.com/travisgoodspeed/maskromtool/issues/49)
-support.
+2023-09-13 -- CLI option to disable OpenGL.  Printing support.
+Working Windows build.
 
 2023-08-06 -- OpenGL is now functional and default.  GatoROM included
 for bit decoding.
