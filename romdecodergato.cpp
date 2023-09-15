@@ -11,8 +11,8 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
     RomDecoderAscii exporter;
     QString ascii=exporter.preview(mrt);
 
-    GatoROM gr(ascii);
-
+    //We rebuild from the preserved class
+    mrt->gr.loadFromString(ascii);
 
     RomBitItem* rowbit = mrt->markBitTable();
     unsigned int row=0, col=0;
@@ -24,7 +24,7 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
                This can be handy in drawing results back to the screen,
                but be careful that the pointers don't become stale!
             */
-            gr.inputbits[row][col]->ptr=bit;
+            mrt->gr.inputbits[row][col]->ptr=bit;
             bit=bit->nexttoright;  //Skip down the row.
             col++;
         }
@@ -34,7 +34,7 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
         row++;
     }
 
-    return gr;
+    return mrt->gr;
 }
 
 

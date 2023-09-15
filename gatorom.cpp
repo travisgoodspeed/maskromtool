@@ -1,8 +1,21 @@
 #include <QDebug>
 #include <QPrinter>
+#include <QRegularExpression>
 
 #include "gatorom.h"
 #include "gatoprinter.h"
+
+//Custom decoders.
+#include "gatodecoderarm6.h"  //MYK82 Fortezza
+#include "gatodecodermsp430.h"
+#include "gatodecodertlcsfont.h"
+#include "gatodecodercolsdownlswap.h" // NEC uCOM4
+//Zorrom compatibility.
+#include "gatodecodercolsdownr.h"
+#include "gatodecodercolsdownl.h"
+#include "gatodecodercolsleft.h"
+#include "gatodecodercolsright.h"
+#include "gatodecodersqueezelr.h"
 
 GatoBit::GatoBit(bool v){
     this->val=v;
@@ -24,9 +37,64 @@ QString GatoROM::description(){
     d.append("-r "+QString::number(angle)+" ");
     if(flippedx)
         d.append("--flipx ");
-
+    if(flippedy)
+        d.append("--flipy ");
 
     return d;
+}
+
+//Loads from the same description.
+void GatoROM::configFromDescription(QString d){
+    //Forgive me for using a shotgun parser here.
+    //qDebug()<<"Loading GatoROM setting"<<d;
+
+    zorrommode=d.contains("-z ");
+    inverted=d.contains("-i ");
+    flippedx=d.contains("--flipx ");
+    flippedy=d.contains("--flipy ");
+
+
+    //Forgive me again for bringin regular expressions into this mess.
+    static QRegularExpression decoder("--decode-(\\w+) ");
+    QRegularExpressionMatch match=decoder.match(d);
+    if(match.hasMatch()){
+        //qDebug()<<"Matched decoder to"<<match.captured(1);
+        setDecoderByName(match.captured(1));
+    }
+
+    static QRegularExpression angle("-r (\\d+) ");
+    match=angle.match(d);
+    if(match.hasMatch()){
+        //qDebug()<<"Matched angle to"<<match.captured(1);
+        bool okay=true;
+        int rotation=match.captured(1).toInt(&okay,10);
+        if(okay)
+            rotate(rotation, true);
+    }
+}
+
+//Sets the secoder by an ASCII name.
+void GatoROM::setDecoderByName(QString name){
+    if(name=="arm6")
+        decoder=new GatoDecoderARM6();
+    else if(name=="msp430")
+        decoder=new GatoDecoderMSP430();
+    else if(name=="tlcs47font")
+        decoder=new GatoDecoderTLCSFont();
+    else if(name=="cols-downl-swap")
+        decoder=new GatoDecoderColsDownLSwap();
+    else if(name=="cols-downr")
+        decoder=new GatoDecoderColsDownR();
+    else if(name=="cols-downl")
+        decoder=new GatoDecoderColsDownL();
+    else if(name=="cols-left")
+        decoder=new GatoDecoderColsLeft();
+    else if(name=="cols-right")
+        decoder=new GatoDecoderColsRight();
+    else if(name=="squeeze-lr")
+        decoder=new GatoDecoderSqueezeLR();
+    else
+        qDebug()<<"Unknown decoder"<<name;
 }
 
 //Prints the bits.  Can be handy for manual decoding.
@@ -47,7 +115,10 @@ QString GatoROM::preview(){
     return p;
 }
 
-
+//Initiates an empty ROM.
+GatoROM::GatoROM(){
+    loadFromString("1");
+}
 //Initiates around a standard ASCII art of the bits.
 GatoROM::GatoROM(QString input){
     loadFromString(input);
@@ -291,7 +362,7 @@ void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
     uint32_t outsize=(rows>cols?rows:cols);
 
     if(!outsize){
-        qDebug()<<"gatorom.cpp: Output array would be zero, growing to 1x1 for sanity.";
+        //qDebug()<<"gatorom.cpp: Output array would be zero, growing to 1x1 for sanity.";
         outsize=1;
     }
 

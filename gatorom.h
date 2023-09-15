@@ -45,6 +45,8 @@ public:
 //Represents an entire ROM, both input and output.
 class GatoROM{
 public:
+    //Initiates an empty ROM, to be populated and resized later.
+    GatoROM();
     //Initiates around a standard ASCII art of the bits.
     GatoROM(QString input);
     //Initiates around a raw binary in Sean Riddle's style.
@@ -67,6 +69,7 @@ public:
     GatoBit*** outputbits=0;
     uint32_t outputrows=0, outputcols=0;
     GatoDecoder *decoder=0;
+    void setDecoderByName(QString name);
 
     //Exports the output as ASCII art.
     QString exportString(bool pretty=true);
@@ -80,21 +83,27 @@ public:
 
     //Returns an English description of the current ROM state.
     QString description();
+    //Loads from the same description.
+    void configFromDescription(QString description);
+
     //Returns the first eight bytes as a preview.
     QString preview();
 
-
-    int zorrommode=0; //Compatibility with Zorrom's bugs.
-private:
     //Loads ASCII art text into the structure.
     void loadFromString(QString str);
-    //Allocates the input size, plus a little extra for rotations.
-    void setInputSize(const uint32_t rows, const uint32_t cols);
-    GatoBit **input=0;  //2D Array of input bits, rows then cols.
+
+    int zorrommode=0; //Compatibility with Zorrom's bugs.
+
+    //Don't set these directly.
     int flippedx=0;     //Is X flipped?
     int flippedy=0;     //Is Y flipped?
     int inverted=0;     //Are bits inverted?
     int angle=0;        //Angle of rotation.
+private:
+    //Allocates the input size, plus a little extra for rotations.
+    void setInputSize(const uint32_t rows, const uint32_t cols);
+    GatoBit **input=0;  //2D Array of input bits, rows then cols.
+
 };
 
 //Represents a decoder, which turns a transofmred GatoROM into a Byte array.

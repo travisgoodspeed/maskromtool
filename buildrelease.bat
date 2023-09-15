@@ -22,6 +22,13 @@ echo moving the release
 move Release ..\
 cd ..
 
+REM Adding files that windeployqt forgets.
+copy C:\Qt\6.5.2\msvc2019_64\bin\Qt6Charts.dll Release\
+copy C:\Qt\6.5.2\msvc2019_64\bin\Qt6OpenGLWidgets.dll Release\
+copy C:\Qt\6.5.2\msvc2019_64\bin\Qt6Widgets.dll Release\
+copy C:\Qt\6.5.2\msvc2019_64\bin\Qt6Gui.dll Release\
+
+
 echo Finishing packing Release.  Now making installer.
 
 
@@ -41,3 +48,5 @@ REM Zip the redist with the installer.
 tar -a -c -f maskromtool-win-x86_64.zip maskromtool-win-x86_64.exe vcredist_msvc2019_x64.exe
 
 cd ..
+
+echo "Release files are available in Deployment\."

@@ -23,9 +23,8 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Release Changelog
 
-`master` -- CLI option to disable OpenGL.
-[Printing](https://github.com/travisgoodspeed/maskromtool/issues/49)
-support.
+2023-09-13 -- CLI option to disable OpenGL.  Printing support.
+Working Windows build.
 
 2023-08-06 -- OpenGL is now functional and default.  GatoROM included
 for bit decoding.
@@ -39,7 +38,7 @@ crash when hitting `V` after deleting a line.
 
 ## Building
 
-This tool works in Windows, Linux and MacOS, using QT6 with the
+This tool works in Windows, Linux, FreeBSD and MacOS, using QT6 with the
 QtCharts extension.  Be sure to manually enable QtCharts in the [QT
 Unified
 Installer](https://download.qt.io/official_releases/online_installers/),
@@ -53,6 +52,7 @@ qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats
 ...
 % cd maskromtool
 % mkdir build; cd build
+% cmake ..
 % make -j 8 && sudo make install
 ```
 

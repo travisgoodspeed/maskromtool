@@ -10,12 +10,14 @@
 #include "rombititem.h"
 #include "asciidialog.h"
 #include "romthresholddialog.h"
+#include "romdecodedialog.h"
 #include "romaligndialog.h"
 #include "romaligner.h"
 #include "rombitsampler.h"
 #include "romruledialog.h"
 #include "romsecond.h"
 
+#include "gatorom.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MaskRomTool; }
@@ -26,7 +28,6 @@ class RomRuleViolation;
 class RomScene;
 class RomView;
 class RomBitFix;
-class GatoROM;
 
 extern unsigned int verbose;
 
@@ -133,9 +134,11 @@ public:
     ASCIIDialog asciiDialog;
     QChart histogramchart;
     RomThresholdDialog thresholdDialog;
+
     RomAlignDialog alignDialog;
     RomRuleDialog violationDialog;
     RomSecond second;
+    RomDecodeDialog decodeDialog;
 
     //Selectable Strategies
     RomAligner *aligner=0;
@@ -165,14 +168,22 @@ public:
     RomView* view;
     //Last row and column.
     QLineF lastrow, lastcol;
+    //We regenerate from this when needed.
+    GatoROM gr;
 
 private slots:
     void on_openButton_triggered();
     void on_saveButton_triggered();
+
     void on_thresholdButton_triggered();
     void on_linecolorButton_triggered();
+
     void on_alignconstrainButton_triggered();
     void on_actionRunDRC_triggered();
+
+    //Edit
+    void on_thresholdButton_triggered();
+    void on_decoderButton_triggered();
 
     //View a window.
     void on_aboutButton_triggered();
@@ -215,6 +226,7 @@ private:
     qreal bitSize=10;
     bool alignmentdirty=true;
     uint32_t alignSkipThreshold=5;
+
 
 
     //Marks the bit fixes.

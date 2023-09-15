@@ -108,6 +108,7 @@
     <addaction name="thresholdButton"/>
     <addaction name="alignconstrainButton"/>
     <addaction name="linecolorButton"/>
+    <addaction name="decoderButton"/>
    </widget>
    <widget class="QMenu" name="menuDRC">
     <property name="title">
@@ -192,7 +193,7 @@
   </action>
   <action name="thresholdButton">
    <property name="text">
-    <string>Choose Bit Threshold</string>
+    <string>Bit Threshold</string>
    </property>
   </action>
   <action name="exportJSONBits">
@@ -372,7 +373,7 @@
   </action>
   <action name="alignconstrainButton">
    <property name="text">
-    <string>Choose Alignment Constraints</string>
+    <string>Alignment Constraints</string>
    </property>
   </action>
   <action name="actionClearViolations">
@@ -390,9 +391,14 @@
     <string>Second View</string>
    </property>
   </action>
+
   <action name="linecolorButton">
    <property name="text">
     <string>Choose Line Color</string>
+   </property>
+  <action name="decoderButton">
+   <property name="text">
+    <string>Decoding</string>
    </property>
   </action>
  </widget>

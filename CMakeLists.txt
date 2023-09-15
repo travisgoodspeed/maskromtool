@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport)
 
 # We currently only support English, so we define this file but we do
@@ -68,6 +68,7 @@ set(MRT_SOURCES
         rombititem.h rombititem.cpp
         rombitfix.h rombitfix.cpp
         romthresholddialog.h romthresholddialog.cpp romthresholddialog.ui
+        romdecodedialog.h romdecodedialog.cpp romdecodedialog.ui
         aboutdialog.h aboutdialog.cpp aboutdialog.ui
         asciidialog.h asciidialog.cpp asciidialog.ui
 # Decoders
@@ -80,7 +81,7 @@ set(MRT_SOURCES
         romdecoderarm6.h romdecoderarm6.cpp
         romdecoderphotograph.h romdecoderphotograph.cpp
         romencoderdiff.h romencoderdiff.cpp
-#Alignment stategies
+# Alignment stategies
         romaligner.h romaligner.cpp
         romalignernew.h romalignernew.cpp
         romaligndialog.h romaligndialog.cpp romaligndialog.ui
@@ -91,7 +92,7 @@ set(MRT_SOURCES
         romdecoderpython.h romdecoderpython.cpp
         romruleambiguous.h romruleambiguous.cpp
         romruledialog.h romruledialog.cpp romruledialog.ui
-#Sampler Strategies
+# Sampler Strategies
         rombitsampler.h rombitsampler.cpp
         rombitsamplerwide.h rombitsamplerwide.cpp
         rombitsamplertall.h rombitsamplertall.cpp
@@ -107,6 +108,7 @@ set(MRT_SOURCES
 qt_add_executable(maskromtool
     MANUAL_FINALIZATION
     ${MRT_SOURCES}
+
 
 )
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
