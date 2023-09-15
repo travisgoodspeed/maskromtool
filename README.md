@@ -23,6 +23,8 @@ not just all ROM bits but also reshoots for error correction.
 
 ## Release Changelog
 
+`master` -- Selection highlight.
+
 2023-09-13 -- CLI option to disable OpenGL.  Printing support.
 Working Windows build.
 
