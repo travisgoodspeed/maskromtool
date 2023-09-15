@@ -174,17 +174,15 @@ public:
 private slots:
     void on_openButton_triggered();
     void on_saveButton_triggered();
-
-    void on_thresholdButton_triggered();
-    void on_linecolorButton_triggered();
-
+  
     void on_alignconstrainButton_triggered();
     void on_actionRunDRC_triggered();
 
     //Edit
     void on_thresholdButton_triggered();
     void on_decoderButton_triggered();
-
+    void on_linecolorButton_triggered();
+  
     //View a window.
     void on_aboutButton_triggered();
     void on_asciiButton_triggered();

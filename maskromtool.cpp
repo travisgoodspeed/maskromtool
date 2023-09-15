@@ -628,6 +628,7 @@ void MaskRomTool::on_linecolorButton_triggered(){
             ((QGraphicsLineItem*)*i)->setPen(QPen(lineColor, 2));
         }
     }
+}
 
 //Shows the decoder dialog.
 void MaskRomTool::on_decoderButton_triggered(){

@@ -396,6 +396,7 @@
    <property name="text">
     <string>Choose Line Color</string>
    </property>
+  </action>
   <action name="decoderButton">
    <property name="text">
     <string>Decoding</string>
