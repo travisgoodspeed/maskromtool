@@ -14,6 +14,7 @@ class RomScene : public QGraphicsScene
 public:
     explicit RomScene(QObject *parent = nullptr);
 
+    void keyPressEvent(QKeyEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);

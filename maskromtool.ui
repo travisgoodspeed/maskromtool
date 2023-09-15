@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>23</height>
+     <height>37</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -107,6 +107,7 @@
     </property>
     <addaction name="thresholdButton"/>
     <addaction name="alignconstrainButton"/>
+    <addaction name="linecolorButton"/>
     <addaction name="decoderButton"/>
    </widget>
    <widget class="QMenu" name="menuDRC">
@@ -390,6 +391,11 @@
     <string>Second View</string>
    </property>
   </action>
+
+  <action name="linecolorButton">
+   <property name="text">
+    <string>Choose Line Color</string>
+   </property>
   <action name="decoderButton">
    <property name="text">
     <string>Decoding</string>

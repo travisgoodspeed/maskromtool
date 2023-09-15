@@ -72,7 +72,7 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     violationDialog.setMaskRomTool(this);
     decodeDialog.setMaskRomTool(this);
     RomRuleViolation::bitSize=bitSize;
-
+    lineColor = QColor(Qt::black);
     //Strategies should be initialized.
     aligner=new RomAlignerNew();
     addSampler(new RomBitSampler());
@@ -614,6 +614,21 @@ void MaskRomTool::on_thresholdButton_triggered(){
     updateThresholdHistogram();
 }
 
+
+void MaskRomTool::on_linecolorButton_triggered(){
+    QColor color = QColorDialog::getColor(Qt::black, this );
+    if( color.isValid() )
+    {
+        lineColor = color;
+        //update&redraw
+        for(QSet<RomLineItem*>::iterator i = rows.begin(), end = rows.end(); i != end; ++i){
+            ((QGraphicsLineItem*)*i)->setPen(QPen(lineColor, 2));
+        }
+        for(QSet<RomLineItem*>::iterator i = cols.begin(), end = cols.end(); i != end; ++i){
+            ((QGraphicsLineItem*)*i)->setPen(QPen(lineColor, 2));
+        }
+    }
+
 //Shows the decoder dialog.
 void MaskRomTool::on_decoderButton_triggered(){
     decodeDialog.show();
@@ -1105,13 +1120,14 @@ QJsonObject MaskRomTool::exportJSON(){
      * we should update this date to indicate the new file format
      * version number.
      *
+     * 2023.09.15 -- Adds 'linecolor'.
      * 2023.09.04 -- Adds 'gatorom' with string description.
      * 2023.05.14 -- Adds 'inverted' bits.
      * 2023.05.08 -- Adds 'sampler' and 'samplersize'.
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2023.09.04";
+    root["00version"]="2023.09.15";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -1124,6 +1140,7 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["samplersize"]=getSamplerSize();    //2023.05.08
     settings["inverted"]=inverted;               //2023.05.14
     settings["gatorom"]=gr.description();        //2023.09.04
+    settings["linecolor"]=lineColor.name();      //2023.09.15
     root["settings"]=settings;
 
 
@@ -1175,9 +1192,13 @@ void MaskRomTool::importJSON(QJsonObject o){
     setAlignSkipCountThreshold(alignskipthreshold.toInt(5)); //Default of 5.
     QJsonValue inverted=settings.value("inverted");
     this->inverted=inverted.toBool(false); //Defaults to not inverting bits.
+
+    lineColor = QColor(settings.value("linecolor").toString("#000000"));
+
     QJsonValue grsetting=settings.value("gatorom");
     this->gr.configFromDescription(grsetting.toString(""));
     decodeDialog.setMaskRomTool(this);
+
 
     //New bit sampler algorithms.
     QJsonValue sampler=settings.value("sampler");
@@ -1202,6 +1223,7 @@ void MaskRomTool::importJSON(QJsonObject o){
     for(int i = 0; i < jrows.size(); i++){
         RomLineItem *l=new RomLineItem(RomLineItem::LINEROW);
         l->read(jrows[i]);
+        l->setPen(QPen(lineColor, 2));
         scene->addItem(l);
         rows.insert(l);
         lastrow=l->line();
@@ -1213,6 +1235,7 @@ void MaskRomTool::importJSON(QJsonObject o){
     for(int i = 0; i < jcols.size(); i++){
         RomLineItem *c=new RomLineItem(RomLineItem::LINECOL);
         c->read(jcols[i]);
+        c->setPen(QPen(lineColor, 2));
         scene->addItem(c);
         cols.insert(c);
         lastcol=c->line();

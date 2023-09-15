@@ -31,6 +31,43 @@ RomScene::RomScene(QObject *parent)
     //setBspTreeDepth(2);  //Maybe a decent depth helps initial performance?
 }
 
+void RomScene::keyPressEvent(QKeyEvent *event){
+
+    RomLineItem *rlitem;
+    QPointF dpos;
+
+    switch(event->key()){
+    // selected item translation via arrow keys
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+    case Qt::Key_Left:
+    case Qt::Key_Right:
+            if(focusItem()){
+                switch(focusItem()->type()){
+                    case QGraphicsItem::UserType: //row
+                    case QGraphicsItem::UserType+1: //column
+                        rlitem = (RomLineItem*)focusItem();
+                        dpos = QPointF(0,0);
+                        switch(event->key()){
+                            case Qt::Key_Up: dpos.setY(-1);break;
+                            case Qt::Key_Down: dpos.setY(1);break;
+                            case Qt::Key_Left: dpos.setX(-1);break;
+                            case Qt::Key_Right: dpos.setX(1);break;
+                        }
+                        maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
+                        break;
+                }
+            break;
+        }else{// no selected item, default arrows handler will move the whole scene
+            QGraphicsScene::keyPressEvent(event);
+        }
+        break;
+    default:
+        QGraphicsScene::keyPressEvent(event);
+    }
+}
+
+
 //Update the crosshairs to the new position.
 void RomScene::updateCrosshairs(bool dragging){
     /* If our images were perfect, the crosshairs would be perfectly vertical
@@ -94,6 +131,20 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
                      maskRomTool->bitcount/1024/8
                    )
                 );
+    //here instead of on release so we can have preview
+    if(mouseEvent->buttons()==Qt::RightButton){
+        QPointF dpos = mouseEvent->scenePos() - presspos;
+        RomLineItem *rlitem = (RomLineItem *)focusItem();
+        if(rlitem){
+            switch(rlitem->type()){
+                case QGraphicsItem::UserType: //row
+                case QGraphicsItem::UserType+1: //column
+                    maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
+                    presspos = scenepos; // update because we already moved it
+                    break;
+            }
+        }
+    }
 }
 
 void RomScene::setRowAngle(qreal angle){
@@ -108,9 +159,9 @@ void RomScene::setColAngle(qreal angle){
 //Store the last pressed mouse position.
 void RomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
     //This could be handy in the selection.
-    if(mouseEvent->buttons()&Qt::LeftButton){
+    //if(mouseEvent->buttons()&Qt::LeftButton){
         presspos=mouseEvent->scenePos();
-    }
+    //}
 }
 
 //Store the last pressed mouse position.
@@ -172,14 +223,25 @@ QGraphicsItem* RomScene::focusItem(){
 
 void RomScene::setFocusItem(QGraphicsItem* item){
     focusitem=item;
+    
+    //reset line focus first, would be nice if we knew the last one that was in focus
+    for(QSet<RomLineItem*>::iterator i = maskRomTool->rows.begin(), end = maskRomTool->rows.end(); i != end; ++i){
+        ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
+    }
+    for(QSet<RomLineItem*>::iterator i = maskRomTool->cols.begin(), end = maskRomTool->cols.end(); i != end; ++i){
+        ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
+    }
     if(!item)
         //No item to mark, so don't worry about investigating it.
         return;
-    else if(item->type()==QGraphicsItem::UserType)
+    else if(item->type()==QGraphicsItem::UserType){
         //row
         maskRomTool->lastrow=((RomLineItem*)item)->line();
-    else if(item->type()==QGraphicsItem::UserType+1)
+        ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+    }
+    else if(item->type()==QGraphicsItem::UserType+1){
         //column
         maskRomTool->lastcol=((RomLineItem*)item)->line();
-
+        ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+    }
 }

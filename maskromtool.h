@@ -43,6 +43,7 @@ public:
 
     //Persistant user settings.
     QSettings settings();
+    QColor lineColor;
 
     //Background image of the ROM.
     QImage background;
@@ -173,6 +174,10 @@ public:
 private slots:
     void on_openButton_triggered();
     void on_saveButton_triggered();
+
+    void on_thresholdButton_triggered();
+    void on_linecolorButton_triggered();
+
     void on_alignconstrainButton_triggered();
     void on_actionRunDRC_triggered();
 
