@@ -26,6 +26,12 @@ void GatoPrinter::print(QPrinter &printer){
     xstep=paperrect.width()/colcount;
     ystep=paperrect.height()/rowcount;
 
+    /* And whichever step is greater, that's the only
+     * one we use.  This keeps things regular and avoids
+     * obscenely large steps.
+     */
+    xstep=ystep=(xstep<ystep?xstep:ystep);
+
 
     QPainter painter;
     painter.begin(&printer);
