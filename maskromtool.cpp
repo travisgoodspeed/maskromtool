@@ -1106,6 +1106,19 @@ RomBitItem* MaskRomTool::markBitTable(){
     if(!firstbit)
         alignmentdirty=true;
 
+    //If we have a bit, update the counts.
+    rowcount=colcount=0;
+    RomBitItem* bit=firstbit;
+    while(bit){
+        rowcount++;
+        bit=bit->nextrow;
+    }
+    bit=firstbit;
+    while(bit){
+        colcount++;
+        bit=bit->nexttoright;
+    }
+
     return firstbit;
 }
 

@@ -124,8 +124,9 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
      * to show our position and size.
      */
     maskRomTool->statusBar()->showMessage(
-                str.asprintf("%05d x %05d -- %2lld violations -- %ld bits, %ldkB",
+                str.asprintf("%05d x %05d -- %ld rows, %ld cols -- %2lld violations -- %ld bits, %ldkB",
                      (int) scenepos.x(), (int) scenepos.y(),
+                     maskRomTool->rowcount, maskRomTool->colcount,
                      maskRomTool->violations.size(),
                      maskRomTool->bitcount,
                      maskRomTool->bitcount/1024/8

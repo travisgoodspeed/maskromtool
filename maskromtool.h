@@ -53,6 +53,7 @@ public:
     QSet<RomBitFix*> bitfixes;   //Forced bits, used to keep human agency above the thinking machine.
     QSet<RomRuleViolation*> violations;  //DRC Errors and warnings.
     long bitcount=0;             //Total count of bits from the latest marking.
+    long rowcount=0, colcount=0;
     void removeItem(QGraphicsItem* item);    //Removed an item of any type from the view and its QSet.
 
 
@@ -134,7 +135,6 @@ public:
     ASCIIDialog asciiDialog;
     QChart histogramchart;
     RomThresholdDialog thresholdDialog;
-
     RomAlignDialog alignDialog;
     RomRuleDialog violationDialog;
     RomSecond second;
