@@ -15,7 +15,8 @@ int GatoGraderASCII::grade(QByteArray ba){
 
     for(int i=0; i<ba.length(); i++){
         char c=ba[i]; //Must be signed!
-        if(((int) c)>=32){
+        if(((int) c)>=32
+            && ((int) c)!=127){
             last.append(c);
             lastcount++;
         }else{
