@@ -43,9 +43,6 @@ void GatoPrinter::print(QPrinter &printer){
                     row, col,
                     gr->outputbits[row][col]->getVal());
 
-    //Draw the guide lines.
-
-
     painter.end();
 }
 

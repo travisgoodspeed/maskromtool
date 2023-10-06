@@ -42,6 +42,7 @@ set(GATOROM_SOURCES
     gatosolver.h gatosolver.cpp
     gatograderbytes.h gatograderbytes.cpp
     gatograderstring.h gatograderstring.cpp
+    gatograderascii.h gatograderascii.cpp
     # Decoders that are new to GatoRom.
     gatodecoderinfo.h gatodecoderinfo.cpp  # Just info, no details.
     gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder
@@ -146,7 +147,6 @@ add_executable(gatorom
   ${GATOROM_SOURCES}
   # CLI
   gatomain.cpp
-  gatoprinter.h gatoprinter.cpp
 )
 target_link_libraries(gatorom Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::PrintSupport)
 

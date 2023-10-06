@@ -32,6 +32,7 @@
 //Graders for the solver.
 #include "gatograderbytes.h"
 #include "gatograderstring.h"
+#include "gatograderascii.h"
 
 
 /* This is a quick CLI wrapper for GatoROM, which you might run on textfiles
@@ -179,6 +180,10 @@ int main(int argc, char *argv[]) {
                                    ""
                                    );
     parser.addOption(bytesOption);
+    QCommandLineOption solveasciiOption(QStringList()<<"solve-ascii",
+                                   "Look for ASCII strings."
+                                   );
+    parser.addOption(solveasciiOption);
     QCommandLineOption stringOption(QStringList()<<"solve-string",
                                    "Byte string as a hint to the solver. 31,fe,ff",
                                    "bytes",
@@ -312,6 +317,8 @@ int main(int argc, char *argv[]) {
                 grader=new GatoGraderBytes(bytes);
             }else if(string.length()>0){
                 grader=new GatoGraderString(string);
+            }else if(parser.isSet(solveasciiOption)){
+                grader=new GatoGraderASCII();
             }else{
                 qDebug()<<"No solver criteria has been specified.  Try --solve-bytes or --solve-string.";
                 return 1;
