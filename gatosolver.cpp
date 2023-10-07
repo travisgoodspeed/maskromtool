@@ -57,10 +57,11 @@ bool GatoSolver::next(){
 
 //This is a little lazy, might cause bugs on big endian machines.
 struct statefield {
+    unsigned char rotation : 2;
     unsigned char flipx : 1;
     //unsigned char flipy : 1;
-    unsigned char rotation : 2;
     unsigned char invert : 1;
+    unsigned char bank : 2;     //No banking, left or right banking.
     unsigned char decoder : 4;  //Always the last thing we iterate.
     unsigned char toohigh : 1;  //Zero until the others have overflowed.
 };
@@ -97,12 +98,14 @@ bool GatoSolver::applyState(){
             break;
         }
 
+        rom->bank=state->bank;
         rom->flipx(state->flipx);
         rom->invert(state->invert);
         rom->decoder=decoders[state->decoder];
 
         //We'll have invalid states within the table when the decoder is null.
-        if(rom->decoder){
+        if(rom->decoder && rom->bank!=3){
+            rom->eval();
             rom->decode();
             return true;
         }
