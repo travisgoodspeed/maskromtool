@@ -105,8 +105,7 @@ bool GatoSolver::applyState(){
 
         //We'll have invalid states within the table when the decoder is null.
         if(rom->decoder && rom->bank!=3){
-            rom->eval();
-            rom->decode();
+            rom->decode();  //Implied an eval().
             return true;
         }
 
