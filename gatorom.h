@@ -99,6 +99,7 @@ public:
     int flippedy=0;     //Is Y flipped?
     int inverted=0;     //Are bits inverted?
     int angle=0;        //Angle of rotation.
+    int bank=0;         //1 for left, 2 for right.
 private:
     //Allocates the input size, plus a little extra for rotations.
     void setInputSize(const uint32_t rows, const uint32_t cols);

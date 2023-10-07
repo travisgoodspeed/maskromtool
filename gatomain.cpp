@@ -157,6 +157,17 @@ int main(int argc, char *argv[]) {
                                        );
     parser.addOption(zorromOption);
 
+    //banking
+    QCommandLineOption leftbankOption(QStringList()<<"leftbank",
+                                      "Only the left half of the bits."
+                                      );
+    parser.addOption(leftbankOption);
+    QCommandLineOption rightbankOption(QStringList()<<"rightbank",
+                                      "Only the right half of the bits."
+                                      );
+    parser.addOption(rightbankOption);
+
+
 
     //ASCII dumping.
     QCommandLineOption asciiOption(QStringList()<<"a"<<"print-bits",
@@ -259,6 +270,15 @@ int main(int argc, char *argv[]) {
         if(parser.isSet(invertOption))
             gr->invert(true);
 
+        //Banking
+        if(parser.isSet(leftbankOption))
+            gr->bank=1;
+        else if(parser.isSet(rightbankOption))
+            gr->bank=2;
+
+        //Evaluate any changes.
+        gr->eval();
+
         //Export results.
         if(parser.isSet(asciiOption))
             std::cout<<gr->exportString(false).toStdString();
@@ -286,6 +306,7 @@ int main(int argc, char *argv[]) {
             gr->decoder=new GatoDecoderColsRight();
         else if(parser.isSet(squeezelrOption))
             gr->decoder=new GatoDecoderSqueezeLR();
+
 
 
         //Attempt to decode even if we aren't saving it.

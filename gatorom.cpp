@@ -40,6 +40,12 @@ QString GatoROM::description(){
     if(flippedy)
         d.append("--flipy ");
 
+    //Cuts the image in half.  Needed for MC6801U4.
+    if(bank==1)
+        d.append("--leftbank ");
+    if(bank==2)
+        d.append("--rightbank ");
+
     return d;
 }
 
@@ -52,6 +58,13 @@ void GatoROM::configFromDescription(QString d){
     inverted=d.contains("-i ");
     flippedx=d.contains("--flipx ");
     flippedy=d.contains("--flipy ");
+
+    if(d.contains("--leftbank "))
+        bank=1;
+    else if(d.contains("--rightbank "))
+        bank=2;
+    else
+        bank=0;
 
 
     //Forgive me again for bringin regular expressions into this mess.
@@ -247,12 +260,27 @@ void GatoROM::eval(){
     //Rotation first.
     rotate(0, false);  //0 additional degrees.
 
+    //Banking after rotation, before flips.
+    if(bank==1){        //Left Bank
+        outputcols>>=1; //Halve the column count.
+    }else if(bank==2){  //Right bank.
+        outputcols>>=1; //Halve the column count.
+        for(unsigned int row=0; row<outputrows; row++){
+            for(int col=0; col<outputcols; col++){
+                //Translate the bits left; no mirroring.
+                outputbits[row][col]=outputbits[row][col+outputcols];
+            }
+        }
+    }
+
     //Then flips
     flipx(flippedx);
     flipy(flippedy);
 
     //Invert?
     invert(inverted);
+
+
 }
 
 //Applies a rotation to the bits.

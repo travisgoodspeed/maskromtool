@@ -16,9 +16,9 @@ For convenience of packaging and distribution, it is included with
 GatoROM is fully functional as a command line tool, performing all
 decoding methods of Zorrom and adding some extra solvers as well.
 
-As a C++ library, it is not yet being used by MaskRomTool.  To decode
-your project, first export it as an ASCII bitstream and then use
-GatoROM from the command line.
+As a C++ library, it is not yet fully integrated into MaskRomTool.  To
+decode your project, first export it as an ASCII bitstream and then
+use GatoROM from the command line.
 
 ## CLI Usage
 
@@ -48,9 +48,12 @@ Options:
   --rawwidth, --seanriddle <width>  Width of a raw binary input, in Sean
                                     Riddle's style.
   -I, --info                        Info about input.
+  --print                           Print with a GUI dialog.
+  --printpdf <file.pdf>             Print to a PDF file.
   --decode-arm6                     Decodes the ROM as ARM6 (MYK82).
   --decode-msp430                   Decodes the ROM as MSP430. (Broken.)
   --decode-tlcs47font               Decodes as a TMP47C434N Font.
+  --decode-cols-downl-swap          Decodes as a uCOM4 ROM.
   --decode-cols-downr               Decodes the ROM first down then right like
                                     a Gameboy.
   --decode-cols-downl               Decodes the ROM first down then left.
@@ -60,17 +63,35 @@ Options:
                                     from right like in the TMS32C15.
   -z, --zorrom                      Zorrom compatibility mode, with flipx
                                     before rotation.
+  --leftbank                        Only the left half of the bits.
+  --rightbank                       Only the right half of the bits.
   -a, --print-bits                  Prints ASCII art of the transformed bits.
   -A, --print-pretty-bits           Prints ASCII art with spaces.
   --solve                           Solves for an unknown format.
   --solve-bytes <bytes>             Bytes as a hint to the solver.
                                     0:31,1:fe,2:ff
+  --solve-ascii                     Look for ASCII strings.
   --solve-string <bytes>            Byte string as a hint to the solver.
                                     31,fe,ff
 
 Arguments:
   bitstream                         ASCII art of ROM to decode.
 ```
+
+
+## Order of Operations
+
+The order of operations is defined in `GatoROM::eval()`.
+
+1. Rotations first, before all others.
+2. Bank selection comes after rotation.
+3. Flipping next.
+4. Inverting bits happens last.
+
+[Zorrom](https://github.com/JohnDMcMaster/zorrom) performs flips
+before rotation, while Gatorom rotates first before flips.  When
+flipping X, you will need to adjust your rotation by 180 degrees or
+pass the `-z` parameter to enable Zorrom compatibility mode.
 
 
 ## Specific Examples
@@ -117,14 +138,4 @@ Zorrom solver results.  Each is verified by MD5 checksums, and any
 assertion failure or segfault is something about which you should file
 an issue.
 
-## Zorrom Compatibility
-
-This project aims to be compatible with
-[ZorROM](https://github.com/JohnDMcMaster/zorrom), but some
-incompatibilities have snuck in.
-
-Zorrom performs flips before rotation, while Gatorom rotates first
-before flips.  When flipping X, you will need to adjust your rotation
-by 180 degrees or pass the `-z` parameter to enable Zorrom
-compatibility mode.
 
