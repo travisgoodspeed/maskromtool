@@ -791,9 +791,12 @@ void MaskRomTool::fileOpen(QString filename){
             qDebug()<<"Loading background image: "<<imagefilename;
         background=QImage(imagefilename);
         if(background.isNull()){
-            QMessageBox msgBox;
-            msgBox.setText("Error opening "+imagefilename);
-            msgBox.exec();
+            qDebug()<<"Error opening "<<imagefilename;
+            if(QGuiApplication::platformName()!="offscreen"){
+                QMessageBox msgBox;
+                msgBox.setText("Error opening "+imagefilename);
+                msgBox.exec();
+            }
             return;
         }
         //Adjust the crosshair sizes in the scene.
