@@ -1,5 +1,6 @@
 #include "gatodecodercolsdownlswap.h"
 
+#include <QDebug>
 
 /* NEC uCOM4 micros use a format much like cols-downl
  * except that the 128 byte pages periodically swap order.
@@ -17,7 +18,7 @@ GatoDecoderColsDownLSwap::GatoDecoderColsDownLSwap(){
 
 QByteArray GatoDecoderColsDownLSwap::decode(GatoROM *gr){
     uint32_t adr=0, vadr=0;  //Physical and virtual address.
-    QByteArray ba, vba;      //Physical and virtual bytes.
+    QByteArray ba, vba, empty;      //Physical and virtual bytes.
 
     gr->eval();
 
@@ -56,7 +57,10 @@ QByteArray GatoDecoderColsDownLSwap::decode(GatoROM *gr){
         vadr=adr;
         if(adr&0x100) vadr=adr^0x80;
 
-        vba.append(ba[vadr]);
+        if(ba.length()>=vadr)
+            vba.append(ba[vadr]);
+        else
+            return empty;
     }
 
     return vba;

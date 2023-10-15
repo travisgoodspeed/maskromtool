@@ -35,6 +35,8 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
 
     //We might be dynamic, but we still don't want to crash.
     if(gr->outputcols%8!=0) return ba;
+    if(gr->outputrows%8!=0) return ba;
+
 
     //Top to bottom
     uint32_t adr=0;
