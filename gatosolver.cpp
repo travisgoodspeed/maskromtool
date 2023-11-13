@@ -56,7 +56,7 @@ bool GatoSolver::next(){
 
 
 //This is a little lazy, might cause bugs on big endian machines.
-struct statefield {
+struct __attribute__((__packed__)) statefield {
     unsigned char rotation : 2;
     unsigned char flipx : 1;
     //unsigned char flipy : 1;
@@ -105,22 +105,25 @@ bool GatoSolver::applyState(){
 
         //We'll have invalid states within the table when the decoder is null.
         if(rom->decoder && rom->bank!=3){
-            rom->decode();  //Implied an eval().
+            rom->decode();  //Implies an eval().
             return true;
         }
 
         //If the state is invalid, quietly try the next.
         this->state++;
-        state=(statefield*) &(this->state);
+        //state=(statefield*) &(this->state); //No need, because the pointer aims here.
     }
 
     return false;
 }
+
 
 //Get the grade, from -1 to 100.
 int GatoSolver::grade(){
     assert(grader);
     assert(rom);
 
-    return grader->grade(rom->decoded);
+    int grade=grader->grade(rom->decoded);
+    return grade;
 }
+
