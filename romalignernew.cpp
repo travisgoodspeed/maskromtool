@@ -70,11 +70,17 @@ RomBitItem* RomAlignerNew::markBitTable(MaskRomTool* mrt){
     if(verbose)
         qDebug()<<"Counted"<<rowstarts.count()<<"rows.";
 
-    //And we grow those bits outward to the right.
-    markRemainingBits();
+    //If we have some starts,
+    if(rowstarts.count()>0){
+        //And we grow those bits outward to the right.
+        markRemainingBits();
 
-    //And finally we return a pointer to the topleft bit.
-    return linkresults();
+        //And finally we return a pointer to the topleft bit.
+        return linkresults();
+    }
+
+    //Return null if we failed to make enough rows.
+    return 0;
 }
 
 void RomAlignerNew::markRemainingBits(){
@@ -84,7 +90,6 @@ void RomAlignerNew::markRemainingBits(){
      */
     int rowcount=rowstarts.count();
     RomBitItem** rowbits=new RomBitItem*[rowcount];
-
     for(int i=0; i<rowstarts.count(); i++)
         rowbits[i]=rowstarts[i];
 
@@ -106,7 +111,7 @@ void RomAlignerNew::markRemainingBits(){
                 leastydist=ydist;
             }
         }
-        //if(verbose) qDebug()<<"Assigning bit to row"<<leastyi;
+
         rowbits[leastyi]->nexttoright=bit;
         rowbits[leastyi]=bit;
         bit->marked=true;
