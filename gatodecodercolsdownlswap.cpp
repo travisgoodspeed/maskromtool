@@ -57,7 +57,7 @@ QByteArray GatoDecoderColsDownLSwap::decode(GatoROM *gr){
         vadr=adr;
         if(adr&0x100) vadr=adr^0x80;
 
-        if(ba.length()>=vadr)
+        if(ba.length()>vadr)
             vba.append(ba[vadr]);
         else
             return empty;
