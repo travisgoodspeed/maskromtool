@@ -24,9 +24,9 @@ not just all ROM bits but also reshoots for error correction.
 ## Release Changelog
 
 `master` -- Selection highlight.  Row/column counts in status bar.
-ASCII solver.
-[Crashes](https://github.com/travisgoodspeed/maskromtool/issues/59) in
-solver from awkward ROM sizes.
+ASCII solver.  Fixes multiple
+[crashes](https://github.com/travisgoodspeed/maskromtool/issues/59) in
+solver from awkward ROM sizes.  Test case fixes.
 
 2023-09-13 -- CLI option to disable OpenGL.  Printing support.
 Working Windows build.
