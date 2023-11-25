@@ -82,9 +82,13 @@ int main(int argc, char *argv[]) {
 
     //Randomizing without an input file.
     QCommandLineOption randomOption(QStringList()<<"random",
-                                    "Randomize a ROM."
+                                    "Randomize a ROM for testing."
                                     );
     parser.addOption(randomOption);
+    QCommandLineOption randomOption2(QStringList()<<"Random",
+                                    "Randomize a crazy ROM."
+                                    );
+    parser.addOption(randomOption2);
 
     //Randomizing without an input file.
     QCommandLineOption seanriddleOption(QStringList()<<"rawwidth"<<"seanriddle",
@@ -227,11 +231,20 @@ int main(int argc, char *argv[]) {
         input.open(QFile::ReadOnly);
         byteArray=input.readAll();
         gr=new GatoROM(QString(byteArray));
-    }else if(parser.isSet(randomOption)){                   //Fake a random ROM.
+    }else if(parser.isSet(randomOption) || parser.isSet(randomOption2)){                   //Fake a random ROM.
         //Initialize a random generator.
         QRandomGenerator *rng=QRandomGenerator::global();
+
+        // By default, we use square sizes.
         int rows=16*(rng->generate()%16);
         int cols=16*(rng->generate()%16);
+
+        // With --Random, we don't make the sizes square.
+        // This catches different bugs.
+        if(parser.isSet(randomOption2)){
+            rows=(rng->generate()%1280);
+            cols=(rng->generate()%1280);
+        }
 
         //Make it a string.
         QString str="";
@@ -245,6 +258,7 @@ int main(int argc, char *argv[]) {
 
         //Make it a GatROM.
         gr=new GatoROM(str);
+        qDebug()<<"Randomized ROM of "<<gr->inputrows<<"x"<<gr->inputcols;
     }else{
         //Kindly help when the arguments make no sense.
         parser.showHelp(1);
@@ -333,6 +347,12 @@ int main(int argc, char *argv[]) {
 
             QString bytes=parser.value(bytesOption);
             QString string=parser.value(stringOption);
+
+            if(gr->inputrows==0 || gr->inputcols==0){
+                qDebug()<<"Cannot solve an empty ROM.";
+                return 1;
+            }
+
 
             if(bytes.length()>0){
                 grader=new GatoGraderBytes(bytes);
