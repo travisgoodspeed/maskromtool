@@ -18,7 +18,7 @@
     <widget class="QTabWidget" name="tabWidget">
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Tab 1</string>
+       <string>Main</string>
       </attribute>
       <widget class="QLabel" name="label">
        <property name="geometry">
@@ -228,7 +228,7 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Tab 2</string>
+       <string>Extras</string>
       </attribute>
      </widget>
     </widget>
