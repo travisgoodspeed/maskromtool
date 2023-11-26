@@ -63,6 +63,7 @@ public:
     void flipx(bool flipped);                       //Flip horizontally.
     void flipy(bool flipped);                       //Flip vertically.
     void invert(bool inverted);                     //Invert every bit.
+    void setBank(int b);                            //Choose
     void eval();                                    //Re-applies all transformations.
 
     //After rotation and mirroring, before decoding.
@@ -92,9 +93,10 @@ public:
     //Loads ASCII art text into the structure.
     void loadFromString(QString str);
 
-    int zorrommode=0; //Compatibility with Zorrom's bugs.
 
-    //Don't set these directly.
+
+    //These are set directly, but probably shouldn't be.
+    int zorrommode=0;   //Compatibility with Zorrom's bugs.
     int flippedx=0;     //Is X flipped?
     int flippedy=0;     //Is Y flipped?
     int inverted=0;     //Are bits inverted?

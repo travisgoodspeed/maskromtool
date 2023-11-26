@@ -363,6 +363,19 @@ void GatoROM::invert(bool inverted){
     }
 }
 
+//Chooses the bank.
+void GatoROM::setBank(int b){
+    switch(bank){
+    case 0:
+    case 1:
+    case 2:
+        this->bank=b;
+        break;
+    default:
+        qDebug()<<"Ignoring illegal bank of"<<b;
+    }
+}
+
 
 //Exports the project as bits.
 QString GatoROM::exportString(bool pretty){
@@ -384,9 +397,11 @@ QString GatoROM::exportString(bool pretty){
 
 //Allocates the input buffer, given known dimensions.
 void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
-    if(inputbits)
-        qDebug()<<"WARNING: GatoRom input buffer is not empty.  Maybe leaking memory?";
+    if(inputbits){
+        qDebug()<<"WARNING: GatoRom input buffer is leaking.  https://github.com/travisgoodspeed/maskromtool/issues/66";
+    }
 
+    //Output is sized for the worst case in rotation and both axes.
     uint32_t outsize=(rows>cols?rows:cols);
 
     if(!outsize){

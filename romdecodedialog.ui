@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>393</width>
-    <height>367</height>
+    <height>437</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -107,7 +107,7 @@
          <x>100</x>
          <y>110</y>
          <width>256</width>
-         <height>192</height>
+         <height>151</height>
         </rect>
        </property>
        <item>
@@ -162,6 +162,67 @@
        </property>
        <property name="text">
         <string>Zorrom Mode</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="textFlags">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>340</y>
+         <width>341</width>
+         <height>41</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>320</y>
+         <width>58</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Flags</string>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="listBank">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>270</y>
+         <width>256</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>left</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>right</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>270</y>
+         <width>58</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Bank</string>
        </property>
       </widget>
      </widget>

@@ -1,8 +1,7 @@
 #include "maskromtool.h"
 #include "romdecoderascii.h"
+#include "romdecodergato.h"
 #include "romdecodercsv.h"
-#include "romdecodermarc4.h"
-#include "romdecoderarm6.h"
 #include "romdecoderjson.h"
 #include "romdecoderpython.h"
 #include "romdecoderphotograph.h"
@@ -17,7 +16,8 @@
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
 
-    //Stupid portability bug.  It's a lot faster to name a font that exists on macOS with no GUI.
+    //Stupid portability bug.
+    // It's faster to name a font that exists on macOS with no GUI.
     if(a.platformName()=="offscreen")
         a.setFont(QFont("Helvetica Neue"));
 
@@ -85,9 +85,14 @@ int main(int argc, char *argv[]){
 
     // Exporting to ASCII art.
     QCommandLineOption asciiExportOption(QStringList() << "a" << "export-ascii",
-        QCoreApplication::translate("main", "Export ASCII bits for use in ZorRom."),
-        QCoreApplication::translate("main", "file"));
+                                         QCoreApplication::translate("main", "Export ASCII bits."),
+                                         QCoreApplication::translate("main", "file"));
     parser.addOption(asciiExportOption);
+    // Exporting to ROM bytes.
+    QCommandLineOption rombytesExportOption(QStringList() << "o" << "export",
+                                         QCoreApplication::translate("main", "Export ROM bytes."),
+                                         QCoreApplication::translate("main", "file"));
+    parser.addOption(rombytesExportOption);
     // Exporting to CSV table.
     QCommandLineOption csvExportOption(QStringList() << "export-csv",
         QCoreApplication::translate("main", "Export CSV bits for use in Matlab or Excel."),
@@ -103,21 +108,12 @@ int main(int argc, char *argv[]){
         QCoreApplication::translate("main", "Export Python arrays."),
         QCoreApplication::translate("main", "file"));
     parser.addOption(pythonExportOption);
-    // Exporting a MARC4 ROM.
-    QCommandLineOption marc4ExportOption(QStringList() << "export-marc4",
-        QCoreApplication::translate("main", "Export MARC4 ROM banks, left to right."),
-        QCoreApplication::translate("main", "file"));
-    parser.addOption(marc4ExportOption);
-    // Exporting an ARM6 ROM.
-    QCommandLineOption arm6ExportOption(QStringList() << "export-arm6",
-        QCoreApplication::translate("main", "Export ARM6L (MYK82) ROM."),
-        QCoreApplication::translate("main", "file"));
-    parser.addOption(arm6ExportOption);
     // Exporting a photo.
     QCommandLineOption photoExportOption(QStringList() << "export-photo",
         QCoreApplication::translate("main", "Export a photograph."),
         QCoreApplication::translate("main", "file"));
     parser.addOption(photoExportOption);
+
 
 
 
@@ -155,6 +151,14 @@ int main(int argc, char *argv[]){
         RomDecoderAscii exporter;
         exporter.writeFile(&mrt, parser.value(asciiExportOption));
     }
+    //Export to ASCII.
+    if(parser.isSet(rombytesExportOption)){
+        qDebug()<<"Exporting ROM";
+        RomDecoderGato exporter;
+        exporter.writeFile(&mrt, parser.value(rombytesExportOption));
+
+    }
+
     //Export to CSV.
     if(parser.isSet(csvExportOption)){
         qDebug()<<"Exporting to CSV.";
@@ -178,18 +182,6 @@ int main(int argc, char *argv[]){
         qDebug()<<"Exporting a photo.";
         RomDecoderPhotograph exporter;
         exporter.writeFile(&mrt, parser.value(photoExportOption));
-    }
-    //Export to MARC4.
-    if(parser.isSet(marc4ExportOption)){
-        qDebug()<<"Exporting MARC4 ROM.  Banks may be in the wrong order.";
-        RomDecoderMarc4 exporter;
-        exporter.writeFile(&mrt, parser.value(marc4ExportOption));
-    }
-    //Export to ARM6.
-    if(parser.isSet(arm6ExportOption)){
-        qDebug()<<"Exporting ARM6 ROM.";
-        RomDecoderARM6 exporter;
-        exporter.writeFile(&mrt, parser.value(arm6ExportOption));
     }
 
     //Stress test.

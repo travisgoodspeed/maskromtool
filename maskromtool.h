@@ -192,8 +192,7 @@ private slots:
     void on_exportCSV_triggered();
     void on_exportJSONBits_triggered();
     void on_exportPython_triggered();
-    void on_exportMARC4_triggered();
-    void on_exportARM6_triggered();
+    void on_exportROMBytes_triggered();
     void on_exportPhotograph_triggered();
 
     //printing

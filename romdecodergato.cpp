@@ -7,6 +7,8 @@ RomDecoderGato::RomDecoderGato(){}
 
 //Returns a GatoROM structure of the bits.
 GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
+    this->mrt=mrt;
+
     //FIXME: This works well enough to print, but doesn't return links to MRT objects.
     RomDecoderAscii exporter;
     QString ascii=exporter.preview(mrt);
@@ -45,5 +47,7 @@ QString RomDecoderGato::preview(MaskRomTool *m){
 
 //Exports the preview to a file.
 void RomDecoderGato::writeFile(MaskRomTool *m, QString filename){
-    qDebug()<<"Not writing a GatoRom file.";
+    QFile fout(filename);
+    fout.open(QIODevice::WriteOnly);
+    fout.write(gatorom(m).decode());
 }
