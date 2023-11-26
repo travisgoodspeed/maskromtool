@@ -22,8 +22,6 @@
 #include "romdecodercsv.h"
 #include "romdecoderpython.h"
 #include "romdecoderjson.h"
-#include "romdecodermarc4.h"
-#include "romdecoderarm6.h"
 #include "romdecoderphotograph.h"
 #include "romdecodergato.h"
 //Importers too, weird as they are.

@@ -79,7 +79,6 @@ set(MRT_SOURCES
         romdecoderjson.h romdecoderjson.cpp
         romdecodercsv.h romdecodercsv.cpp
         romdecodermarc4.h romdecodermarc4.cpp
-        romdecoderarm6.h romdecoderarm6.cpp
         romdecoderphotograph.h romdecoderphotograph.cpp
         romencoderdiff.h romencoderdiff.cpp
 # Alignment stategies
