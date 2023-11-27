@@ -68,11 +68,13 @@ void GatoROM::configFromDescription(QString d){
 
 
     //Forgive me again for bringin regular expressions into this mess.
-    static QRegularExpression decoder("--decode-(\\w+) ");
+    static QRegularExpression decoder("--decode-([a-z\\-]+) ");
     QRegularExpressionMatch match=decoder.match(d);
     if(match.hasMatch()){
         //qDebug()<<"Matched decoder to"<<match.captured(1);
         setDecoderByName(match.captured(1));
+    }else{
+        qDebug()<<"Failed to match decoder.";
     }
 
     static QRegularExpression angle("-r (\\d+) ");
