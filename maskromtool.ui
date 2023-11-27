@@ -62,7 +62,6 @@
      <addaction name="separator"/>
      <addaction name="exportROMBytes"/>
      <addaction name="exportMARC4"/>
-     <addaction name="exportARM6"/>
     </widget>
     <widget class="QMenu" name="menuImport">
      <property name="title">
@@ -363,14 +362,6 @@
   <action name="exportCSV">
    <property name="text">
     <string>CSV</string>
-   </property>
-  </action>
-  <action name="exportARM6">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>ARM6 ROM Bytes</string>
    </property>
   </action>
   <action name="importDiff">

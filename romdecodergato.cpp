@@ -47,7 +47,9 @@ QString RomDecoderGato::preview(MaskRomTool *m){
 
 //Exports the preview to a file.
 void RomDecoderGato::writeFile(MaskRomTool *m, QString filename){
+    GatoROM gr=gatorom(m);
+    QByteArray bytes=gr.decode();
     QFile fout(filename);
     fout.open(QIODevice::WriteOnly);
-    fout.write(gatorom(m).decode());
+    fout.write(bytes);
 }

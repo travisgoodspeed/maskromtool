@@ -574,6 +574,14 @@ void MaskRomTool::on_exportJSONBits_triggered(){
 void MaskRomTool::on_exportROMBytes_triggered(){
     GatoROM gato=gatorom();
 
+    if(gato.decoder==0){
+        QMessageBox::warning(this, "Mask ROM Tool",
+                             "Use Edit/Decoding to set a decoder.",
+                             QMessageBox::Ok,
+                             QMessageBox::Ok);
+        return;
+    }
+
     QString filename = QFileDialog::getSaveFileName(this,tr("Save ROM"), tr("rom.bin"));
     if(!filename.isEmpty()){
         QFile fout(filename);
