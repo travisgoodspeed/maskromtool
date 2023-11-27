@@ -72,8 +72,8 @@
     </widget>
     <addaction name="openButton"/>
     <addaction name="saveButton"/>
-    <addaction name="menuExport"/>
     <addaction name="menuImport"/>
+    <addaction name="menuExport"/>
     <addaction name="actionPrint"/>
    </widget>
    <widget class="QMenu" name="menuView">
