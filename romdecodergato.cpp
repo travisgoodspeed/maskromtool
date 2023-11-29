@@ -30,7 +30,6 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
             bit=bit->nexttoright;  //Skip down the row.
             col++;
         }
-        ascii.append("\n");
         rowbit=rowbit->nextrow;  //Skip to the next row.
         col=0;
         row++;

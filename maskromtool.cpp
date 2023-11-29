@@ -70,6 +70,7 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     view=ui->graphicsView;
     violationDialog.setMaskRomTool(this);
     decodeDialog.setMaskRomTool(this);
+    hexDialog.setMaskRomTool(this);
     RomRuleViolation::bitSize=bitSize;
     lineColor = QColor(Qt::black);
 
@@ -91,7 +92,9 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
 GatoROM MaskRomTool::gatorom(){
     //FIXME: This works well enough to print, but doesn't return links to MRT objects.
     RomDecoderGato exporter;
-    return exporter.gatorom(this);
+    exporter.gatorom(this);
+    hexDialog.updatebinary(gr.decode());
+    return this->gr;
 }
 
 //Prints the bits.
@@ -611,6 +614,12 @@ void MaskRomTool::on_asciiButton_triggered(){
     RomDecoderAscii exporter;
     asciiDialog.setText(exporter.preview(this));
     asciiDialog.show();
+}
+
+//Display the Hex preview window.
+void MaskRomTool::on_actionHexView_triggered(){
+    gatorom();
+    hexDialog.show();
 }
 
 //Pop a dialog to apply the threshold.

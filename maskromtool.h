@@ -9,6 +9,7 @@
 #include "romlineitem.h"
 #include "rombititem.h"
 #include "asciidialog.h"
+#include "romhexdialog.h"
 #include "romthresholddialog.h"
 #include "romdecodedialog.h"
 #include "romaligndialog.h"
@@ -139,6 +140,7 @@ public:
     RomRuleDialog violationDialog;
     RomSecond second;
     RomDecodeDialog decodeDialog;
+    RomHexDialog hexDialog;
 
     //Selectable Strategies
     RomAligner *aligner=0;
@@ -186,6 +188,7 @@ private slots:
     //View a window.
     void on_aboutButton_triggered();
     void on_asciiButton_triggered();
+    void on_actionHexView_triggered();
 
     //Export to a file.
     void on_exportASCII_triggered();

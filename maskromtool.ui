@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>24</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -81,6 +81,7 @@
     </property>
     <addaction name="separator"/>
     <addaction name="asciiButton"/>
+    <addaction name="actionHexView"/>
     <addaction name="actionViolationsDialog"/>
     <addaction name="actionOpenGL"/>
     <addaction name="actionSecond"/>
@@ -402,6 +403,11 @@
   <action name="exportROMBytes">
    <property name="text">
     <string>ROM Bytes</string>
+   </property>
+  </action>
+  <action name="actionHexView">
+   <property name="text">
+    <string>Hex Preview</string>
    </property>
   </action>
  </widget>

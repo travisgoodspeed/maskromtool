@@ -1,8 +1,6 @@
 #include "romrulecount.h"
 #include "maskromtool.h"
 
-#include<QStringBuilder>
-
 RomRuleCount::RomRuleCount()
 {
 
