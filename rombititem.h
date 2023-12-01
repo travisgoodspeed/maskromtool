@@ -49,6 +49,9 @@ public:
     //Gets the same size.  Used for DRC violations.
     qreal getBitSize();
 
+    //Address and mask of the bit.
+    uint32_t adr=0xFFFFFFFF, mask=0;
+
     bool marked=false;  //A marked bit is part of the bit table.
     RomBitItem *nexttoright=0; //Linked list of bits in a row.
     RomBitItem *nextrow=0; //Linked list of row starters.

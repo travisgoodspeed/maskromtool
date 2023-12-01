@@ -9,7 +9,6 @@ RomDecoderGato::RomDecoderGato(){}
 GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
     this->mrt=mrt;
 
-    //FIXME: This works well enough to print, but doesn't return links to MRT objects.
     RomDecoderAscii exporter;
     QString ascii=exporter.preview(mrt);
 
@@ -25,8 +24,14 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
             /* Update the input bit to point to the RomBitItem*.
                This can be handy in drawing results back to the screen,
                but be careful that the pointers don't become stale!
+
+               We also set the address and the mask for visualizing
+               selections.
             */
             mrt->gr.inputbits[row][col]->ptr=bit;
+            bit->adr=mrt->gr.inputbits[row][col]->adr;
+            bit->mask=mrt->gr.inputbits[row][col]->mask;
+
             bit=bit->nexttoright;  //Skip down the row.
             col++;
         }

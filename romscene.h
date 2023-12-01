@@ -19,6 +19,7 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
     void setCrosshairVisible(bool v);
+    void updateStatus();
 
     QPointF scenepos; //Last seen position.
     QPointF presspos; //Position where last pressed.

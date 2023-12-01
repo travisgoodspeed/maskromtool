@@ -111,10 +111,25 @@ void RomScene::updateCrosshairs(bool dragging){
 
 }
 
+
+void RomScene::updateStatus(){
+    static QString str;
+    maskRomTool->statusBar()->showMessage(
+        str.asprintf(
+            "%04x to %04x -- %05d x %05d -- %ld rows, %ld cols -- %2lld violations -- %ld bits, %ldkB",
+            maskRomTool->hexDialog.start,
+            maskRomTool->hexDialog.end,
+            (int) scenepos.x(), (int) scenepos.y(),
+            maskRomTool->rowcount, maskRomTool->colcount,
+            maskRomTool->violations.size(),
+            maskRomTool->bitcount,
+            maskRomTool->bitcount/1024/8
+            )
+        );
+}
+
 //Store the last seen mouse position.
 void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
-    static QString str;
-
     //Now update the position.
     scenepos=mouseEvent->scenePos();
 
@@ -123,15 +138,8 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
     /* Whenever the mouse moves, we also update the status bar
      * to show our position and size.
      */
-    maskRomTool->statusBar()->showMessage(
-                str.asprintf("%05d x %05d -- %ld rows, %ld cols -- %2lld violations -- %ld bits, %ldkB",
-                     (int) scenepos.x(), (int) scenepos.y(),
-                     maskRomTool->rowcount, maskRomTool->colcount,
-                     maskRomTool->violations.size(),
-                     maskRomTool->bitcount,
-                     maskRomTool->bitcount/1024/8
-                   )
-                );
+    updateStatus();
+
     //here instead of on release so we can have preview
     if(mouseEvent->buttons()==Qt::RightButton){
         QPointF dpos = mouseEvent->scenePos() - presspos;

@@ -3,6 +3,8 @@
 
 #include "maskromtool.h"
 
+#include "romscene.h"
+
 RomHexDialog::RomHexDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RomHexDialog)
@@ -40,6 +42,9 @@ void RomHexDialog::on_plaintextHex_selectionChanged(){
     QTextCursor cursor=ui->plaintextHex->textCursor();
     start=positionToAdr(cursor.selectionStart());
     end=positionToAdr(cursor.selectionEnd());
+
+    //Redraw the new selection.
+    mrt->scene->updateStatus();
 }
 
 
