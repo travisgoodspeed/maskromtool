@@ -26,6 +26,13 @@ public:
     ~RomHexDialog();
     void updatebinary(QByteArray bytes);
     void setMaskRomTool(MaskRomTool *mrt);
+    uint32_t positionToAdr(int pos);
+
+    //Selections are in terms of byte addresses.
+    uint32_t start=0, end=0;
+
+private slots:
+    void on_plaintextHex_selectionChanged();
 
 private:
     Ui::RomHexDialog *ui;
