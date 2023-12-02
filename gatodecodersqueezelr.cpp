@@ -36,7 +36,7 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
             uint32_t w=0;
 
             for(int bit=7; bit>=0; bit--){
-                GatoBit *B=gr->outputbits[row][bit*skip+word];
+                GatoBit *B=gr->outputbit(row, bit*skip+word);
                 assert(B); //If this fails, we're about to crash.
 
                 //Update target address and mask.
@@ -57,7 +57,7 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
             uint32_t w=0;
 
             for(int bit=7; bit>=0; bit--){
-                GatoBit *B=gr->outputbits[row][bit*skip+word];
+                GatoBit *B=gr->outputbit(row,bit*skip+word);
                 assert(B); //If this fails, we're about to crash.
 
                 //Update target address and mask.

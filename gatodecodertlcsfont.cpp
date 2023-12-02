@@ -37,6 +37,8 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
     if(gr->outputcols%8!=0) return ba;
     if(gr->outputrows%8!=0) return ba;
 
+    //qDebug()<<"Output size is"<<gr->outputrows<<"x"<<gr->outputcols;
+    //qDebug()<<"Angle is"<<gr->angle;
 
     //Top to bottom
     uint32_t adr=0;
@@ -57,7 +59,9 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
             Q_ASSERT(word<sizeof(wordorder));
             int wordi=wordorder[word];  //Interleave the bytes.
             for (int bit = 0; bit < 8; bit++) {
-                GatoBit *gatobit=gr->outputbits[rowi][bit*8+wordi];
+                int coli=bit*8+wordi;
+                GatoBit *gatobit=gr->outputbit(rowi,coli);
+
                 if(!gatobit)   //Sizes don't line up.
                     return QByteArray();
                 gatobit->adr=adr;     //Mark the address.

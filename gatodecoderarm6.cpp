@@ -20,7 +20,7 @@ QByteArray GatoDecoderARM6::decode(GatoROM *gr){
         for(int word=15; word>=0; word--){
             uint32_t w=0;
             for(int bit=31; bit>=0; bit--){
-                GatoBit *gb=gr->outputbits[row][bit*16+word];
+                GatoBit *gb=gr->outputbit(row,bit*16+word);
                 assert(gb);
 
                 //Mark the address and bit.

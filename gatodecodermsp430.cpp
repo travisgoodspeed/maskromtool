@@ -27,7 +27,7 @@ QByteArray GatoDecoderMSP430::decode(GatoROM *gr){
             //for(unsigned int bit=15; bit>0; bit--){
             for(unsigned int bit=0; bit<16; bit++){
                 //qDebug()<<"row"<<row<<"word"<<word<<"bit"<<bit;
-                GatoBit *gb=gr->outputbits[row][bit*8+word];
+                GatoBit *gb=gr->outputbit(row,bit*8+word);
                 if(!gb){
                     qDebug()<<"Bit"<<bit<<"of row"<<row<<"is null.";
                     exit(1);

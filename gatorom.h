@@ -57,6 +57,10 @@ public:
     GatoBit*** inputbits=0;
     uint32_t inputrows=0, inputcols=0;
 
+    //Fetches a bit, while performing a safety check on the range.
+    GatoBit* inputbit(int row, int col);
+    GatoBit* outputbit(int row, int col);
+
     //First we rotate, then we flip.
     void reset();                                   //Resets to input state.
     void rotate(uint32_t degrees, bool zerofirst);  //Rotation comes before flips.
