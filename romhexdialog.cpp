@@ -22,8 +22,10 @@ RomHexDialog::~RomHexDialog(){
 }
 
 void RomHexDialog::updatebinary(QByteArray bytes){
-    //Save the cursor.
+    //Save the selection for after we re-render.
     QTextCursor cursor=ui->plaintextHex->textCursor();
+    int start=cursor.selectionStart();
+    int end=cursor.selectionEnd();
 
     //Pre-allocate the buffer so we don't keep growing it.
     QString str="";
@@ -39,6 +41,9 @@ void RomHexDialog::updatebinary(QByteArray bytes){
     }
 
     ui->plaintextHex->setPlainText(str);
+    cursor.setPosition(start,QTextCursor::MoveAnchor);
+    cursor.setPosition(end,QTextCursor::KeepAnchor);
+    ui->plaintextHex->setTextCursor(cursor);
 }
 
 
