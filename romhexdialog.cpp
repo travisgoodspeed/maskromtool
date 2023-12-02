@@ -9,15 +9,14 @@ RomHexDialog::RomHexDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RomHexDialog)
 {
-
+    /* macOS is really picky, but this seems to work
+     * on Mac, Linux and Windows.  Removing the style hint
+     * breaks Windows.
+     */
     QFont font("Andale Mono"); // macOS
-    //QFont font("Monospace");   // Windows
-
-    //font.setStyleHint(QFont::TypeWriter);
     font.setStyleHint(QFont::Monospace);
 
     ui->setupUi(this);
-    //qDebug()<<"Setting font to"<<font.toString();
     ui->plaintextHex->setFont(font);
 }
 
