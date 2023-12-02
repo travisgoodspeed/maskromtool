@@ -1335,4 +1335,6 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
             //qDebug()<<"Skipping adr"<<a;
         }
     }
+
+    this->violationDialog.show();
 }
