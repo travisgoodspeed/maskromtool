@@ -55,8 +55,16 @@ bool GatoSolver::next(){
 }
 
 
+//Packing works differently on each compiler.
+#ifdef _MSC_VER
+#define PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
+#elif defined(__GNUC__)
+#define PACK( __Declaration__ ) __Declaration__ __attribute__((__packed__))
+#endif
+
+
 //This is a little lazy, might cause bugs on big endian machines.
-struct __attribute__((__packed__)) statefield {
+PACK(struct statefield {
     unsigned char rotation : 2;
     unsigned char flipx : 1;
     //unsigned char flipy : 1;
@@ -64,7 +72,7 @@ struct __attribute__((__packed__)) statefield {
     unsigned char bank : 2;     //No banking, left or right banking.
     unsigned char decoder : 4;  //Always the last thing we iterate.
     unsigned char toohigh : 1;  //Zero until the others have overflowed.
-};
+});
 
 //Are we there yet?
 bool GatoSolver::finished(){

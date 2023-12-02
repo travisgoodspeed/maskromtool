@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core)
 
 # We currently only support English, so we define this file but we do
 # not link it.  That can, of course, be changed if/when we get around
