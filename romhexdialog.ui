@@ -18,8 +18,8 @@
     <widget class="QPlainTextEdit" name="plaintextHex">
      <property name="font">
       <font>
-       <family>Noto Mono</family>
-       <kerning>false</kerning>
+       <family>Arial Unicode MS</family>
+       <kerning>12</kerning>
       </font>
      </property>
      <property name="readOnly">
