@@ -9,7 +9,12 @@ RomHexDialog::RomHexDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RomHexDialog)
 {
+
+    QFont font("Monospace");
+    font.setStyleHint(QFont::TypeWriter);
+
     ui->setupUi(this);
+    ui->plaintextHex->setFont(font);
 }
 
 RomHexDialog::~RomHexDialog(){
