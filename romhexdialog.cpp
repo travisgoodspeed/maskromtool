@@ -17,6 +17,9 @@ RomHexDialog::~RomHexDialog(){
 }
 
 void RomHexDialog::updatebinary(QByteArray bytes){
+    //Save the cursor.
+    QTextCursor cursor=ui->plaintextHex->textCursor();
+
     //Pre-allocate the buffer so we don't keep growing it.
     QString str="";
     str.reserve(bytes.length()*4);
@@ -40,11 +43,16 @@ void RomHexDialog::setMaskRomTool(MaskRomTool *mrt){
 
 void RomHexDialog::on_plaintextHex_selectionChanged(){
     QTextCursor cursor=ui->plaintextHex->textCursor();
-    start=positionToAdr(cursor.selectionStart());
-    end=positionToAdr(cursor.selectionEnd());
 
-    //Redraw the new selection.
-    mrt->scene->updateStatus();
+    if(cursor.selectionStart()!=-1){
+        start=positionToAdr(cursor.selectionStart());
+        end=positionToAdr(cursor.selectionEnd());
+
+        //Redraw the new selection.
+        mrt->scene->updateStatus();
+    }else{
+        qDebug()<<"Skipping an empty hex selection.";
+    }
 }
 
 

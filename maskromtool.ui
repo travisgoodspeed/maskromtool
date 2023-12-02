@@ -85,6 +85,8 @@
     <addaction name="actionViolationsDialog"/>
     <addaction name="actionOpenGL"/>
     <addaction name="actionSecond"/>
+    <addaction name="separator"/>
+    <addaction name="actionHighlightHexSelection"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -408,6 +410,11 @@
   <action name="actionHexView">
    <property name="text">
     <string>Hex Preview</string>
+   </property>
+  </action>
+  <action name="actionHighlightHexSelection">
+   <property name="text">
+    <string>Highlight Hex Selection</string>
    </property>
   </action>
  </widget>

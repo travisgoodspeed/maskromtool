@@ -88,9 +88,10 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
         enableOpenGL(0);
 }
 
+
+
 //Returns a GatoROM structure of the bits.
 GatoROM MaskRomTool::gatorom(){
-    //FIXME: This works well enough to print, but doesn't return links to MRT objects.
     RomDecoderGato exporter;
     exporter.gatorom(this);
     hexDialog.updatebinary(gr.decode());
@@ -1296,10 +1297,42 @@ void MaskRomTool::importJSON(QJsonObject o){
 }
 
 
-
+// This displays the second window.  Maybe we ought to have a third?
 void MaskRomTool::on_actionSecond_triggered(){
     second.mrt=this;         //Apply a backreference for sharing keystrokes.
     second.show();           //Show the window.
     second.resize(1024,768); //Resizing it makes scrollbars visible.
 }
 
+// This hilights all bits in the range selected in the Hex viewer.
+void MaskRomTool::on_actionHighlightHexSelection_triggered(){
+    highlightAdrRange(
+        hexDialog.start,
+        hexDialog.end
+        );
+}
+
+// Marks a warning for bits in range.
+void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
+
+    qDebug()<<"Marking range from"<<start<<"to"<<end;
+
+    //Just another type of violation, so we have to clear the real ones.
+    clearViolations();
+
+    //Update the decoding and mark the bits.
+    gatorom();
+
+    foreach (RomBitItem* b, bits){
+        uint32_t a=b->adr;
+        if(start<=a && a<=end){
+            RomRuleViolation* violation=new RomRuleViolation(b->pos(),
+                                                               QString::asprintf("Bit at 0x%x",a),
+                                                               QString::asprintf("Bit at 0x%x",a));
+            violation->error=false;
+            addViolation(violation);
+        }else{
+            //qDebug()<<"Skipping adr"<<a;
+        }
+    }
+}

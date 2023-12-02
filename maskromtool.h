@@ -96,6 +96,9 @@ public:
     RomBitFix* getBitFix(QPointF point, bool create=false);
     RomBitFix* getBitFix(RomBitItem* bit, bool crate=false);
 
+    //Highlight stuff for easy visibility.
+    void highlightAdrRange(uint32_t start, uint32_t end);
+
     //Updates the histogram dialog.
     void updateThresholdHistogram();
 
@@ -190,6 +193,9 @@ private slots:
     void on_asciiButton_triggered();
     void on_actionHexView_triggered();
 
+    //Import from a file.  (Loose definition.
+    void on_importDiff_triggered();
+
     //Export to a file.
     void on_exportASCII_triggered();
     void on_exportCSV_triggered();
@@ -201,9 +207,6 @@ private slots:
     //printing
     void on_actionPrint_triggered();
 
-    //Import from a file.  (Loose definition.
-    void on_importDiff_triggered();
-
     //View or hide.
     void on_actionPhotograph_triggered();
     void on_actionRowsColumns_triggered();
@@ -212,13 +215,12 @@ private slots:
     void on_actionViolationsDialog_triggered();
     void on_actionCrosshair_triggered();
     void on_actionOpenGL_triggered();
-
+    void on_actionSecond_triggered();
 
     void on_actionClearViolations_triggered();
-
     void on_actionRunAllDRC_triggered();
 
-    void on_actionSecond_triggered();
+    void on_actionHighlightHexSelection_triggered();
 
 private:
     Ui::MaskRomTool *ui;

@@ -11,13 +11,17 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
 
     RomDecoderAscii exporter;
     QString ascii=exporter.preview(mrt);
+    RomBitItem* firstbit = mrt->markBitTable();
+
 
     //We rebuild from the preserved class
     mrt->gr.loadFromString(ascii);
 
-    RomBitItem* rowbit = mrt->markBitTable();
+
     unsigned int row=0, col=0;
-    //Prints all bits in the row.
+    RomBitItem* rowbit=firstbit;
+
+    //Match them together.
     while(rowbit){
         RomBitItem* bit=rowbit;
         while(bit){
@@ -25,9 +29,29 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
                This can be handy in drawing results back to the screen,
                but be careful that the pointers don't become stale!
 
-               We also set the address and the mask for visualizing
-               selections.
-            */
+               We can't set the address and mask yet because we don't know them.
+             */
+            mrt->gr.inputbits[row][col]->ptr=bit;
+
+            bit=bit->nexttoright;  //Skip down the row.
+            col++;
+        }
+        rowbit=rowbit->nextrow;  //Skip to the next row.
+        col=0;
+        row++;
+    }
+
+    row=0; col=0;
+    rowbit=firstbit;
+
+    //Set the bits.
+    mrt->gr.decode();
+
+    //Then loop again to set addresses and masks.
+    while(rowbit){
+        RomBitItem* bit=rowbit;
+        while(bit){
+            //Now we can set the address and mask.
             mrt->gr.inputbits[row][col]->ptr=bit;
             bit->adr=mrt->gr.inputbits[row][col]->adr;
             bit->mask=mrt->gr.inputbits[row][col]->mask;

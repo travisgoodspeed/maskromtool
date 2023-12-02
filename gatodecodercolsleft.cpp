@@ -25,7 +25,6 @@ QByteArray GatoDecoderColsLeft::decode(GatoROM *gr){
         for(int word=(gr->outputcols/8)-1; word>=0; word--){
             uint32_t w=0;
 
-            //for(int bit=0; bit<8; bit++){
             for(int bit=7; bit>=0; bit--){
                 GatoBit *B=gr->outputbits[row][bit*skip+word];
                 assert(B); //If this fails, we're about to crash.
