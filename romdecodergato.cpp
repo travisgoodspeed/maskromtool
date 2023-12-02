@@ -33,7 +33,7 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
 
                We can't set the address and mask yet because we don't know them.
              */
-            mrt->gr.inputbits[row][col]->ptr=bit;
+            mrt->gr.inputbit(row,col)->ptr=bit;
 
             bit=bit->nexttoright;  //Skip down the row.
             col++;
@@ -54,9 +54,9 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
         RomBitItem* bit=rowbit;
         while(bit){
             //Now we can set the address and mask.
-            mrt->gr.inputbits[row][col]->ptr=bit;
-            bit->adr=mrt->gr.inputbits[row][col]->adr;
-            bit->mask=mrt->gr.inputbits[row][col]->mask;
+            mrt->gr.inputbit(row,col)->ptr=bit;
+            bit->adr=mrt->gr.inputbit(row,col)->adr;
+            bit->mask=mrt->gr.inputbit(row,col)->mask;
 
             bit=bit->nexttoright;  //Skip down the row.
             col++;

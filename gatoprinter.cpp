@@ -41,7 +41,7 @@ void GatoPrinter::print(QPrinter &printer){
         for(unsigned int col=0; col<gr->outputcols; col++)
             drawbit(painter,
                     row, col,
-                    gr->outputbits[row][col]->getVal());
+                    gr->outputbit(row,col)->getVal());
 
     painter.end();
 }
