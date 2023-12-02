@@ -24,13 +24,16 @@ QByteArray GatoDecoderARM6::decode(GatoROM *gr){
                 assert(gb);
 
                 //Mark the address and bit.
-                gb->adr=adr+w/8;
-                gb->mask=1<<(w%8);
+                gb->adr=adr+bit/8;
+                gb->mask=1<<(bit%8);
 
                 //Mark the value.
                 int b=gb->getVal();
                 w=(w<<1)|b;
             }
+
+            //Little endian is arbitrary here.
+            //The ROM has no endianness, as ARM6 has no unaligned accesses.
             ba.append(w&0xFF);
             ba.append((w>>8)&0xFF);
             ba.append((w>>16)&0xFF);

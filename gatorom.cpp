@@ -67,20 +67,19 @@ void GatoROM::configFromDescription(QString d){
         bank=0;
 
 
-    //Forgive me again for bringin regular expressions into this mess.
-    static QRegularExpression decoder("--decode-([a-z\\-]+) ");
+    //Forgive me again for bringing regular expressions into this mess.
+    static QRegularExpression decoder("--decode-([a-z0-9\\-]+) ");
     QRegularExpressionMatch match=decoder.match(d);
     if(match.hasMatch()){
         //qDebug()<<"Matched decoder to"<<match.captured(1);
         setDecoderByName(match.captured(1));
     }else{
-        qDebug()<<"Failed to match decoder.";
+        //qDebug()<<"Failed to match decoder: "<<d;
     }
 
     static QRegularExpression angle("-r (\\d+) ");
     match=angle.match(d);
     if(match.hasMatch()){
-        //qDebug()<<"Matched angle to"<<match.captured(1);
         bool okay=true;
         int rotation=match.captured(1).toInt(&okay,10);
         if(okay)
