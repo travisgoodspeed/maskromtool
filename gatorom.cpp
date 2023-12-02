@@ -82,8 +82,11 @@ void GatoROM::configFromDescription(QString d){
     if(match.hasMatch()){
         bool okay=true;
         int rotation=match.captured(1).toInt(&okay,10);
-        if(okay)
-            rotate(rotation, true);
+
+        if(okay){ //Only apply proper angles.
+            this->angle=rotation;
+            //rotate(rotation, true);
+        }
     }
 }
 
@@ -280,14 +283,14 @@ void GatoROM::eval(){
 
     //Invert?
     invert(inverted);
-
-
 }
 
 //Applies a rotation to the bits.
 void GatoROM::rotate(uint32_t degrees, bool zerofirst){
     if(zerofirst)
         angle=0;
+
+    //qDebug()<<"Rotating"<<degrees<<"degrees from"<<angle<<(zerofirst?"with":"without")<<"zeroing.";
 
     //Continually update.
     angle+=degrees;

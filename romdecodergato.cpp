@@ -13,6 +13,8 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
     QString ascii=exporter.preview(mrt);
     RomBitItem* firstbit = mrt->markBitTable();
 
+    //We'll need to reapply the angle after regenerating the matrix.
+    int angle=mrt->gr.angle;
 
     //We rebuild from the preserved class
     mrt->gr.loadFromString(ascii);
@@ -63,6 +65,9 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
         col=0;
         row++;
     }
+
+    //Finally, reapply the preserved angle.
+    mrt->gr.rotate(angle,true);
 
     return mrt->gr;
 }
