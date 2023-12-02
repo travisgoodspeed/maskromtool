@@ -146,7 +146,8 @@ SHIFT+C -- Repeat the shape of the last column.
 SHIFT+F -- Force a bit's value. (Again to flip.)
 SHIFT+A -- Force a bit's ambiguity.  (Again to flip.)
 
-M       -- Remark all of the bits.
+M       -- Mark all of the bits.
+SHIFT+M -- Decode to Hex bytes.
 V       -- Run the Design Rule Checks.
 SHIFT+V -- Clear the DRC violations.
 ```

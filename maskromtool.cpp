@@ -442,6 +442,10 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         if(asciiDialog.isVisible())
             on_asciiButton_triggered();
         statusBar()->showMessage(tr("Marked bits."));
+        if(event->modifiers()&Qt::SHIFT){
+            on_actionHexView_triggered();
+            statusBar()->showMessage(tr("Decoded bits."));
+        }
         break;
     }
 
@@ -1325,6 +1329,7 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
 
     foreach (RomBitItem* b, bits){
         uint32_t a=b->adr;
+
         if(start<=a && a<=end){
             RomRuleViolation* violation=new RomRuleViolation(b->pos(),
                                                                QString::asprintf("Bit at 0x%x",a),
