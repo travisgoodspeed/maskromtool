@@ -24,6 +24,16 @@ bool GatoBit::getVal(){
     return this->val ^ this->inverted;
 }
 
+
+/* Decoders are inherently sloppy things, much as we try to
+ * keep them clean.  These two functions interpose all requests
+ * for pointers to bits in the table, zeroing them out
+ * and printing a warning if they are out of range.
+ *
+ * I'm intentionally not complicating this with exceptions
+ * for now, but that might change later.
+ */
+
 GatoBit* GatoROM::inputbit(int row, int col){
     if(row<inputrows && col<inputcols)
         return inputbits[row][col];

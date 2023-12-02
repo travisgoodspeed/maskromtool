@@ -54,7 +54,6 @@ public:
 
 
     //Before any processing at all.
-    GatoBit*** inputbits=0;
     uint32_t inputrows=0, inputcols=0;
 
     //Fetches a bit, while performing a safety check on the range.
@@ -71,7 +70,6 @@ public:
     void eval();                                    //Re-applies all transformations.
 
     //After rotation and mirroring, before decoding.
-    GatoBit*** outputbits=0;
     uint32_t outputrows=0, outputcols=0;
     GatoDecoder *decoder=0;
     void setDecoderByName(QString name);
@@ -109,7 +107,10 @@ public:
 private:
     //Allocates the input size, plus a little extra for rotations.
     void setInputSize(const uint32_t rows, const uint32_t cols);
-    GatoBit **input=0;  //2D Array of input bits, rows then cols.
+
+    //Input and output matrices.
+    GatoBit*** inputbits=0;
+    GatoBit*** outputbits=0;
 
 };
 
