@@ -11,10 +11,10 @@ RomHexDialog::RomHexDialog(QWidget *parent) :
 {
 
     QFont font("Andale Mono"); // macOS
-    //QFont font("Monospace");   // Linux
+    //QFont font("Monospace");   // Windows
 
     //font.setStyleHint(QFont::TypeWriter);
-    //font.setStyleHint(QFont::Monospace);
+    font.setStyleHint(QFont::Monospace);
 
     ui->setupUi(this);
     //qDebug()<<"Setting font to"<<font.toString();
