@@ -426,9 +426,8 @@ QString GatoROM::exportString(bool pretty){
 
 //Allocates the input buffer, given known dimensions.
 void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
-    if(inputbits){
-        qDebug()<<"WARNING: GatoRom input buffer is leaking.  https://github.com/travisgoodspeed/maskromtool/issues/66";
-    }
+    if(inputbits)
+        freeBuffers();
 
     //Output is sized for the worst case in rotation and both axes.
     uint32_t outsize=(rows>cols?rows:cols);
@@ -445,8 +444,37 @@ void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
     for(unsigned int i=0; i<outsize; i++){
         inputbits[i]=(GatoBit**) malloc(16*outsize);
         outputbits[i]=(GatoBit**) malloc(16*outsize);
+        memset(inputbits[i],0,16*outsize);
+        memset(outputbits[i],0,16*outsize);
         //We don't populate the individual elements.
     }
     outputrows=inputrows=rows;
     outputcols=inputcols=cols;
 }
+
+//Frees the old buffers to avoid leaking memory.
+void GatoROM::freeBuffers(){
+    qDebug()<<"WARNING: Cleaning input buffer.  https://github.com/travisgoodspeed/maskromtool/issues/66";
+
+    //Output is sized for the worst case in rotation and both axes.
+    uint32_t outsize=(inputrows>inputcols?inputrows:inputcols);
+
+    //Empty any pointers on the input.
+    for(unsigned int i=0; i<outsize; i++){
+        for(int j=0; j<outsize; j++){
+            if(inputbits[i][j]){
+                free(inputbits[i][j]);
+                inputbits[i][j]=0;
+            }
+        }
+
+        //FIXME: Need to free the bits themselves.
+        free(inputbits[i]);
+        free(outputbits[i]);
+    }
+    free(inputbits);
+    free(outputbits);
+}
+
+
+

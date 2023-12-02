@@ -107,6 +107,8 @@ public:
 private:
     //Allocates the input size, plus a little extra for rotations.
     void setInputSize(const uint32_t rows, const uint32_t cols);
+    //Frees the old buffers to avoid leaking memory.
+    void freeBuffers();
 
     //Input and output matrices.
     GatoBit*** inputbits=0;
