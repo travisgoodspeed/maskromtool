@@ -182,9 +182,9 @@ void GatoROM::loadFromString(QString input){
                 cols=thisrowlen;
                 thisrowlen=0;
                 rows++;
-            }else{
-                if(thisrowlen>0)
-                    qDebug()<<"Expected"<<cols<<"but got"<<thisrowlen<<"on row"<<rows;
+            }else if(thisrowlen>0){
+                qDebug()<<"GatoROM::loadFromString expected"<<cols<<"but got"<<thisrowlen<<"on row"<<rows;
+                return loadFromString("1");
             }
             break;
         }
