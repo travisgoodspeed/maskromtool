@@ -37,8 +37,9 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
     if(gr->outputcols%8!=0) return ba;
     if(gr->outputrows%8!=0) return ba;
 
-    //qDebug()<<"Output size is"<<gr->outputrows<<"x"<<gr->outputcols;
-    //qDebug()<<"Angle is"<<gr->angle;
+    //Strictly check the size.  FIXME: Make this more generic.
+    if(gr->outputrows!=48 || gr->outputcols!=64)
+        return ba;
 
     //Top to bottom
     uint32_t adr=0;
