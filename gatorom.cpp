@@ -38,14 +38,14 @@ GatoBit* GatoROM::inputbit(int row, int col){
     if(row<inputrows && col<inputcols)
         return inputbits[row][col];
 
-    qDebug()<<"Illegal fetch of input bit"<<row<<","<<col;
+    qDebug()<<"Illegal fetch of input bit"<<row<<","<<col<<"with args: "<<description();
     return 0;
 }
 GatoBit* GatoROM::outputbit(int row, int col){
     if(row<outputrows && col<outputcols)
         return outputbits[row][col];
 
-    qDebug()<<"Illegal fetch of output bit"<<row<<","<<col;
+    qDebug()<<"Illegal fetch of output bit"<<row<<","<<col<<"with args: "<<description();
     return 0;
 }
 
