@@ -47,6 +47,9 @@ class GatoROM{
 public:
     //Initiates an empty ROM, to be populated and resized later.
     GatoROM();
+    // Frees the buffers.
+    ~GatoROM();
+
     //Initiates around a standard ASCII art of the bits.
     GatoROM(QString input);
     //Initiates around a raw binary in Sean Riddle's style.

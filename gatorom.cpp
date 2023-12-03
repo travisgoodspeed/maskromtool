@@ -163,6 +163,11 @@ QString GatoROM::preview(){
 GatoROM::GatoROM(){
     loadFromString("1");
 }
+// Frees the buffers.
+GatoROM::~GatoROM(){
+    freeBuffers();
+}
+
 //Initiates around a standard ASCII art of the bits.
 GatoROM::GatoROM(QString input){
     loadFromString(input);
@@ -323,6 +328,13 @@ void GatoROM::rotate(uint32_t degrees, bool zerofirst){
     angle+=degrees;
     angle%=360;
 
+    //Fake rotation when buffers don't yet exist.
+    if(!inputbits[0]) return;
+
+    //If these fail, we've freed the buffers but not yet rebuilt them.
+    assert(inputbits[0]);
+    assert(outputbits[0]);
+
     /* Zorrom flips before rotation, while GatoROM
      * flips after rotation.  When compatibility
      * mode is engaged, we fake compatibility by
@@ -456,26 +468,35 @@ void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
 
 //Frees the old buffers to avoid leaking memory.
 void GatoROM::freeBuffers(){
-    qDebug()<<"WARNING: Cleaning input buffer.  https://github.com/travisgoodspeed/maskromtool/issues/66";
+    qDebug()<<"Leaking buffers.  See https://github.com/travisgoodspeed/maskromtool/issues/66";
+    return;
+
+
+    qDebug()<<"Freeing GR buffers.";
 
     //Output is sized for the worst case in rotation and both axes.
     uint32_t outsize=(inputrows>inputcols?inputrows:inputcols);
 
     //Empty any pointers on the input.
     for(unsigned int i=0; i<outsize; i++){
+        //Free the bits.
         for(int j=0; j<outsize; j++){
             if(inputbits[i][j]){
                 free(inputbits[i][j]);
                 inputbits[i][j]=0;
             }
         }
-
-        //FIXME: Need to free the bits themselves.
+        //Free the rows.  Separate for input and output.
         free(inputbits[i]);
+        inputbits[i]=0;
         free(outputbits[i]);
+        outputbits[i]=0;
     }
+    //Free the first-bit column.
     free(inputbits);
+    inputbits=0;
     free(outputbits);
+    outputbits=0;
 }
 
 
