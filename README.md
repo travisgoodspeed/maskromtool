@@ -28,6 +28,7 @@ ASCII solver.  Fixes multiple
 [crashes](https://github.com/travisgoodspeed/maskromtool/issues/59) in
 solver from awkward ROM sizes.  GatoROM decoding in the GUI.  Removal
 of redundant decoders.  Hex viewer and highlighting of selected bytes.
+GatoROM CLI is now very strict about exiting on illegal access.
 
 2023-09-13 -- CLI option to disable OpenGL.  Printing support.
 Working Windows build.

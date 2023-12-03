@@ -39,6 +39,7 @@ GatoBit* GatoROM::inputbit(int row, int col){
         return inputbits[row][col];
 
     qDebug()<<"Illegal fetch of input bit"<<row<<","<<col<<"with args: "<<description();
+    if(strictmode) exit(1);
     return 0;
 }
 GatoBit* GatoROM::outputbit(int row, int col){
@@ -46,6 +47,7 @@ GatoBit* GatoROM::outputbit(int row, int col){
         return outputbits[row][col];
 
     qDebug()<<"Illegal fetch of output bit"<<row<<","<<col<<"with args: "<<description();
+    if(strictmode) exit(1);
     return 0;
 }
 

@@ -267,6 +267,9 @@ int main(int argc, char *argv[]) {
 
     //However we've opened a rom, now we can operate on it.
     if(gr){
+        //Strict mode, so CLI will crash on errors but GUI will not.
+        gr->strictmode=1;
+
         //Compatibility.
         if(parser.isSet(zorromOption))
             gr->zorrommode=1;

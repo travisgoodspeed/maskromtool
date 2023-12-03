@@ -104,6 +104,7 @@ public:
     int inverted=0;     //Are bits inverted?
     int angle=0;        //Angle of rotation.
     int bank=0;         //1 for left, 2 for right.
+    int strictmode=0;   //1 will crash on illegal fetches, used for CLI but not GUI.
 private:
     //Allocates the input size, plus a little extra for rotations.
     void setInputSize(const uint32_t rows, const uint32_t cols);
