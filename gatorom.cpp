@@ -165,7 +165,11 @@ GatoROM::GatoROM(){
 }
 // Frees the buffers.
 GatoROM::~GatoROM(){
-    freeBuffers();
+    /* We don't free buffers because they might be shared
+     * between multiple copies of the class.
+     */
+
+    //freeBuffers();
 }
 
 //Initiates around a standard ASCII art of the bits.
@@ -468,12 +472,6 @@ void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
 
 //Frees the old buffers to avoid leaking memory.
 void GatoROM::freeBuffers(){
-    qDebug()<<"Leaking buffers.  See https://github.com/travisgoodspeed/maskromtool/issues/66";
-    return;
-
-
-    qDebug()<<"Freeing GR buffers.";
-
     //Output is sized for the worst case in rotation and both axes.
     uint32_t outsize=(inputrows>inputcols?inputrows:inputcols);
 
