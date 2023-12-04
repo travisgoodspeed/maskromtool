@@ -47,7 +47,7 @@ QByteArray GatoDecoderColsDownLSwap::decode(GatoROM *gr){
             /* The virtual address is the same as the physical,
              * except when we are swapping.
              */
-            vadr=adr++;
+            vadr=++adr;
             if(adr&0x100) vadr=adr^0x80;
         }
     }
