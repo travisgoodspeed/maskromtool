@@ -21,6 +21,9 @@ completed dump of the ROM from the MYK82 chip in a Fortezza Card.
 This is the successor to the Clipper Chip, and the repository includes
 not just all ROM bits but also reshoots for error correction.
 
+[wersi-slm2-51173](https://github.com/travisgoodspeed/wersi-slm2-51173/)
+is a Zilog Z8 ROM from a music synthesize module.
+
 ## Release Changelog
 
 `master` -- Selection highlight.  Row/column counts in status bar.
