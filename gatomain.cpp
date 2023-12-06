@@ -120,11 +120,11 @@ int main(int argc, char *argv[]) {
 
     //Decoder itself.
     QCommandLineOption arm6Option(QStringList()<<"decode-arm6",
-                                    "Decodes the ROM as ARM6 (MYK82)."
+                                    "Decodes as ARM6 (MYK82)."
                                     );
     parser.addOption(arm6Option);
     QCommandLineOption msp430Option(QStringList()<<"decode-msp430",
-                                    "Decodes the ROM as MSP430. (Broken.)"
+                                    "Decodes as MSP430. (Broken.)"
                                     );
     parser.addOption(msp430Option);
     QCommandLineOption tlcsfontOption(QStringList()<<"decode-tlcs47font",
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
                                   );
     parser.addOption(tlcsfontOption);
     QCommandLineOption z86x1Option(QStringList()<<"decode-z86x1",
-                                  "Decodes the rom as a Zilog Z86x1."
+                                  "Decodes as a Zilog Z86x1."
                                   );
     parser.addOption(z86x1Option);
     QCommandLineOption colsdownlswapOption(QStringList()<<"decode-cols-downl-swap",
@@ -142,19 +142,19 @@ int main(int argc, char *argv[]) {
 
     //Decoders for Zorrom compatibility.
     QCommandLineOption colsdownrOption(QStringList()<<"decode-cols-downr",
-                                       "Decodes the ROM first down then right like a Gameboy."
+                                       "Decodes first down then right like a Gameboy."
                                        );
     parser.addOption(colsdownrOption);
     QCommandLineOption colsdownlOption(QStringList()<<"decode-cols-downl",
-                                       "Decodes the ROM first down then left."
+                                       "Decodes first down then left."
                                        );
     parser.addOption(colsdownlOption);
     QCommandLineOption colsleftOption(QStringList()<<"decode-cols-left",
-                                      "Decodes the ROM left-to-right."
+                                      "Decodes left-to-right."
                                       );
     parser.addOption(colsleftOption);
     QCommandLineOption colsrightOption(QStringList()<<"decode-cols-right",
-                                      "Decodes the ROM right-to-left."
+                                      "Decodes right-to-left."
                                       );
     parser.addOption(colsrightOption);
     QCommandLineOption squeezelrOption(QStringList()<<"decode-squeeze-lr",

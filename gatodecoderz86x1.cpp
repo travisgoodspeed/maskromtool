@@ -10,6 +10,8 @@
  * The rows are not in linear order, but top to bottom 1, 0, 2, 3, 5, 4, 6, 7, etc.
  * The top two rows are the 64-byte factory test ROM. This effectively means the
  *  actual row numbers top to bottom are T1 T0 0 1 3 2 4 5 7 6 ... up to 3f or 7f.
+ *
+ *  Decoder module by Lord Nightmare.
  */
 
 GatoDecoderZ86x1::GatoDecoderZ86x1(){
@@ -45,10 +47,6 @@ QByteArray GatoDecoderZ86x1::decode(GatoROM *gr){
     for(int i=0; i<colcount; i++){
         wordorder[BITSWAP8((i^0x1e), 7, 6, 5, 0, 1, 2, 3, 4)]=i;
     }
-
-    //We might be dynamic, but we still don't want to crash.
-    //if(gr->outputcols%8!=0) return ba;
-    //if(gr->outputrows%8!=0) return ba;
 
     //Strictly check the size.  FIXME: Make this more generic.
     if((gr->outputrows!=2+64 && gr->outputrows!=2+128) || gr->outputcols!=32*8)

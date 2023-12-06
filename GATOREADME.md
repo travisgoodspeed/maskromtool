@@ -29,13 +29,13 @@ bits may be conveniently rotated, flipped or inverted.
 Run with no parameters for usage information.
 
 ```
-% gatorom
+dell% gatorom 
 Usage: gatorom [options] bitstream
 Gato ROM: A Decoder for Mask ROM Bits
 
 Options:
   -h, --help                        Displays help on commandline options.
-  --help-all                        Displays help including Qt specific
+  --help-all                        Displays help, including generic Qt
                                     options.
   -v, --version                     Displays version information.
   -r, --rotate <degrees>            Rotates the image in multiples of 90
@@ -44,21 +44,23 @@ Options:
   --flipy                           Flips the bits along the Y axis.
   -i, --invert                      Inverts the bits.
   -o, --output <out.bin>            Output file.
-  --random                          Randomize a ROM.
+  --random                          Randomize a ROM for testing.
+  --Random                          Randomize a crazy ROM.
   --rawwidth, --seanriddle <width>  Width of a raw binary input, in Sean
                                     Riddle's style.
   -I, --info                        Info about input.
   --print                           Print with a GUI dialog.
   --printpdf <file.pdf>             Print to a PDF file.
-  --decode-arm6                     Decodes the ROM as ARM6 (MYK82).
-  --decode-msp430                   Decodes the ROM as MSP430. (Broken.)
+  --decode-arm6                     Decodes as ARM6 (MYK82).
+  --decode-msp430                   Decodes as MSP430. (Broken.)
   --decode-tlcs47font               Decodes as a TMP47C434N Font.
+  --decode-z86x1                    Decodes as a Zilog Z86x1.
   --decode-cols-downl-swap          Decodes as a uCOM4 ROM.
-  --decode-cols-downr               Decodes the ROM first down then right like
-                                    a Gameboy.
-  --decode-cols-downl               Decodes the ROM first down then left.
-  --decode-cols-left                Decodes the ROM left-to-right.
-  --decode-cols-right               Decodes the ROM right-to-left.
+  --decode-cols-downr               Decodes first down then right like a
+                                    Gameboy.
+  --decode-cols-downl               Decodes first down then left.
+  --decode-cols-left                Decodes left-to-right.
+  --decode-cols-right               Decodes right-to-left.
   --decode-squeeze-lr               Decodes even bits from the left, odd bits
                                     from right like in the TMS32C15.
   -z, --zorrom                      Zorrom compatibility mode, with flipx
