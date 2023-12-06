@@ -127,6 +127,11 @@
        </item>
        <item>
         <property name="text">
+         <string>z86x1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>cols-downl-swap</string>
         </property>
        </item>

@@ -29,6 +29,8 @@ ASCII solver.  Fixes multiple
 solver from awkward ROM sizes.  GatoROM decoding in the GUI.  Removal
 of redundant decoders.  Hex viewer and highlighting of selected bytes.
 GatoROM CLI is now very strict about exiting on illegal access.
+[Zilog Z8](https://github.com/travisgoodspeed/maskromtool/issues/76)
+ROM support.
 
 2023-09-13 -- CLI option to disable OpenGL.  Printing support.
 Working Windows build.
@@ -188,21 +190,21 @@ Mask ROM Tool
 
 Options:
   -h, --help                 Displays help on commandline options.
-  --help-all                 Displays help including Qt specific options.
+  --help-all                 Displays help, including generic Qt options.
   -v, --version              Displays version information.
   -V, --verbose              Print verbose debugging messages.
   --stress                   Stress test bit marking.
   -e, --exit                 Exit after processing arguments.
+  --disable-opengl           Disable OpenGL.
   -d, --drc                  Run default Design Rule Checks.
   -D, --DRC                  Run all Design Rule Checks.
   --sampler <Default>        Bit Sampling Algorithm.
   --diff-ascii <file>        Compares against ASCII art, for finding errors.
-  -a, --export-ascii <file>  Export ASCII bits for use in ZorRom.
+  -a, --export-ascii <file>  Export ASCII bits.
+  -o, --export <file>        Export ROM bytes.
   --export-csv <file>        Export CSV bits for use in Matlab or Excel.
   --export-json <file>       Export JSON bit positions.
   --export-python <file>     Export Python arrays.
-  --export-marc4 <file>      Export MARC4 ROM banks, left to right.
-  --export-arm6 <file>       Export ARM6L (MYK82) ROM.
   --export-photo <file>      Export a photograph.
 
 Arguments:

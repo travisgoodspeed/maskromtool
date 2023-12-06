@@ -9,6 +9,7 @@
 #include "gatodecoderarm6.h"  //MYK82 Fortezza
 #include "gatodecodermsp430.h"
 #include "gatodecodertlcsfont.h"
+#include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
 //Zorrom compatibility.
 #include "gatodecodercolsdownr.h"
@@ -125,6 +126,8 @@ void GatoROM::setDecoderByName(QString name){
         decoder=new GatoDecoderMSP430();
     else if(name=="tlcs47font")
         decoder=new GatoDecoderTLCSFont();
+    else if(name=="z86x1")
+        decoder=new GatoDecoderZ86x1();
     else if(name=="cols-downl-swap")
         decoder=new GatoDecoderColsDownLSwap();
     else if(name=="cols-downr")

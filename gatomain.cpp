@@ -20,6 +20,7 @@
 #include "gatodecoderarm6.h"  //MYK82 Fortezza
 #include "gatodecodermsp430.h"
 #include "gatodecodertlcsfont.h"
+#include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
 
 //Zorrom compatibility.
@@ -119,17 +120,21 @@ int main(int argc, char *argv[]) {
 
     //Decoder itself.
     QCommandLineOption arm6Option(QStringList()<<"decode-arm6",
-                                    "Decodes the ROM as ARM6 (MYK82)."
+                                    "Decodes as ARM6 (MYK82)."
                                     );
     parser.addOption(arm6Option);
     QCommandLineOption msp430Option(QStringList()<<"decode-msp430",
-                                    "Decodes the ROM as MSP430. (Broken.)"
+                                    "Decodes as MSP430. (Broken.)"
                                     );
     parser.addOption(msp430Option);
     QCommandLineOption tlcsfontOption(QStringList()<<"decode-tlcs47font",
                                   "Decodes as a TMP47C434N Font."
                                   );
     parser.addOption(tlcsfontOption);
+    QCommandLineOption z86x1Option(QStringList()<<"decode-z86x1",
+                                  "Decodes as a Zilog Z86x1."
+                                  );
+    parser.addOption(z86x1Option);
     QCommandLineOption colsdownlswapOption(QStringList()<<"decode-cols-downl-swap",
                                       "Decodes as a uCOM4 ROM."
                                       );
@@ -137,19 +142,19 @@ int main(int argc, char *argv[]) {
 
     //Decoders for Zorrom compatibility.
     QCommandLineOption colsdownrOption(QStringList()<<"decode-cols-downr",
-                                       "Decodes the ROM first down then right like a Gameboy."
+                                       "Decodes first down then right like a Gameboy."
                                        );
     parser.addOption(colsdownrOption);
     QCommandLineOption colsdownlOption(QStringList()<<"decode-cols-downl",
-                                       "Decodes the ROM first down then left."
+                                       "Decodes first down then left."
                                        );
     parser.addOption(colsdownlOption);
     QCommandLineOption colsleftOption(QStringList()<<"decode-cols-left",
-                                      "Decodes the ROM left-to-right."
+                                      "Decodes left-to-right."
                                       );
     parser.addOption(colsleftOption);
     QCommandLineOption colsrightOption(QStringList()<<"decode-cols-right",
-                                      "Decodes the ROM right-to-left."
+                                      "Decodes right-to-left."
                                       );
     parser.addOption(colsrightOption);
     QCommandLineOption squeezelrOption(QStringList()<<"decode-squeeze-lr",
@@ -311,6 +316,8 @@ int main(int argc, char *argv[]) {
             gr->decoder=new GatoDecoderMSP430();
         else if(parser.isSet(tlcsfontOption))
             gr->decoder=new GatoDecoderTLCSFont();
+        else if(parser.isSet(z86x1Option))
+            gr->decoder=new GatoDecoderZ86x1();
         else if(parser.isSet(colsdownlswapOption))
             gr->decoder=new GatoDecoderColsDownLSwap();
         else if(parser.isSet(colsdownrOption))
