@@ -9,8 +9,6 @@
 #include <QPrinter>
 
 #include <iostream>
-#include <string>
-#include <stdio.h>
 
 #include "gatorom.h"
 #include "gatosolver.h"
@@ -41,8 +39,8 @@
  */
 
 int main(int argc, char *argv[]) {
-    //QCoreApplication a(argc, argv);
-    QApplication a(argc,argv);
+    QCoreApplication a(argc, argv);
+    //QApplication a(argc,argv);
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Gato ROM: A Decoder for Mask ROM Bits");
