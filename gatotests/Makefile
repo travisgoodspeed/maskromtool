@@ -4,10 +4,12 @@ all:
 	make -C tlcs all
 	make -C gameboy all
 	make -C seanriddle all
+	make -C z8 all
 clean:
 	make -C zorrom clean
 	make -C arm6 clean
 	make -C tlcs clean
 	make -C gameboy clean
 	make -C seanriddle clean
+	make -C z8 clean
 
