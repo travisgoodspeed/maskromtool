@@ -2,6 +2,7 @@ REM Delete old build.
 rmdir /s /q build
 rmdir /s /q Release
 
+
 REM Import the Qt and VS2022 paths.
 set PATH=C:\Qt\Tools\CMake_64\bin;C:\Qt\6.6.1\msvc2019_64\bin;%PATH%
 REM "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
@@ -24,10 +25,14 @@ cd ..
 
 REM Adding files that windeployqt forgets.
 copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6Charts.dll Release\
+copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6OpenGL.dll Release\
 copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6OpenGLWidgets.dll Release\
 copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6Widgets.dll Release\
 copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6Gui.dll Release\
-
+copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6PrintSupport.dll Release\
+copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6Pdf.dll Release\
+copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6Svg.dll Release\
+copy C:\Qt\6.6.1\msvc2019_64\bin\Qt6Core.dll Release\
 
 echo Finishing packing Release.  Now making installer.
 
