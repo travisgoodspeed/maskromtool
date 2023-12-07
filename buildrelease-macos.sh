@@ -11,9 +11,9 @@ set -e
 ## These paths are hardcoded to prevent Homebrew for gunking things
 ## up.  Be sure to install *everything* in that version of Qt, or
 ## you'll be missing important libraries like QtCharts.
-export QTDIR=~/Qt/6.5.2/macos/bin
-export CMAKE=~/Qt/6.5.2/macos/bin/qt-cmake
-export DEPLOYQT=~/Qt/6.5.2/macos/bin/macdeployqt
+export QTDIR=~/Qt/6.6.1/macos/bin
+export CMAKE=~/Qt/6.6.1/macos/bin/qt-cmake
+export DEPLOYQT=~/Qt/6.6.1/macos/bin/macdeployqt
 
 
 
