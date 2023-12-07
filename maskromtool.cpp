@@ -1164,6 +1164,7 @@ QJsonObject MaskRomTool::exportJSON(){
      * we should update this date to indicate the new file format
      * version number.
      *
+     * 2023.12.07 -- Gatorom strings now work.
      * 2023.09.15 -- Adds 'linecolor'.
      * 2023.09.04 -- Adds 'gatorom' with string description.
      * 2023.05.14 -- Adds 'inverted' bits.
@@ -1171,7 +1172,7 @@ QJsonObject MaskRomTool::exportJSON(){
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2023.09.15";
+    root["00version"]="2023.12.07";
 
     //These threshold values will change in a later version.
     QJsonObject settings;

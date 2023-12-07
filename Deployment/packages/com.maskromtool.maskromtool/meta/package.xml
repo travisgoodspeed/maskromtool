@@ -3,8 +3,8 @@
   <DisplayName>Mask ROM Tool</DisplayName>
   <Description>This is going to install Mask ROM Tool.</Description>
   <ProductUrl>http://maskromtool.com/</ProductUrl>
-  <Version>2023-09-013</Version>
-  <ReleaseDate>2023-09-13</ReleaseDate>
+  <Version>2023-12-07</Version>
+  <ReleaseDate>2023-12-07</ReleaseDate>
   <Default>true</Default>
   <Script>installscript.qs</Script>
 </Package>

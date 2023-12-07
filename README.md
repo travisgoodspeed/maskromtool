@@ -26,7 +26,7 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
-`master` -- Selection highlight.  Row/column counts in status bar.
+2023-12-07 -- Selection highlight.  Row/column counts in status bar.
 ASCII solver.  Fixes multiple
 [crashes](https://github.com/travisgoodspeed/maskromtool/issues/59) in
 solver from awkward ROM sizes.  GatoROM decoding in the GUI.  Removal
