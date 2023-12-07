@@ -1058,6 +1058,11 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
 void MaskRomTool::markBits(){
     static long lastbitcount=50000;
     bool bitswerevisible=bitsVisible;
+    bool lineswerevisible=ui->actionRowsColumns->isChecked();
+
+
+    if(!lineswerevisible)
+        setLinesVisible(true);
 
     //We're blowing away the alignment here, will need to rebuild it later.
     alignmentdirty=true;
@@ -1078,6 +1083,8 @@ void MaskRomTool::markBits(){
 
     //Show the bits if--and only if--we've set that style.
     setBitsVisible(bitswerevisible);
+    //Same for the lines.
+    setLinesVisible(lineswerevisible);
 
     if(verbose)
         qDebug()<<"Marked"<<bitcount<<"bits.";
