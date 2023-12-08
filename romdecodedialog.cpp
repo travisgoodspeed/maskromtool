@@ -19,6 +19,7 @@ void RomDecodeDialog::setMaskRomTool(MaskRomTool* maskRomTool){
     ui->checkInvertBits->setCheckState(mrt->gr.inverted ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     ui->spinRotation->setValue(mrt->gr.angle);
     ui->listBank->item(mrt->gr.bank)->setSelected(true);
+    ui->checkZorrom->setCheckState(mrt->gr.zorrommode ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
 
     if(mrt->gr.decoder){
         auto item =
