@@ -43,14 +43,16 @@ QByteArray GatoDecoderZ86x1::decode(GatoROM *gr){
     int colcount=(gr->outputcols/8);
     if(colcount>=sizeof(wordorder)) return ba;  //Fail when poor match.
 
+    //Strictly check the size.  FIXME: Make this more generic.
+    if((gr->outputrows!=2+64 && gr->outputrows!=2+128) || gr->outputcols!=32*8)
+        return ba;
+
     //Quickly produce an interleave table of words within the row.
     for(int i=0; i<colcount; i++){
         wordorder[BITSWAP8((i^0x1e), 7, 6, 5, 0, 1, 2, 3, 4)]=i;
     }
 
-    //Strictly check the size.  FIXME: Make this more generic.
-    if((gr->outputrows!=2+64 && gr->outputrows!=2+128) || gr->outputcols!=32*8)
-        return ba;
+
 
     //Top to bottom
     uint32_t adr=0;
