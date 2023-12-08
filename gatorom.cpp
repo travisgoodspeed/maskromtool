@@ -264,9 +264,11 @@ QByteArray GatoROM::decode(){
     eval();
 
     //If there's a decoder, return the results.
-    if(decoder)
+    if(decoder){
+        if(verbose)
+            qDebug()<<"Decoding with settings:"<<description();
         decoded=decoder->decode(this);
-    else
+    }else
         decoded=QByteArray();  //Zero bytes on failure.
 
     return decoded;

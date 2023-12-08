@@ -27,6 +27,7 @@ is a Zilog Z8 ROM from a music synthesize module.
 ## Release Changelog
 
 `master` -- Fixes bus error in Z8 decoder when solving odd sizes.
+Verbose mode in the GatoROM CLI.
 
 2023-12-07 -- Selection highlight.  Row/column counts in status bar.
 ASCII solver.  Fixes multiple

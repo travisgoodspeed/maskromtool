@@ -49,6 +49,12 @@ int main(int argc, char *argv[]) {
     parser.addPositionalArgument("bitstream", "ASCII art of ROM to decode.");
 
 
+    //Verbose mode.
+    QCommandLineOption verboseOption(QStringList()<<"V"<<"verbose",
+                                    "Talk too much."
+                                    );
+    parser.addOption(verboseOption);
+
     //Rotations come first.
     QCommandLineOption rotateOption(QStringList()<<"r"<<"rotate",
                                     "Rotates the image in multiples of 90 degrees.",
@@ -216,6 +222,7 @@ int main(int argc, char *argv[]) {
     QByteArray byteArray;
     GatoROM *gr=0;
 
+
     const QStringList args = parser.positionalArguments();
 
     if(args.count()==1 && parser.isSet(seanriddleOption)){  //Raw binary mode.
@@ -267,6 +274,9 @@ int main(int argc, char *argv[]) {
         parser.showHelp(1);
     }
 
+    if(gr && parser.isSet(verboseOption)){
+        gr->verbose++;
+    }
 
     //However we've opened a rom, now we can operate on it.
     if(gr){
