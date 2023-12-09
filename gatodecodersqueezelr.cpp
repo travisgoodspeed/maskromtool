@@ -10,7 +10,7 @@ GatoDecoderSqueezeLR::GatoDecoderSqueezeLR(){
 }
 
 QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
-    uint32_t adr=0;
+    uint32_t leftadr=0, rightadr=0;
     QByteArray left, right;
     QByteArray ba;
 
@@ -41,18 +41,17 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
 
                 //Update target address and mask.
                 if((1<<bit)&0xAA){
-                    B->adr=adr;
+                    B->adr=leftadr;
                     B->mask=1<<bit;
                     if(B->getVal())
                         w|=B->mask;
                 }
             }
             left.append(w&0xFF);
-            adr++;
+            leftadr++;
         }
 
         //cols-right
-        adr=0;  //Reset for second pass.
         for(unsigned int word=0; word<(gr->outputcols/8); word++){
             uint32_t w=0;
 
@@ -62,14 +61,14 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
 
                 //Update target address and mask.
                 if((1<<bit)&0x55){
-                    B->adr=adr;
+                    B->adr=rightadr;
                     B->mask=1<<bit;
                     if(B->getVal())
                         w|=B->mask;
                 }
             }
             right.append(w&0xFF);
-            adr++;
+            rightadr++;
         }
     }
 

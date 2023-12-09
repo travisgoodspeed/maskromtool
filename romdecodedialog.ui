@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>393</width>
-    <height>437</height>
+    <height>553</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -107,7 +107,7 @@
          <x>100</x>
          <y>110</y>
          <width>256</width>
-         <height>151</height>
+         <height>221</height>
         </rect>
        </property>
        <item>
@@ -155,6 +155,11 @@
          <string>cols-right</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>squeeze-lr</string>
+        </property>
+       </item>
       </widget>
       <widget class="QCheckBox" name="checkZorrom">
        <property name="geometry">
@@ -173,7 +178,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>340</y>
+         <y>430</y>
          <width>341</width>
          <height>41</height>
         </rect>
@@ -182,8 +187,8 @@
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>320</y>
+         <x>20</x>
+         <y>400</y>
          <width>58</width>
          <height>18</height>
         </rect>
@@ -196,7 +201,7 @@
        <property name="geometry">
         <rect>
          <x>100</x>
-         <y>270</y>
+         <y>340</y>
          <width>256</width>
          <height>61</height>
         </rect>
@@ -220,8 +225,8 @@
       <widget class="QLabel" name="label_4">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>270</y>
+         <x>20</x>
+         <y>350</y>
          <width>58</width>
          <height>18</height>
         </rect>
