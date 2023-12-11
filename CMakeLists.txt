@@ -86,6 +86,7 @@ set(MRT_SOURCES
 # Alignment stategies
         romaligner.h romaligner.cpp
         romalignernew.h romalignernew.cpp
+        romalignerreliable.h romalignerreliable.cpp
         romaligndialog.h romaligndialog.cpp romaligndialog.ui
         romrule.h romrule.cpp
         romrulecount.h romrulecount.cpp
@@ -110,7 +111,6 @@ set(MRT_SOURCES
 qt_add_executable(maskromtool
     MANUAL_FINALIZATION
     ${MRT_SOURCES}
-
 
 )
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
