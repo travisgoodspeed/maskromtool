@@ -8,6 +8,12 @@
 static bool leftOf(RomBitItem * left, RomBitItem * right){
     qreal a=left->x();
     qreal b=right->x();
+
+    //When two positions are equal, we pretend the higher one is to the left.
+    //This prevents ambiguous sorting and torn projects.
+    if(left->x()==right->x())
+        return left->y()<right->y();
+
     return (a<b);
 }
 static bool above(RomBitItem * top, RomBitItem * bottom){
@@ -121,7 +127,13 @@ void RomAlignerNew::markRemainingBits(){
 }
 
 void RomAlignerNew::markRowStarts(){
+    //Smallest gap in the first column in X.
+    qreal smallestxgap=1000;
+
+    //Largest gap yet seen in Y.
     qreal largestgap=1;
+
+
     /* First we need to know the distance between bits.  This is rather
      * regular for bits that are evenly spaced, but many roms include
      * a larger jump between the left and right sides.  When oriented
@@ -132,14 +144,22 @@ void RomAlignerNew::markRowStarts(){
     qreal maxy=0, miny=0;
     for(RomBitItem *bit: topsorted){  //Finding gap distance.
         qreal y=bit->y();
+        qreal x=bit->x();
         //Largest gap is only useful when there's a big jump between rows.
         if(lasty>1 && y-lasty>largestgap)
             largestgap=y-lasty;
+
+        if(lasty>0 && qFabs(lastx-x)<smallestxgap)
+            smallestxgap=qFabs(lastx-x);
+
         lasty=y;
+        lastx=y;
         if(maxy<y) maxy=y;
         if(miny==0 || miny>y) miny=y;
     }
     qreal yspread=qFabs(maxy-miny);
+
+    qDebug()<<"Smallest x gap was "<<smallestxgap;
 
     /* Getting this wrong will completely screw over the number
      * of columns in the result.  I tried some complicated algorithms
@@ -147,6 +167,8 @@ void RomAlignerNew::markRowStarts(){
      * all of my samples.
      */
     qreal shorthopthreshold=yspread/4;
+
+    qDebug()<<"yspread is"<<yspread<<"and shorthopthreshold is"<<shorthopthreshold;
 
     /* Here we create a sorted list of the starts of row start
      * positions.  This is done by sweeping in from the left

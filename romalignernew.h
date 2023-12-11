@@ -16,6 +16,12 @@ private:
     void markRowStarts();
     void markRemainingBits();
 
+    /* This must be non-zero for tilted images where
+     * one column overlaps another.  If you get errors
+     * when this is zero, then the sorting algorithms are
+     * likely ambiguous and returning the bits in an unsorted
+     * order.
+     */
     uint32_t threshold=5;  //Overwritten from MRT.
 };
 
