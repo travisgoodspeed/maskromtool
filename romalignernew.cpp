@@ -9,10 +9,12 @@ static bool leftOf(RomBitItem * left, RomBitItem * right){
     qreal a=left->x();
     qreal b=right->x();
 
-    //When two positions are equal, we pretend the higher one is to the left.
+    //When two positions are nearly equal, we pretend the lower one is to the left.
     //This prevents ambiguous sorting and torn projects.
-    if(left->x()==right->x())
-        return left->y()<right->y();
+    //Don't use == operator with floats!
+    if(qFabs(left->x()-right->x())<0.00001)
+        //return left->y()<right->y();
+        return left->y()>right->y();
 
     return (a<b);
 }
@@ -159,7 +161,7 @@ void RomAlignerNew::markRowStarts(){
     }
     qreal yspread=qFabs(maxy-miny);
 
-    qDebug()<<"Smallest x gap was "<<smallestxgap;
+    //qDebug()<<"Smallest x gap was "<<smallestxgap;
 
     /* Getting this wrong will completely screw over the number
      * of columns in the result.  I tried some complicated algorithms
@@ -168,7 +170,7 @@ void RomAlignerNew::markRowStarts(){
      */
     qreal shorthopthreshold=yspread/4;
 
-    qDebug()<<"yspread is"<<yspread<<"and shorthopthreshold is"<<shorthopthreshold;
+    //qDebug()<<"yspread is"<<yspread<<"and shorthopthreshold is"<<shorthopthreshold;
 
     /* Here we create a sorted list of the starts of row start
      * positions.  This is done by sweeping in from the left
