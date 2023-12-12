@@ -12,7 +12,7 @@ static bool leftOf(RomBitItem * left, RomBitItem * right){
     //When two positions are nearly equal, we pretend the lower one is to the left.
     //This prevents ambiguous sorting and torn projects.
     //Don't use == operator with floats!
-    if(qFabs(left->x()-right->x())<0.00001)
+    if(qFabs(left->x()-right->x())<0.1)
         //return left->y()<right->y();
         return left->y()>right->y();
 
