@@ -953,6 +953,15 @@ void MaskRomTool::fixBit(RomBitItem* bit){
         bit->setFix(fix);
     }
 }
+//Clears all bit fixes.
+void MaskRomTool::clearBitFixes(){
+    //Just removes all the fixes, handy when you're retrying
+    //a bad project.
+    foreach (RomBitFix* item, bitfixes.values()){
+        bitfixes.remove(item);
+        removeItem(item);
+    }
+}
 //Marks a bit at a position as damaged.
 void MaskRomTool::damageBit(QPointF point){
     if(!bitsVisible) return;
@@ -1351,3 +1360,9 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
 
     this->violationDialog.show();
 }
+
+//Menu item to remove all bit fixes.
+void MaskRomTool::on_actionClearForcedBits_triggered(){
+    clearBitFixes();
+}
+

@@ -95,6 +95,8 @@ public:
     //Given a bit or its position, is there a matching BitFix?
     RomBitFix* getBitFix(QPointF point, bool create=false);
     RomBitFix* getBitFix(RomBitItem* bit, bool crate=false);
+    //Clears all bit fixes.
+    void clearBitFixes();
 
     //Highlight stuff for easy visibility.
     void highlightAdrRange(uint32_t start, uint32_t end);
@@ -221,6 +223,8 @@ private slots:
     void on_actionRunAllDRC_triggered();
 
     void on_actionHighlightHexSelection_triggered();
+
+    void on_actionClearForcedBits_triggered();
 
 private:
     Ui::MaskRomTool *ui;
