@@ -4,6 +4,8 @@
 #include "maskromtool.h"
 #include "romrule.h"
 
+#include "QDebug"
+
 RomRuleDialog::RomRuleDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RomRuleDialog)
@@ -18,6 +20,21 @@ RomRuleDialog::~RomRuleDialog(){
 
 void RomRuleDialog::clearViolations(){
     ui->listWidget->clear();
+}
+void RomRuleDialog::nextViolation(){
+    //Avoid some edge cases by never running on empty.
+    if(ui->listWidget->count()==0)
+        return;
+
+    //Grab the next row, looping to zero if it's too high.
+    int row=ui->listWidget->currentRow();
+    row++;
+    if(row >= ui->listWidget->count())
+        row=0;
+
+    //Then apply it.
+    ui->listWidget->setCurrentRow(row);
+    on_listWidget_itemDoubleClicked(ui->listWidget->item(row));
 }
 void RomRuleDialog::addViolation(RomRuleViolation* violation){
     int count=ui->listWidget->count();

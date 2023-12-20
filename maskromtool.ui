@@ -122,6 +122,7 @@
     <addaction name="actionRunDRC"/>
     <addaction name="actionRunAllDRC"/>
     <addaction name="actionClearViolations"/>
+    <addaction name="actionSelectNextViolation"/>
     <addaction name="separator"/>
     <addaction name="drcCount"/>
     <addaction name="drcAmbiguous"/>
@@ -313,7 +314,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Evaluation All Rules (V)</string>
+    <string>Evaluate All Rules</string>
    </property>
    <property name="visible">
     <bool>true</bool>
@@ -381,7 +382,7 @@
   </action>
   <action name="actionClearViolations">
    <property name="text">
-    <string>Clear Violations</string>
+    <string>Clear Violations (V)</string>
    </property>
   </action>
   <action name="actionEvaluate_All_Rules">
@@ -422,6 +423,11 @@
   <action name="actionClearForcedBits">
    <property name="text">
     <string>Clear Forced Bits</string>
+   </property>
+  </action>
+  <action name="actionSelectNextViolation">
+   <property name="text">
+    <string>Select Next Violation (e)</string>
    </property>
   </action>
  </widget>

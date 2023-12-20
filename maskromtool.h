@@ -167,6 +167,7 @@ public:
     bool runDRC(bool all=false);
     void addViolation(RomRuleViolation* violation);
     void clearViolations();
+    void nextViolation();
 
 
     //The scene.
@@ -225,6 +226,8 @@ private slots:
     void on_actionHighlightHexSelection_triggered();
 
     void on_actionClearForcedBits_triggered();
+
+    void on_actionSelectNextViolation_triggered();
 
 private:
     Ui::MaskRomTool *ui;

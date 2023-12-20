@@ -360,10 +360,17 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         }
         break;
     case Qt::Key_V: //DRC
-        if(!(event->modifiers()&Qt::SHIFT))
-            runDRC(false);  //Just run the normal DRC, no key combo for the long one.
-        else
+        if((event->modifiers()&Qt::SHIFT))
             clearViolations(); //Clear out the violations for now.
+        else
+            runDRC(false);  //Just run the normal DRC, no key combo for the long one.
+
+        break;
+
+
+    //Show errors.
+    case Qt::Key_E: // Errors
+        nextViolation(); //Select the next violation.
         break;
 
     //Modify the focus object.
@@ -517,6 +524,10 @@ void MaskRomTool::clearViolations(){
     foreach (RomRuleViolation* v, violations){
         removeItem(v);
     }
+}
+//Select the next violation.
+void MaskRomTool::nextViolation(){
+    violationDialog.nextViolation();
 }
 
 void MaskRomTool::on_importDiff_triggered(){
@@ -1364,5 +1375,10 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
 //Menu item to remove all bit fixes.
 void MaskRomTool::on_actionClearForcedBits_triggered(){
     clearBitFixes();
+}
+
+//Jump to the very next violation.  Handy in error correcting.
+void MaskRomTool::on_actionSelectNextViolation_triggered(){
+    nextViolation();
 }
 

@@ -18,6 +18,7 @@ public:
     explicit RomRuleDialog(QWidget *parent = nullptr);
     ~RomRuleDialog();
     void clearViolations();
+    void nextViolation();
     void addViolation(RomRuleViolation* violation);
     void removeViolation(RomRuleViolation* violation);
     void setMaskRomTool(MaskRomTool* maskRomTool);
