@@ -28,8 +28,9 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 `master` -- Fixes bus error in Z8 decoder when solving odd sizes.
 Verbose mode in the GatoROM CLI.  `squeeze-lr` mode now in GUI
-decoder.  Edit menu item to clear all bit fixes.  `E` will select
-the next DRC violation.
+decoder.  Edit menu item to clear all bit fixes.  `E` will select the
+next DRC violation.  Perfectly vertical images no longer break the
+alignment algorithm.
 
 2023-12-07 -- Selection highlight.  Row/column counts in status bar.
 ASCII solver.  Fixes multiple
