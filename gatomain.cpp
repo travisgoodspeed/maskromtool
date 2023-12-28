@@ -283,6 +283,12 @@ int main(int argc, char *argv[]) {
         //Strict mode, so CLI will crash on errors but GUI will not.
         gr->strictmode=1;
 
+        //Is it a real ROM, or an empty dummy?
+        if(gr->inputcols+gr->inputrows<3){
+            qDebug()<<"Too few bits.";
+            exit(1);
+        }
+
         //Compatibility.
         if(parser.isSet(zorromOption))
             gr->zorrommode=1;
