@@ -149,6 +149,7 @@ int main(int argc, char *argv[]){
     if(parser.isSet(asciiExportOption)){
         qDebug()<<"Exporting to ASCII.";
         RomDecoderAscii exporter;
+
         exporter.writeFile(&mrt, parser.value(asciiExportOption));
     }
     //Export to ASCII.
@@ -206,7 +207,7 @@ int main(int argc, char *argv[]){
             msgBox.exec();
         }
 
-        //We never launch the GUi for offscreen, because it should always exit.
+        //We never launch the GUI when offscreen, because it should always exit.
         if(!a.platformName().contains("offscreen"))
             return a.exec();
     }

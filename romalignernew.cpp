@@ -3,18 +3,43 @@
 #include "romalignernew.h"
 #include "maskromtool.h"
 
+/* This is the default aligner for MaskRomTool, though we hope to replace
+ * it someday.  It works from a leftmost sorting of the bits, first generating
+ * the leftmost column and then constructing a linked list by sorting each new
+ * bit into a row.
+ *
+ * This algorith has one serious complication:  When the columns are perfectly
+ * vertical, the bits of the first column arrive in a random order, which can
+ * confuse detection of when the column ends.  Similarly, too much tilt will
+ * interleve the columns.  Most of this algorithm assumes a little tilt,
+ * but it attempts to correct itself if things look very vertical.
+ *
+ * --Travis
+ */
+
+//Do we drift east or west as we go south?
+static int driftcount=0;
 
 //FIXME: We also need rotation matrix sorting, to avoid tilt bugs.
 static bool leftOf(RomBitItem * left, RomBitItem * right){
     qreal a=left->x();
     qreal b=right->x();
+    qreal distance=qFabs(left->x()-right->x());
 
-    //When two positions are nearly equal, we pretend the lower one is to the left.
-    //This prevents ambiguous sorting and torn projects.
-    //Don't use == operator with floats!
-    if(qFabs(left->x()-right->x())<0.1)
-        //return left->y()<right->y();
-        return left->y()>right->y();
+
+    /* Here's the tricky part:  If the X coordinates are pretty much equal,
+     * we don't know whether to tilt left or right, and guessing wrong
+     * will break the alignment unless the column is *totally* vertical.
+     */
+    if(distance<0.01){
+        if(verbose)
+            qDebug()<<"WARNING: Bit distance "<<distance<<a<<b<<" leaning "
+                     <<driftcount;
+        if(driftcount<0)
+            return left->y()>right->y();  //Use this one.
+        else
+            return left->y()<right->y(); //This one breaks my samples.
+    }
 
     return (a<b);
 }
@@ -27,7 +52,7 @@ static bool below(RomBitItem * top, RomBitItem * bottom){
 }
 */
 
-//This one should be a lot faster faster.
+//This one should be a lot faster.
 //Remove this comment when we know it to be accurate.
 RomBitItem* RomAlignerNew::markBitTable(MaskRomTool* mrt){
     mrt->getAlignSkipCountThreshold(this->threshold);
@@ -66,9 +91,8 @@ RomBitItem* RomAlignerNew::markBitTable(MaskRomTool* mrt){
         topsorted<<bit;
     }
 
-    //We read each row from the left, but presort it in case X values are exactly identical.
-    std::sort(leftsorted.begin(), leftsorted.end(), above);  //Keeps things deterministic.
-    std::sort(leftsorted.begin(), leftsorted.end(), leftOf); //Our real sort.
+    //We read each row from the left.  Presorting doesn't help determinism.
+    std::sort(leftsorted.begin(), leftsorted.end(), leftOf);
     //We use this to count the gap between rows.
     std::sort(topsorted.begin(), topsorted.end(), above);
 
@@ -142,6 +166,7 @@ void RomAlignerNew::markRowStarts(){
      * off by 90 degrees, this gap confused older implementations of
      * this class.
      */
+    qreal firstx=0, firsty=0;
     qreal lasty=0, lastx=0;
     qreal maxy=0, miny=0;
     for(RomBitItem *bit: topsorted){  //Finding gap distance.
@@ -161,31 +186,40 @@ void RomAlignerNew::markRowStarts(){
     }
     qreal yspread=qFabs(maxy-miny);
 
-    //qDebug()<<"Smallest x gap was "<<smallestxgap;
+    if(verbose)
+        qDebug()<<"Smallest x gap was "<<smallestxgap;
 
     /* Getting this wrong will completely screw over the number
      * of columns in the result.  I tried some complicated algorithms
      * for it, but simply dividing the height by four seems to work for
-     * all of my samples.
+     * many of my samples with tilt.
      */
     qreal shorthopthreshold=yspread/4;
 
-    //qDebug()<<"yspread is"<<yspread<<"and shorthopthreshold is"<<shorthopthreshold;
+    if(verbose)
+        qDebug()<<"yspread is"<<yspread<<"and shorthopthreshold is"<<shorthopthreshold;
 
     /* Here we create a sorted list of the starts of row start
      * positions.  This is done by sweeping in from the left
      * while ignoring large gaps in the Y position.
      */
-    lasty=leftsorted[0]->y();
-    lastx=leftsorted[0]->x();
+    firsty=lasty=leftsorted[1]->y();
+    firstx=lastx=leftsorted[1]->x();
     unsigned int rowcount=0, skipcount=0;
     for(RomBitItem *bit: leftsorted){
-        if(qFabs(bit->y()-lasty)<shorthopthreshold  //Small Y change.
-            //|| (qFabs(bit->x()-lastx)<1)          //Exactly vertical in X.
+        if(
+            (
+            qFabs(bit->x()-lastx)<qFabs(bit->y()-lasty) //Bigger change in Y than X.
+                &&
+            qFabs(bit->y()-lasty)<shorthopthreshold  //Small Y change.
+                )
+            || (qFabs(bit->x()-firstx)<1)          //Exactly vertical in X.
             ){
+
             rowstarts<<bit;
             lasty=bit->y();
             lastx=bit->x();
+
             if(verbose)
                 qDebug()<<"Bit at"<<bit->x()<<bit->y()<<"row"<<rowcount++;
             //bit->setToolTip(QString("Row header."));
@@ -198,10 +232,31 @@ void RomAlignerNew::markRowStarts(){
             skipcount++;
         }
         //One or two long hops are normal, but many indicate end of first col.
-        if(skipcount>threshold)
+        if(skipcount>threshold){
+            if(verbose)
+                qDebug()<<skipcount<<"is above skip count threshold of"<<threshold;
             break;
+        }
     }
+
+    /* Now we have the row headers in order, but we need to make sure
+     * that we only have the first column.  Any extra entries will break
+     * the sorting.
+     */
     std::sort(rowstarts.begin(), rowstarts.end(), above);
+    lastx=rowstarts[0]->x();
+    driftcount=0; //Are we drifting west or east as we move south?
+    for(RomBitItem *bit: rowstarts){
+        if(bit->x()-lastx>0)
+            driftcount++;
+        if(bit->x()-lastx<0)
+            driftcount--;
+
+        lastx=bit->x();
+    }
+
+    if(verbose)
+        qDebug()<<"Driftcount"<<driftcount;
 
     //Apply the linked list.
     RomBitItem* lastbit=0;
@@ -214,6 +269,7 @@ void RomAlignerNew::markRowStarts(){
 
 //This updates the linked lists that MRT uses internally.
 RomBitItem* RomAlignerNew::linkresults(){
+    int expectedcols=0;
     int row=0;
     for(RomBitItem* bit: rowstarts){
         int col=0;
@@ -223,7 +279,11 @@ RomBitItem* RomAlignerNew::linkresults(){
             bit=bit->nexttoright;
             col++;
         }
+        if(expectedcols && expectedcols!=col){
+            qDebug()<<"WARNING: Column counts don't match.";
+        }
         row++;
+        expectedcols=col;
     }
     return rowstarts[0];
 }
