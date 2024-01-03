@@ -89,6 +89,76 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
 }
 
 
+/* Undo works by saving the state during important actions
+ * to one of two stacks, and moving the state between those
+ * stacks.
+ */
+void MaskRomTool::undo(){
+    if(undostack.size()==0)
+        return;
+
+    //Move an item from the undo stack to redo stack.
+    QJsonObject oldstate=exportJSON();
+    QJsonObject newstate=undostack.pop();
+    redostack.push(oldstate);
+    clear();
+    importJSON(newstate);
+}
+void MaskRomTool::redo(){
+    if(redostack.size()==0)
+        return;
+
+    //Move a item from the redo stack to undo stack.
+    QJsonObject oldstate=exportJSON();
+    QJsonObject newstate=redostack.pop();
+    undostack.push(oldstate);
+    clear();
+    importJSON(newstate);
+}
+void MaskRomTool::markUndoPoint(){
+    //Marking a point is just saving the state and emptying the redo buffer.
+    undostack.push(exportJSON());
+    redostack.empty();
+}
+void MaskRomTool::clear(){
+    /* For performance, we are just obliterating the entire state
+     * and not taking care to update things individually.  This is
+     * why we call .remove() and delete directly, rather than
+     * calling MaskRomTool::removeItem().
+     */
+
+    foreach (RomBitItem* item, bits){
+        //removeItem(item);
+        bits.remove(item);
+        delete item;
+    }
+    assert(bits.isEmpty());
+    bits.empty();
+    foreach (RomBitFix* item, bitfixes){
+        //removeItem(item);
+        bitfixes.remove(item);
+        delete item;
+    }
+    assert(bitfixes.isEmpty());
+    bitfixes.empty();
+    foreach (RomLineItem* item, rows){
+        //removeItem(item);  //Slow!
+        rows.remove(item);
+        delete item;
+    }
+    assert(rows.isEmpty());
+    rows.empty();
+    foreach (RomLineItem* item, cols){
+        //removeItem(item);  //Slow!
+        cols.remove(item);
+        delete item;
+    }
+    assert(cols.isEmpty());
+    cols.empty();
+
+    markBits();
+}
+
 
 //Returns a GatoROM structure of the bits.
 GatoROM MaskRomTool::gatorom(){
@@ -339,19 +409,26 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         break;
     case Qt::Key_A:
         if(event->modifiers()&Qt::SHIFT){ //Damage/Ambiguate bit.
+            markUndoPoint();
             damageBit(scene->scenepos);
         }else{ //Zoom in.
             ui->graphicsView->scale(1/1.2);
         }
         break;
-    case Qt::Key_Z: //Zoom out.
-        ui->graphicsView->scale(1.2);
+    case Qt::Key_Z: //Undo, Redo, Zoom out.
+        if(event->modifiers()&Qt::CTRL && !(event->modifiers()&Qt::SHIFT))
+            undo();
+        else if(event->modifiers()&Qt::CTRL && event->modifiers()&Qt::SHIFT)
+            redo();
+        else //zoom out
+            ui->graphicsView->scale(1.2);
         break;
     case Qt::Key_Tab: //Show/Hide BG
         nextMode();
         break;
     case Qt::Key_F:
         if(event->modifiers()&Qt::SHIFT){ //Force a Bit
+            markUndoPoint();
             fixBit(scene->scenepos);
             statusBar()->showMessage(tr("Forced a bit."));
         }else{//Focus
@@ -376,12 +453,14 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     //Modify the focus object.
     case Qt::Key_D: //Delete an object.  With Shift, it deletes many.
         if(event->modifiers()&Qt::SHIFT){
+            markUndoPoint();
             foreach(QGraphicsItem* item, scene->selection){
                 removeItem(item);
             }
             scene->setFocusItem(0);
             statusBar()->showMessage(tr("Deleted all selected items."));
         }else if(scene->focusItem()){
+            markUndoPoint();
             removeItem(scene->focusItem());
             scene->setFocusItem(0);
             statusBar()->showMessage(tr("Deleted item."));
@@ -408,6 +487,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     //These insert an object and set its focus.
     case Qt::Key_Space:
     case Qt::Key_R: //Row line.
+        markUndoPoint();
         rlitem=new RomLineItem(RomLineItem::LINEROW);
         if(event->key()==Qt::Key_Space
                 || event->modifiers()&Qt::SHIFT)
@@ -426,6 +506,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         break;
 
     case Qt::Key_C: //Column line.
+        markUndoPoint();
         rlitem=new RomLineItem(RomLineItem::LINECOL);
         if(event->modifiers()&Qt::SHIFT)
             rlitem->setLine(lastcol);
@@ -968,6 +1049,7 @@ void MaskRomTool::fixBit(RomBitItem* bit){
 void MaskRomTool::clearBitFixes(){
     //Just removes all the fixes, handy when you're retrying
     //a bad project.
+    markUndoPoint();
     foreach (RomBitFix* item, bitfixes.values()){
         bitfixes.remove(item);
         removeItem(item);
@@ -1380,5 +1462,14 @@ void MaskRomTool::on_actionClearForcedBits_triggered(){
 //Jump to the very next violation.  Handy in error correcting.
 void MaskRomTool::on_actionSelectNextViolation_triggered(){
     nextViolation();
+}
+
+
+void MaskRomTool::on_actionUndo_triggered(){
+    undo();
+}
+
+void MaskRomTool::on_actionRedo_triggered(){
+    redo();
 }
 

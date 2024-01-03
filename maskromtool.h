@@ -42,6 +42,13 @@ public:
     void enableVerbose(unsigned int level=1);
     void enableOpenGL(unsigned int antialiasing=0);
 
+    // Undo, Redo, or mark a checkpoint for undoing later.
+    QStack<QJsonObject> undostack, redostack;
+    void undo();
+    void redo();
+    void markUndoPoint();
+    void clear();
+
     //Persistant user settings.
     QSettings settings();
     QColor lineColor;
@@ -222,12 +229,11 @@ private slots:
 
     void on_actionClearViolations_triggered();
     void on_actionRunAllDRC_triggered();
-
     void on_actionHighlightHexSelection_triggered();
-
     void on_actionClearForcedBits_triggered();
-
     void on_actionSelectNextViolation_triggered();
+    void on_actionUndo_triggered();
+    void on_actionRedo_triggered();
 
 private:
     Ui::MaskRomTool *ui;

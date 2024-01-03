@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>24</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -108,6 +108,9 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
     <addaction name="thresholdButton"/>
     <addaction name="alignconstrainButton"/>
     <addaction name="linecolorButton"/>
@@ -137,11 +140,17 @@
    <addaction name="menuHelp"/>
   </widget>
   <action name="openButton">
+   <property name="icon">
+    <iconset theme="document-open"/>
+   </property>
    <property name="text">
     <string>Open ROM</string>
    </property>
   </action>
   <action name="saveButton">
+   <property name="icon">
+    <iconset theme="document-save"/>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -188,11 +197,17 @@
    </property>
   </action>
   <action name="aboutButton">
+   <property name="icon">
+    <iconset theme="help-about"/>
+   </property>
    <property name="text">
     <string>About MaskRomTool</string>
    </property>
   </action>
   <action name="actionPrint">
+   <property name="icon">
+    <iconset theme="printer"/>
+   </property>
    <property name="text">
     <string>Print</string>
    </property>
@@ -229,6 +244,9 @@
    <property name="checked">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="image-x-generic"/>
+   </property>
    <property name="text">
     <string>Photograph</string>
    </property>
@@ -262,6 +280,9 @@
    <property name="checked">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset theme="list-add"/>
+   </property>
    <property name="text">
     <string>Crosshair</string>
    </property>
@@ -275,6 +296,9 @@
    </property>
   </action>
   <action name="actionRunDRC">
+   <property name="icon">
+    <iconset theme="scanner"/>
+   </property>
    <property name="text">
     <string>Evaluate Rules (v)</string>
    </property>
@@ -401,6 +425,9 @@
    </property>
   </action>
   <action name="decoderButton">
+   <property name="icon">
+    <iconset theme="utilities-system-monitor"/>
+   </property>
    <property name="text">
     <string>Decoding</string>
    </property>
@@ -421,13 +448,35 @@
    </property>
   </action>
   <action name="actionClearForcedBits">
+   <property name="icon">
+    <iconset theme="edit-clear"/>
+   </property>
    <property name="text">
     <string>Clear Forced Bits</string>
    </property>
   </action>
   <action name="actionSelectNextViolation">
+   <property name="icon">
+    <iconset theme="dialog-error"/>
+   </property>
    <property name="text">
     <string>Select Next Violation (e)</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="icon">
+    <iconset theme="edit-undo"/>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset theme="edit-redo"/>
+   </property>
+   <property name="text">
+    <string>Redo</string>
    </property>
   </action>
  </widget>

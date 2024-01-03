@@ -26,6 +26,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
+`master` -- Undo and Redo.
+
 2024-01-01 -- Fixes bus error in Z8 decoder when solving odd sizes.
 Verbose mode in the GatoROM CLI.  `squeeze-lr` mode now in GUI
 decoder.  Edit menu item to clear all bit fixes.  `E` will select the
@@ -137,32 +139,35 @@ The most recent object is already selected, so you can remove a
 mistake with `D` or adjust its position a little with `S`.
 
 ```
-Tab     -- Show/Hide bits.
-Q       -- Zoom to zero.
-A       -- Zoom in.
-Z       -- Zoom out.
-H       -- Jump to home position.
-SHIFT+H -- Set the home position.
+Tab      -- Show/Hide bits.
+Q        -- Zoom to zero.
+A        -- Zoom in.
+Z        -- Zoom out.
+H        -- Jump to home position.
+SHIFT+H  -- Set the home position.
 
-D       -- Delete the one selected object.
-SHIFT+D -- Delete all selected objects.
-S       -- Set the selected object to the mouse position.
-F       -- Jump to the selected item.
+D        -- Delete the one selected object.
+SHIFT+D  -- Delete all selected objects.
+S        -- Set the selected object to the mouse position.
+F        -- Jump to the selected item.
 
-R       -- Draw a row from the last click position.
-SHIFT+R -- Repeat the shape of the last row.
-SPACE   -- Repeat the shape of the last row.
-C       -- Draw a column from the last click position.
-SHIFT+C -- Repeat the shape of the last column.
+R        -- Draw a row from the last click position.
+SHIFT+R  -- Repeat the shape of the last row.
+SPACE    -- Repeat the shape of the last row.
+C        -- Draw a column from the last click position.
+SHIFT+C  -- Repeat the shape of the last column.
 
-SHIFT+F -- Force a bit's value. (Again to flip.)
-SHIFT+A -- Force a bit's ambiguity.  (Again to flip.)
+SHIFT+F  -- Force a bit's value. (Again to flip.)
+SHIFT+A  -- Force a bit's ambiguity.  (Again to flip.)
 
-M       -- Mark all of the bits.
-SHIFT+M -- Decode to Hex bytes.
-V       -- Run the Design Rule Checks.
-SHIFT+V -- Clear the DRC violations.
-E       -- Select the next violation.
+M        -- Mark all of the bits.
+SHIFT+M  -- Decode to Hex bytes.
+V        -- Run the Design Rule Checks.
+SHIFT+V  -- Clear the DRC violations.
+E        -- Jump to next violation.
+
+^Z       -- Undo
+SHIFT+^Z -- Redo
 ```
 
 When you first begin to mark bits, the software won't yet know the
@@ -181,7 +186,7 @@ of your photographs.
 
 After you have marked the bits and spot checked that they are accurate
 with DRC, run File/Export to dump them into ASCII for parsing with
-other tools, such as
+other tools, such as [GatoROM](GATOREADME.md),
 [Bitviewer](https://github.com/SiliconAnalysis/bitviewer) or
 [ZorRom](https://github.com/SiliconAnalysis/zorrom).
 
@@ -292,9 +297,6 @@ do not spam the issue tracker with feature requests.  Pull requests
 should be submitted through the Github page, and they should not
 entangle the project with dependencies upon third-party libraries.
 
-We will keep Qt5 compatibility until Debian begins to drop it for Qt6,
-so please try to test your patch on both platforms.
-
 The code is written in a conservative dialect of C++, with minimal use
 of advanced features.  I've tried to comment the code and the class
 definitions thoroughly.
@@ -302,56 +304,30 @@ definitions thoroughly.
 
 ## ROM Decoders
 
-Many of these will soon be rewritten now that [GatoROM](GATOREADME.md)
-has been linked into the executable.
+[GatoROM](GATOREADME.md) is included as a command line decoder that
+solves for bit arrangements.  Please see its own README file for CLI
+documentation, particularly for the solver methods that are not yet
+supported in the GUI.
 
-**ASCII** exports for
-[Bitviewer](https://github.com/SiliconAnalysis/bitviewer) and
-[ZorRom](https://github.com/SiliconAnalysis/zorrom).  If your chip is
-not supported by Mask ROM Tool, you almost certainly want to export
-the bits to ASCII and explore them with these two tools until they
-make sense.
+Separately, GatoROM is used as a library for decoding within the
+MaskRomTool GUI.  Use Edit/Decoding to define the decoding style and
+View/HexPreview to see a live decoding of the bits to hexadecimal.
 
-**CSV** exports as a Comma Separated Value file.  In Matlab or Octave,
-`csvread("foo.csv")` imports the data.  In Excel, you can just open
-the file.
+![Screenshot of MYK82 decoding.](screenshots/decoder.png)
 
-**JSON** export of bit positions and values.  This is far more verbose
-than ASCII, but might be useful if you wanted to write your own tool.
+From the decoder, you can highlight hex bytes and use View/Highlight
+Hex Selection to visualize the selected bytes.  Here we see the first
+three words of the [MYK82
+ROM](https://github.com/travisgoodspeed/myk82rom), which pack 32 bits
+into each position.
 
-**Python** export provides you with an array of the bits, for writing
-your own parsing scripts.
-
-**Photograph** export provides a `.png` file of the current project.
-It's useful for documenting your work.
-
-**ARM6** exports bytes from ARM's ARM6L SoC devices, which are encoded
-as sixteen 32-bit words per row, most significant bits on the right.
-This was designed for the MYK82 chip in a Fortezza card, but might
-work elsewhere.
-
-**MARC4** exports for Atmel's 4-bit architecture by the same name.
-For now, this dumps the pages from left to right, so you'll need to
-rearrange the pages manually until
-[marc4dasm](https://github.com/AdamLaurie/marc4dasm) is happy.  Read
-Adam Laurie's [Fun With Masked
-ROMs](http://adamsblog.rfidiot.org/2013/01/fun-with-masked-roms.html)
-for more details on the format.
-
-Pull requests for new export formats are more than welcome.
-
-## Included Tools
-
-[GatoROM](GATOREADME.md) is included as a command line decoder and
-solver for bit arrangements.  Please see its own README file for
-documentation.
+![Screenshot of selected first three MYK82 words.](screenshots/selection.png)
 
 ## Related Tools
 
 John McMaster's [ZorRom](https://github.com/SiliconAnalysis/zorrom) is
-the best decoder available.  You will probably use ZorRom to decode
-the ASCII output of physical bits from MaskRomTool into a file of
-logical bytes.
+an excellent decoder and the inspiration for the decoding library in
+this tool.
 
 Adam Laurie's [RomPar](https://github.com/AdamLaurie/rompar) might be
 the very first bit marking tool to be open sourced.
