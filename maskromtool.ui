@@ -244,9 +244,6 @@
    <property name="checked">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset theme="image-x-generic"/>
-   </property>
    <property name="text">
     <string>Photograph</string>
    </property>
@@ -279,9 +276,6 @@
    </property>
    <property name="checked">
     <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset theme="list-add"/>
    </property>
    <property name="text">
     <string>Crosshair</string>
