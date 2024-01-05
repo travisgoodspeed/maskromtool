@@ -742,8 +742,9 @@ void MaskRomTool::on_thresholdButton_triggered(){
 
 void MaskRomTool::on_linecolorButton_triggered(){
     QColor color = QColorDialog::getColor(Qt::black, this );
-    if( color.isValid() )
-    {
+    if( color.isValid() ){
+        markUndoPoint();
+
         lineColor = color;
         //update&redraw
         for(QSet<RomLineItem*>::iterator i = rows.begin(), end = rows.end(); i != end; ++i){

@@ -21,6 +21,8 @@ public:
 private slots:
     void on_editMaxSkip_textChanged(const QString &arg1);
 
+    void on_comboBox_activated(int index);
+
 private:
     Ui::RomAlignDialog *ui;
     MaskRomTool *mrt;

@@ -24,7 +24,7 @@ void RomAlignDialog::setMaskRomTool(MaskRomTool* parent){
 
 //Called whenever the text changes.
 void RomAlignDialog::on_editMaxSkip_textChanged(const QString &arg1){
-    qDebug()<<"Value set to"<<arg1;
+    mrt->markUndoPoint();
 
     bool ok;
     uint32_t threshold=arg1.toInt(&ok, 10);
@@ -33,5 +33,13 @@ void RomAlignDialog::on_editMaxSkip_textChanged(const QString &arg1){
     }else{
         qDebug()<<"Illegal threshold number: "<<arg1;
     }
+}
+
+
+void RomAlignDialog::on_comboBox_activated(int index){
+    /* Expect something weird here, as we don't yet support
+     * more than one strategy in the combo box.
+     */
+    mrt->markUndoPoint();
 }
 
