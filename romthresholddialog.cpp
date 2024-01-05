@@ -72,6 +72,9 @@ void RomThresholdDialog::refreshStats(bool remarkbits){
           blue=0, bluemax=0;
     uint64_t count=0;
 
+    if(!mrt) //Can't update stats without bits.
+        return;
+
     //Make sure we know where the bits are.
     if(remarkbits)
         mrt->remarkBits();
@@ -213,25 +216,26 @@ void RomThresholdDialog::on_samplesizeScrollBar_valueChanged(int value){
 
 
 void RomThresholdDialog::on_checkInverted_stateChanged(int arg1){
+    mrt->markUndoPoint();
     //2 means checked, 0 means unchecked.
     mrt->inverted=(arg1==2);
-    mrt->markUndoPoint();
 }
 
 
 /* We update the colors a lot, but we only mark an undo point
- * when we release the slider.
+ * when we press the slider, as that's when it has the *old*
+ * value.
  */
-void RomThresholdDialog::on_redScrollBar_sliderReleased(){
+void RomThresholdDialog::on_redScrollBar_sliderPressed(){
     mrt->markUndoPoint();
 }
-void RomThresholdDialog::on_greenScrollBar_sliderReleased(){
+void RomThresholdDialog::on_greenScrollBar_sliderPressed(){
     mrt->markUndoPoint();
 }
-void RomThresholdDialog::on_blueScrollBar_sliderReleased(){
+void RomThresholdDialog::on_blueScrollBar_sliderPressed(){
     mrt->markUndoPoint();
 }
-void RomThresholdDialog::on_samplesizeScrollBar_sliderReleased(){
+void RomThresholdDialog::on_samplesizeScrollBar_sliderPressed(){
     mrt->markUndoPoint();
 }
 

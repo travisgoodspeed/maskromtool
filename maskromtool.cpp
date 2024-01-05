@@ -126,6 +126,9 @@ void MaskRomTool::markUndoPoint(){
     if(importLock>0)
         return;
 
+    if(verbose)
+        qDebug()<<"Marking undo point"<<undostack.size();
+
     //Marking a point is just saving the state and emptying the redo buffer.
     undostack.push(exportJSON());
     redostack.empty();
@@ -812,7 +815,6 @@ void MaskRomTool::updateThresholdHistogram(){
     bluemark->append(thresholdB,0);
     bluemark->append(thresholdB,skyhigh);
 
-
     histogramchart.legend()->hide();
     histogramchart.removeAllSeries();
     histogramchart.addSeries(red);
@@ -1428,8 +1430,9 @@ void MaskRomTool::importJSON(QJsonObject o){
     setBitSize(bitSize);
 
     //And correct missing stats.
-    //remarkBits();
-    //thresholdDialog.refreshStats(false);  //FIXME: This crashes.
+    //thresholdDialog.refreshStats();  //FIXME: This crashes.
+    thresholdDialog.setMaskRomTool(this);
+    updateThresholdHistogram();
 
     importLock--;
 }
