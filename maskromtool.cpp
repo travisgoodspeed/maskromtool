@@ -94,8 +94,11 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
  * stacks.
  */
 void MaskRomTool::undo(){
-    if(undostack.size()==0)
+    if(undostack.isEmpty())
         return;
+
+    if(verbose)
+        qDebug()<<"Proceeding with undo. "<<undostack.size()<<"undos available.";
 
     //Move an item from the undo stack to redo stack.
     QJsonObject oldstate=exportJSON();
@@ -105,7 +108,7 @@ void MaskRomTool::undo(){
     importJSON(newstate);
 }
 void MaskRomTool::redo(){
-    if(redostack.size()==0)
+    if(redostack.isEmpty())
         return;
 
     //Move a item from the redo stack to undo stack.
@@ -116,6 +119,13 @@ void MaskRomTool::redo(){
     importJSON(newstate);
 }
 void MaskRomTool::markUndoPoint(){
+    /* We don't mark save states in the middle of file loads,
+     * as that would trigger recursion that would exhaust the
+     * call stack.  Same goes for restoring undoes.
+     */
+    if(importLock>0)
+        return;
+
     //Marking a point is just saving the state and emptying the redo buffer.
     undostack.push(exportJSON());
     redostack.empty();
@@ -962,6 +972,9 @@ void MaskRomTool::fileOpen(QString filename){
 
     //Grab the object.
     importJSON(jsonDoc.object());
+    //Clear undo history, so we can't undo past the beginning.
+    undostack.empty();
+    redostack.empty();
 }
 
 //Opens an image as the backgound for annotation, and matching .json if it's available.
@@ -1325,6 +1338,11 @@ QJsonObject MaskRomTool::exportJSON(){
 
 //The imports the state from JSON.
 void MaskRomTool::importJSON(QJsonObject o){
+    //Recursive is bad here!
+    importLock++;
+    if(importLock>1)
+        qDebug()<<"Import lock is"<<importLock;
+
     QJsonValue github=o.value("00github");
     QJsonValue about=o.value("00about");
 
@@ -1408,6 +1426,8 @@ void MaskRomTool::importJSON(QJsonObject o){
     //After loading all that, we should be able to decode the bits.
     markBits();
     setBitSize(bitSize);
+
+    importLock--;
 }
 
 

@@ -125,14 +125,14 @@ int main(int argc, char *argv[]){
     MaskRomTool mrt(0,
                     //OpenGL is on by default, unless the platform is offscreen.
                     !parser.isSet(disableOpenglOption) && !a.platformName().contains("offscreen"));
-    mrt.show();
-    for(int i=0; i<args.count(); i++)
-        mrt.fileOpen(args[i]);
-
     if(parser.isSet(verboseOption)){
         //Don't print anything because the function takes care of it for us.
         mrt.enableVerbose();
     }
+
+    mrt.show();
+    for(int i=0; i<args.count(); i++)
+        mrt.fileOpen(args[i]);
 
     //Chooses the sampling algorithm.
     if(parser.isSet(samplerOption)){

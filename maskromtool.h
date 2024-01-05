@@ -140,6 +140,7 @@ public:
     QPointF bitLocation(QGraphicsLineItem *a, QGraphicsLineItem *b);
 
     //These are for load/save of the project state.  See RomDecoderJson for the bit position exporter.
+    int importLock=0;
     QJsonObject exportJSON();
     void importJSON(QJsonObject);
 
