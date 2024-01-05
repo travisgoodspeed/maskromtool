@@ -24,12 +24,14 @@ public:
     void postThresholds();
     void setMaskRomTool(MaskRomTool* parent);
     void setChart(QChart *chart);
+    void refreshStats(bool remarkbits=true);
 
 private:
     Ui::RomThresholdDialog *ui;
-    void refreshStats();
     float average_red=0, average_green=0, average_blue=0;
     QChartView *chartview=0;
+    MaskRomTool *mrt=0;
+
 
 private slots:
     void on_averageButton_clicked();
@@ -45,6 +47,10 @@ private slots:
     void on_samplesizeEdit_textEdited(const QString &arg1);
     void on_samplesizeScrollBar_valueChanged(int value);
     void on_checkInverted_stateChanged(int arg1);
+    void on_redScrollBar_sliderReleased();
+    void on_greenScrollBar_sliderReleased();
+    void on_blueScrollBar_sliderReleased();
+    void on_samplesizeScrollBar_sliderReleased();
 };
 
 #endif // ROMTHRESHOLDDIALOG_H

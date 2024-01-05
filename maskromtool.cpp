@@ -1427,6 +1427,10 @@ void MaskRomTool::importJSON(QJsonObject o){
     markBits();
     setBitSize(bitSize);
 
+    //And correct missing stats.
+    //remarkBits();
+    //thresholdDialog.refreshStats(false);  //FIXME: This crashes.
+
     importLock--;
 }
 

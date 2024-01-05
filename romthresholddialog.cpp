@@ -6,15 +6,6 @@
 #include "rombititem.h"
 
 
-/* This tool was designed hastily, and the mrt
- * public symbol is unfortunately one of the
- * blockers to maintaining multiple projects
- * in memory simultaneously.
- *
- * FIXME Remove this symbol from the global scope.
- */
-MaskRomTool *mrt;
-
 RomThresholdDialog::RomThresholdDialog() :
     QDialog(),
     ui(new Ui::RomThresholdDialog)
@@ -74,7 +65,7 @@ void RomThresholdDialog::setChart(QChart *chart){
     chartview->setChart(chart);
 }
 
-void RomThresholdDialog::refreshStats(){
+void RomThresholdDialog::refreshStats(bool remarkbits){
     float r=0, g=0, b=0;
     float red=0, redmax=0,
           green=0, greenmax=0,
@@ -82,7 +73,8 @@ void RomThresholdDialog::refreshStats(){
     uint64_t count=0;
 
     //Make sure we know where the bits are.
-    mrt->remarkBits();
+    if(remarkbits)
+        mrt->remarkBits();
 
     //Average the values.
     foreach (RomBitItem *bit, mrt->bits){
@@ -110,7 +102,8 @@ void RomThresholdDialog::refreshStats(){
 
     //Maybe move this to a button?
     //mrt->setBitThreshold(red, green, blue);
-    mrt->remarkBits();
+    if(remarkbits)
+        mrt->remarkBits();
 
     //Print some debugging items.
     if(verbose){
@@ -120,6 +113,7 @@ void RomThresholdDialog::refreshStats(){
 }
 
 void RomThresholdDialog::on_averageButton_clicked(){
+    mrt->markUndoPoint();
     refreshStats();
 
     //Apply the values.
@@ -153,19 +147,19 @@ void RomThresholdDialog::postThresholds(){
     mrt->remarkBits();
 }
 
-
+/* We do *not* mark an undo point when the slider values are changed
+ * for performance.  Instead we only save the new state when the
+ * slider is released.
+ */
 void RomThresholdDialog::on_redScrollBar_valueChanged(int value){
     postThresholds();
 }
-
 void RomThresholdDialog::on_greenScrollBar_valueChanged(int value){
     postThresholds();
 }
-
 void RomThresholdDialog::on_blueScrollBar_valueChanged(int value){
     postThresholds();
 }
-
 void RomThresholdDialog::on_sizeScrollBar_valueChanged(int value){
     postThresholds();
 }
@@ -175,35 +169,43 @@ void RomThresholdDialog::on_sizeScrollBar_valueChanged(int value){
 void RomThresholdDialog::on_redEdit_textEdited(const QString &arg1){
     bool ok=false;
     int val=arg1.toInt(&ok,10);
-    if(ok)
+    if(ok){
+        mrt->markUndoPoint();
         ui->redScrollBar->setValue(val);
+    }
 }
 void RomThresholdDialog::on_greenEdit_textEdited(const QString &arg1){
     bool ok=false;
     int val=arg1.toInt(&ok,10);
-    if(ok)
+    if(ok){
+        mrt->markUndoPoint();
         ui->greenScrollBar->setValue(val);
+    }
 }
 void RomThresholdDialog::on_blueEdit_textEdited(const QString &arg1){
     bool ok=false;
     int val=arg1.toInt(&ok,10);
-    if(ok)
+    if(ok){
+        mrt->markUndoPoint();
         ui->blueScrollBar->setValue(val);
+    }
 }
 
 void RomThresholdDialog::on_samplerBox_activated(int index){
+    mrt->markUndoPoint();
     mrt->chooseSampler(ui->samplerBox->currentText());
 }
 
 void RomThresholdDialog::on_samplesizeEdit_textEdited(const QString &arg1){
     bool ok=false;
     int val=arg1.toInt(&ok,10);
+
     if(ok){
+        mrt->markUndoPoint();
         ui->samplesizeScrollBar->setValue(val);
         postThresholds();
     }
 }
-
 
 void RomThresholdDialog::on_samplesizeScrollBar_valueChanged(int value){
     postThresholds();
@@ -213,5 +215,23 @@ void RomThresholdDialog::on_samplesizeScrollBar_valueChanged(int value){
 void RomThresholdDialog::on_checkInverted_stateChanged(int arg1){
     //2 means checked, 0 means unchecked.
     mrt->inverted=(arg1==2);
+    mrt->markUndoPoint();
+}
+
+
+/* We update the colors a lot, but we only mark an undo point
+ * when we release the slider.
+ */
+void RomThresholdDialog::on_redScrollBar_sliderReleased(){
+    mrt->markUndoPoint();
+}
+void RomThresholdDialog::on_greenScrollBar_sliderReleased(){
+    mrt->markUndoPoint();
+}
+void RomThresholdDialog::on_blueScrollBar_sliderReleased(){
+    mrt->markUndoPoint();
+}
+void RomThresholdDialog::on_samplesizeScrollBar_sliderReleased(){
+    mrt->markUndoPoint();
 }
 
