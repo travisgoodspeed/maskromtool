@@ -328,7 +328,7 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
 
     //Remove the item if it's a part of the scene.
     if(item->scene()==scene){
-        /* Documetnation of QGraphicsItem says that it's
+        /* Documentation of QGraphicsItem says that it's
          * faster to remove it first and then destroy it,
          * but my benchmarking says the opposite.
          * --Travis
@@ -483,7 +483,8 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
         break;
 
-    case Qt::Key_S: //Set Position
+    //Save or set Position
+    case Qt::Key_S:
         if(event->modifiers()&Qt::CTRL){
             on_saveButton_triggered();
         }else if(scene->focusItem()){
@@ -625,9 +626,8 @@ void MaskRomTool::nextViolation(){
 }
 
 void MaskRomTool::on_importDiff_triggered(){
-
-
-    qDebug()<<"Importing a diff.";
+    if(verbose)
+        qDebug()<<"Importing a diff.";
     RomEncoderDiff differ;
     QString filename = QFileDialog::getOpenFileName(this, tr("Diff Bits as ASCII"),"",tr("Textfiles (*.txt)"));
 
@@ -762,7 +762,6 @@ void MaskRomTool::on_decoderButton_triggered(){
 
 //Pop a dialog to choose the alignment constraints.
 void MaskRomTool::on_alignconstrainButton_triggered(){
-    qDebug()<<"Choosing alignment constraints.";
     alignDialog.setMaskRomTool(this);
     alignDialog.show();
 }
@@ -856,7 +855,7 @@ void MaskRomTool::getBitThreshold(qreal &r, qreal &g, qreal &b){
     b=thresholdB;
 
     if(verbose)
-        qDebug()<<"Returning RGB"<<r<<g<<b;
+        qDebug()<<"Returning RGB threshold"<<r<<g<<b;
 }
 
 //Sets the bit display size.
@@ -1455,8 +1454,8 @@ void MaskRomTool::on_actionHighlightHexSelection_triggered(){
 
 // Marks a warning for bits in range.
 void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
-
-    qDebug()<<"Marking range from"<<start<<"to"<<end;
+    if(verbose)
+        qDebug()<<"Marking address range from"<<start<<"to"<<end;
 
     //Just another type of violation, so we have to clear the real ones.
     clearViolations();
