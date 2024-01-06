@@ -131,6 +131,8 @@ void MaskRomTool::markUndoPoint(){
 
     //Marking a point is just saving the state and emptying the redo buffer.
     undostack.push(exportJSON());
+    if(undostack.size()>maxUndoCount)
+        undostack.pop_front();
     redostack.empty();
 }
 void MaskRomTool::clear(){
@@ -790,6 +792,11 @@ void MaskRomTool::updateThresholdHistogram(){
         blues[b]++;
     }
 
+    /* This looks like a memory leak, but it's
+     * not because addSeries() takes ownership
+     * of the series and removeAllSeries() frees
+     * the old series objects.
+     */
     QLineSeries *red = new QLineSeries();
     red->setName("Red");
     QLineSeries *green = new QLineSeries();

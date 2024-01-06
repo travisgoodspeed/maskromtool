@@ -44,6 +44,8 @@ public:
 
     // Undo, Redo, or mark a checkpoint for undoing later.
     QStack<QJsonObject> undostack, redostack;
+    //No point in keeping a thousand steps in memory.
+    uint32_t maxUndoCount=50;
     void undo();
     void redo();
     void markUndoPoint();
