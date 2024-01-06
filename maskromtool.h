@@ -16,6 +16,7 @@
 #include "romaligner.h"
 #include "rombitsampler.h"
 #include "romruledialog.h"
+#include "romstringsdialog.h"
 #include "romsecond.h"
 
 #include "gatorom.h"
@@ -156,6 +157,7 @@ public:
     RomSecond second;
     RomDecodeDialog decodeDialog;
     RomHexDialog hexDialog;
+    RomStringsDialog stringsDialog;
 
     //Selectable Strategies
     RomAligner *aligner=0;
@@ -237,6 +239,8 @@ private slots:
     void on_actionSelectNextViolation_triggered();
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
+
+    void on_stringsButton_triggered();
 
 private:
     Ui::MaskRomTool *ui;

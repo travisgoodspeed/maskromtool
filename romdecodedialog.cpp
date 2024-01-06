@@ -32,7 +32,10 @@ void RomDecodeDialog::setMaskRomTool(MaskRomTool* maskRomTool){
 
 void RomDecodeDialog::updateString(){
     ui->textFlags->setPlainText(mrt->gr.description());
-    mrt->hexDialog.updatebinary(mrt->gr.decode());
+
+    QByteArray ba=mrt->gr.decode();
+    mrt->hexDialog.updatebinary(ba);
+    mrt->stringsDialog.updatebinary(ba);
 }
 
 RomDecodeDialog::~RomDecodeDialog(){

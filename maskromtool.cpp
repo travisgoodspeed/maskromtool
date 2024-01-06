@@ -179,7 +179,10 @@ void MaskRomTool::clear(){
 GatoROM MaskRomTool::gatorom(){
     RomDecoderGato exporter;
     exporter.gatorom(this);
-    hexDialog.updatebinary(gr.decode());
+
+    QByteArray ga=gr.decode();
+    hexDialog.updatebinary(ga);
+    stringsDialog.updatebinary(ga);
     return this->gr;
 }
 
@@ -1505,5 +1508,11 @@ void MaskRomTool::on_actionUndo_triggered(){
 
 void MaskRomTool::on_actionRedo_triggered(){
     redo();
+}
+
+
+void MaskRomTool::on_stringsButton_triggered(){
+    gatorom();
+    stringsDialog.show();
 }
 

@@ -74,6 +74,7 @@ set(MRT_SOURCES
         aboutdialog.h aboutdialog.cpp aboutdialog.ui
         asciidialog.h asciidialog.cpp asciidialog.ui
         romhexdialog.h romhexdialog.cpp romhexdialog.ui
+        romstringsdialog.h romstringsdialog.cpp romstringsdialog.ui
 # Decoders
         romdecoder.h
         romdecodergato.h romdecodergato.cpp
@@ -111,7 +112,6 @@ set(MRT_SOURCES
 qt_add_executable(maskromtool
     MANUAL_FINALIZATION
     ${MRT_SOURCES}
-
 )
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport)

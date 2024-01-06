@@ -81,6 +81,7 @@
     </property>
     <addaction name="separator"/>
     <addaction name="asciiButton"/>
+    <addaction name="stringsButton"/>
     <addaction name="actionHexView"/>
     <addaction name="actionViolationsDialog"/>
     <addaction name="actionOpenGL"/>
@@ -224,7 +225,7 @@
   </action>
   <action name="asciiButton">
    <property name="text">
-    <string>ASCII Preview</string>
+    <string>ASCII Bits</string>
    </property>
   </action>
   <action name="actionPhoto">
@@ -433,7 +434,7 @@
   </action>
   <action name="actionHexView">
    <property name="text">
-    <string>Hex Preview</string>
+    <string>Hex</string>
    </property>
   </action>
   <action name="actionHighlightHexSelection">
@@ -471,6 +472,11 @@
    </property>
    <property name="text">
     <string>Redo</string>
+   </property>
+  </action>
+  <action name="stringsButton">
+   <property name="text">
+    <string>Strings</string>
    </property>
   </action>
  </widget>
