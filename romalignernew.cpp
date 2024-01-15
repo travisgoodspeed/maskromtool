@@ -203,7 +203,7 @@ void RomAlignerNew::markRowStarts(){
      * positions.  This is done by sweeping in from the left
      * while ignoring large gaps in the Y position.
      */
-    firsty=lasty=leftsorted[1]->y();
+    //firsty=lasty=leftsorted[1]->y();
     firstx=lastx=leftsorted[1]->x();
     unsigned int rowcount=0, skipcount=0;
     for(RomBitItem *bit: leftsorted){

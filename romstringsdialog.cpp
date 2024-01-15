@@ -18,7 +18,7 @@ RomStringsDialog::~RomStringsDialog(){
 void RomStringsDialog::updatebinary(QByteArray bytes){
     QString longest="";
     QString last="";
-    uint32_t longestcount=0, lastcount=0;
+    uint32_t lastcount=0;
 
     //Clear the old items.
     ui->listWidget->clear();
@@ -33,7 +33,6 @@ void RomStringsDialog::updatebinary(QByteArray bytes){
         }else{
             if(lastcount>minLength){
                 longest=last;
-                longestcount=lastcount;
                 registerString(adr, last);
             }
             last="";
