@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QByteArray>
+#include <QListWidget>
 
 class MaskRomTool;
 
@@ -20,6 +21,9 @@ public:
     void updatebinary(QByteArray bytes);
     void setMaskRomTool(MaskRomTool *mrt);
     int minLength=7;
+
+private slots:
+    void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
 
 private:
     Ui::RomStringsDialog *ui;

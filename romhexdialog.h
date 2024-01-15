@@ -27,8 +27,11 @@ public:
     void updatebinary(QByteArray bytes);
     void setMaskRomTool(MaskRomTool *mrt);
     uint32_t positionToAdr(int pos);
+    int adrToPosition(uint32_t adr);
+    int adrToEndPosition(uint32_t adr);
 
     //Selections are in terms of byte addresses.
+    void select(uint32_t adr, uint32_t len);
     uint32_t start=0, end=0;
 
 private slots:

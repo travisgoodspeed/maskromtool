@@ -220,8 +220,7 @@ void RomAlignerNew::markRowStarts(){
             lasty=bit->y();
             lastx=bit->x();
 
-            if(verbose)
-                qDebug()<<"Bit at"<<bit->x()<<bit->y()<<"row"<<rowcount++;
+            //if(verbose) qDebug()<<"Bit at"<<bit->x()<<bit->y()<<"row"<<rowcount++;
             //bit->setToolTip(QString("Row header."));
             bit->marked=true; //Necessary so we don't double-count.
             skipcount=0;

@@ -68,9 +68,13 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     scene->maskRomTool=this;
     ui->graphicsView->setScene(scene);
     view=ui->graphicsView;
+
+    //Some child dialogs need pointers back to the main project.
     violationDialog.setMaskRomTool(this);
     decodeDialog.setMaskRomTool(this);
     hexDialog.setMaskRomTool(this);
+    stringsDialog.setMaskRomTool(this);
+
     RomRuleViolation::bitSize=bitSize;
     lineColor = QColor(Qt::black);
 

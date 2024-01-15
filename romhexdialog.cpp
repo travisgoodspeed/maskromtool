@@ -18,6 +18,9 @@ RomHexDialog::RomHexDialog(QWidget *parent) :
 
     ui->setupUi(this);
     ui->plaintextHex->setFont(font);
+
+    //Quick safety checks.
+    assert(positionToAdr(adrToPosition(0x1337))==0x1337);
 }
 
 RomHexDialog::~RomHexDialog(){
@@ -49,7 +52,26 @@ void RomHexDialog::updatebinary(QByteArray bytes){
     ui->plaintextHex->setTextCursor(cursor);
 }
 
+//Selects a region, such as when a string is rendered.
+void RomHexDialog::select(uint32_t adr, uint32_t len){
+    qDebug()<<"Updating selection to"<<
+                    QString::number(adr,16).prepend("0x")+
+                    "+"+
+                    QString::number(len,16).prepend("0x");
+    start=adrToPosition(adr);
+    end=adrToEndPosition(adr+len);
 
+    //Update the selection in the text editor.
+    QTextCursor cursor=ui->plaintextHex->textCursor();
+    cursor.setPosition(start,QTextCursor::MoveAnchor);
+    cursor.setPosition(end,QTextCursor::KeepAnchor);
+    ui->plaintextHex->setTextCursor(cursor);
+
+    //Redraw the new selection.
+    mrt->scene->updateStatus();
+}
+
+//Sets a pointer to the MRT instance.
 void RomHexDialog::setMaskRomTool(MaskRomTool *mrt){
     this->mrt=mrt;
 }
@@ -69,7 +91,6 @@ void RomHexDialog::on_plaintextHex_selectionChanged(){
 }
 
 
-
 uint32_t RomHexDialog::positionToAdr(int pos){
     /* A given line looks like this:
      * '0000  01 e2 0f 08 c8 41 17 87 33 fc f6 f6 76 3f f6 f6'
@@ -84,6 +105,36 @@ uint32_t RomHexDialog::positionToAdr(int pos){
     int offset=(pos%(6+3*16+1)-6)/3;
 
     uint32_t adr=row*16+offset;
-    //qDebug()<<"Addr="<<adr<<" -- row="<<row<<"offset="<<offset;
+
+    /*qDebug()<<
+        "Addr="<<QString::number(adr,16).prepend("0x")<<
+        " -- row="<<row<<"offset="<<offset;
+    */
+
     return adr;
 }
+
+
+
+int RomHexDialog::adrToPosition(uint32_t adr){
+    /* This takes an address and converts it to a row and line.
+     * You can combine the two functions to normalize a
+     * selection such that no extra characters are selected.
+     */
+
+    int row=adr/16;
+    int offset=(adr%16)*3+6;
+    int pos=row*(6+1+3*16)+offset;
+
+    return pos;
+}
+
+int RomHexDialog::adrToEndPosition(uint32_t adr){
+    /* This takes an address and converts it to a row and line.
+     * You can combine the two functions to normalize a
+     * selection such that no extra characters are selected.
+     */
+
+    return adrToPosition(adr-1)+2;
+}
+

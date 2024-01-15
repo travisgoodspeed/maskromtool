@@ -10,8 +10,7 @@ RomStringsDialog::RomStringsDialog(QWidget *parent)
     ui->setupUi(this);
 }
 
-RomStringsDialog::~RomStringsDialog()
-{
+RomStringsDialog::~RomStringsDialog(){
     delete ui;
 }
 
@@ -53,3 +52,26 @@ void RomStringsDialog::setMaskRomTool(MaskRomTool *mrt){
 void RomStringsDialog::registerString(int adr, QString string){
     ui->listWidget->addItem("0x"+QString::number(adr,16)+"\t"+string);
 }
+
+void RomStringsDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item){
+    /* Apologies for the shotgun parser.  The right way to do this would be
+     * to subclass QListWidgetItem, but I don't think it's worth that complexity
+     * for a feature that few users will appreciate. --Travis
+     */
+    QString str=item->text();
+    QStringList words=str.split("\t");
+    bool okay=false;
+    uint32_t adr=0;
+    uint32_t len=0;
+    assert(mrt);
+
+    if(words.length()>1){
+        QString adrstr=words[0];
+        adr=adrstr.toUInt(&okay, 16);
+        len=str.length()-words[0].length()-1;
+        assert(okay);
+        qDebug()<<"Should be selecting adr "<<QString::number(adr,16).prepend("0x");
+        mrt->hexDialog.select(adr,len);
+    }
+}
+
