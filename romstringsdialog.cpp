@@ -51,5 +51,5 @@ void RomStringsDialog::setMaskRomTool(MaskRomTool *mrt){
 
 
 void RomStringsDialog::registerString(int adr, QString string){
-    ui->listWidget->addItem(string);
+    ui->listWidget->addItem("0x"+QString::number(adr,16)+"\t"+string);
 }
