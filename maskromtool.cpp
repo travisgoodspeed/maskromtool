@@ -383,6 +383,7 @@ void MaskRomTool::on_actionCrosshair_triggered(){
 
 
 void MaskRomTool::setLinesVisible(bool b){
+    linesVisible=b;
     foreach (QGraphicsLineItem* item, rows){
         item->setVisible(b);
     }
@@ -416,10 +417,15 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     RomLineItem *rlitem;
     int key=event->key();
 
+    bool alt=event->modifiers()&Qt::AltModifier;
+    bool shift=event->modifiers()&Qt::ShiftModifier;
+    bool ctrl=event->modifiers()&Qt::CTRL;
+
+
     switch(key){
     //Zoom/view keys.
     case Qt::Key_H: //Home button.
-        if(event->modifiers()&Qt::SHIFT){ //Set home.
+        if(shift){ //Set home.
             home=scene->scenepos;
         }else{ //Jump to home when no modifiers are held.
             ui->graphicsView->centerOn(home);
@@ -430,7 +436,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         ui->graphicsView->totalScaleFactor=1;
         break;
     case Qt::Key_A:
-        if(event->modifiers()&Qt::SHIFT){ //Damage/Ambiguate bit.
+        if(shift){ //Damage/Ambiguate bit.
             markUndoPoint();
             damageBit(scene->scenepos);
         }else{ //Zoom in.
@@ -438,18 +444,36 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         }
         break;
     case Qt::Key_Z: //Undo, Redo, Zoom out.
-        if(event->modifiers()&Qt::CTRL && !(event->modifiers()&Qt::SHIFT))
+        if(ctrl && !shift)
             undo();
-        else if(event->modifiers()&Qt::CTRL && event->modifiers()&Qt::SHIFT)
+        else if(ctrl && shift)
             redo();
         else //zoom out
             ui->graphicsView->scale(1.2);
         break;
     case Qt::Key_Tab: //Show/Hide BG
+        /* I'd love to use tab with modifiers here to hide and show
+         * other layers, but that doesn't work on macOS.  --Travis
+         */
         nextMode();
         break;
+    case Qt::Key_Backslash:
+
+        if(!ctrl && !shift && !alt){ // No modifiers for lines.
+            setLinesVisible(!linesVisible);
+        }else if(ctrl && !shift && !alt){           // Ctrl for background.
+            ui->actionPhotograph->setChecked(
+                !ui->actionPhotograph->isChecked());
+            on_actionPhotograph_triggered();
+        }else if(!ctrl && !shift && alt){           // Alt for crosshair.
+            ui->actionCrosshair->setChecked(
+                !ui->actionCrosshair->isChecked());
+            on_actionCrosshair_triggered();
+        }
+
+        break;
     case Qt::Key_F:
-        if(event->modifiers()&Qt::SHIFT){ //Force a Bit
+        if(shift){ //Force a Bit
             markUndoPoint();
             fixBit(scene->scenepos);
             statusBar()->showMessage(tr("Forced a bit."));
@@ -459,7 +483,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         }
         break;
     case Qt::Key_V: //DRC
-        if((event->modifiers()&Qt::SHIFT))
+        if(shift)
             clearViolations(); //Clear out the violations for now.
         else
             runDRC(false);  //Just run the normal DRC, no key combo for the long one.
@@ -474,7 +498,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //Modify the focus object.
     case Qt::Key_D: //Delete an object.  With Shift, it deletes many.
-        if(event->modifiers()&Qt::SHIFT){
+        if(shift){
             markUndoPoint();
             foreach(QGraphicsItem* item, scene->selection){
                 removeItem(item);
@@ -494,7 +518,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //Save or set Position
     case Qt::Key_S:
-        if(event->modifiers()&Qt::CTRL){
+        if(ctrl){
             on_saveButton_triggered();
         }else if(scene->focusItem()){
             switch(scene->focusItem()->type()){
@@ -513,7 +537,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         markUndoPoint();
         rlitem=new RomLineItem(RomLineItem::LINEROW);
         if(event->key()==Qt::Key_Space
-                || event->modifiers()&Qt::SHIFT)
+                || shift)
             rlitem->setLine(lastrow);
         else
             rlitem->setLine(0, 0,
@@ -531,7 +555,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     case Qt::Key_C: //Column line.
         markUndoPoint();
         rlitem=new RomLineItem(RomLineItem::LINECOL);
-        if(event->modifiers()&Qt::SHIFT)
+        if(shift)
             rlitem->setLine(lastcol);
         else
             rlitem->setLine(0, 0,
@@ -553,7 +577,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         if(asciiDialog.isVisible())
             on_asciiButton_triggered();
         statusBar()->showMessage(tr("Marked bits."));
-        if(event->modifiers()&Qt::SHIFT){
+        if(shift){
             on_actionHexView_triggered();
             statusBar()->showMessage(tr("Decoded bits."));
         }
@@ -1189,7 +1213,7 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
 void MaskRomTool::markBits(){
     static long lastbitcount=50000;
     bool bitswerevisible=bitsVisible;
-    bool lineswerevisible=ui->actionRowsColumns->isChecked();
+    bool lineswerevisible=linesVisible;
 
 
     if(!lineswerevisible)

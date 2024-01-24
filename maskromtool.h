@@ -75,6 +75,7 @@ public:
     void keyPressEvent(QKeyEvent *event);
 
     void nextMode();                         //Called from the Tab key, this hides or shows bits.
+    bool linesVisible=true;
     void setLinesVisible(bool b=true);       //Shows or hides the rows and columns.
     bool bitsVisible=true;                   //Are we currently seeing the bits?
     void setBitsVisible(bool b=true);        //Show or hide the bits.

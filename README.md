@@ -26,7 +26,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
-`master` -- Undo and Redo.  Strings dialog.
+`master` -- Undo and Redo.  Strings dialog.  Backslash key for layer
+visibility.
 
 2024-01-01 -- Fixes bus error in Z8 decoder when solving odd sizes.
 Verbose mode in the GatoROM CLI.  `squeeze-lr` mode now in GUI
@@ -136,38 +137,43 @@ Setting its position will apply to the most recently placed line,
 unless you drag a box to select a line.
 
 The most recent object is already selected, so you can remove a
-mistake with `D` or adjust its position a little with `S`.
+mistake with `D` or adjust its position a little with `S`.  On macOS,
+`^` means Command instead of Ctrl.
 
 ```
 Tab      -- Show/Hide bits.
+\        -- Show/Hide rows and columns.
+^\       -- Show/Hide background.
+ALT \    -- Show/Hide crosshair.
+
 Q        -- Zoom to zero.
 A        -- Zoom in.
 Z        -- Zoom out.
 H        -- Jump to home position.
-SHIFT+H  -- Set the home position.
+SHIFT H  -- Set the home position.
 
 D        -- Delete the one selected object.
-SHIFT+D  -- Delete all selected objects.
+SHIFT D  -- Delete all selected objects.
 S        -- Set the selected object to the mouse position.
 F        -- Jump to the selected item.
 
 R        -- Draw a row from the last click position.
-SHIFT+R  -- Repeat the shape of the last row.
+SHIFT R  -- Repeat the shape of the last row.
 SPACE    -- Repeat the shape of the last row.
 C        -- Draw a column from the last click position.
-SHIFT+C  -- Repeat the shape of the last column.
+SHIFT C  -- Repeat the shape of the last column.
 
-SHIFT+F  -- Force a bit's value. (Again to flip.)
-SHIFT+A  -- Force a bit's ambiguity.  (Again to flip.)
+SHIFT F  -- Force a bit's value. (Again to flip.)
+SHIFT A  -- Force a bit's ambiguity.  (Again to flip.)
 
 M        -- Mark all of the bits.
-SHIFT+M  -- Decode to Hex bytes.
+SHIFT M  -- Decode to Hex bytes.
 V        -- Run the Design Rule Checks.
-SHIFT+V  -- Clear the DRC violations.
+SHIFT V  -- Clear the DRC violations.
 E        -- Jump to next violation.
 
 ^Z       -- Undo
-SHIFT+^Z -- Redo
+SHIFT ^Z -- Redo
 ```
 
 When you first begin to mark bits, the software won't yet know the
