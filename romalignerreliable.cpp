@@ -11,11 +11,11 @@ RomBitItem* RomAlignerReliable::markBitTable(MaskRomTool* mrt){
 
     //First we remove all the old bit marks and pointers.
     foreach (RomBitItem* bit, bits){
-        //Clear the marks.
-        bit->marked=false;
+        //Clear the markup details.
+        bit->marked=false;  //No used by this aligner.
         bit->nextrow=0;
         bit->nexttoright=0;
-        bit->lastinrow=0;
+        bit->lastinrow=0;   //Speeds up linked list usage.
         bit->row=-1;
         bit->col=-1;
     }
