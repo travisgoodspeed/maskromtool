@@ -34,10 +34,9 @@ QRgb RomBitItem::bitvalue_raw(MaskRomTool *mrt, QImage &bg){
     return mrt->sampler->bitvalue_raw(mrt, bg, pos());
 }
 
-static QBrush truebrush(Qt::GlobalColor::red, Qt::SolidPattern);
-static QBrush falsebrush(Qt::GlobalColor::blue, Qt::SolidPattern);
-
 void RomBitItem::setBrush(){
+    static QBrush truebrush(Qt::GlobalColor::red, Qt::SolidPattern);
+    static QBrush falsebrush(Qt::GlobalColor::blue, Qt::SolidPattern);
     QGraphicsRectItem::setBrush(value?truebrush:falsebrush);
 }
 

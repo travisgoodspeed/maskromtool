@@ -80,8 +80,8 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     lineColor = QColor(Qt::black);
 
     //Strategies should be initialized.
-    addAligner(new RomAlignerNew());        //First is default.
-    addAligner(new RomAlignerReliable());
+    addAligner(new RomAlignerReliable());   //First is default.
+    addAligner(new RomAlignerNew());
     addSampler(new RomBitSampler());        //First is default.
     addSampler(new RomBitSamplerWide());
     addSampler(new RomBitSamplerTall());

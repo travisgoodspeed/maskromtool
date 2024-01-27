@@ -54,6 +54,7 @@ public:
 
     bool marked=false;  //A marked bit is part of the bit table.
     RomBitItem *nexttoright=0; //Linked list of bits in a row.
+    RomBitItem *lastinrow=0;
     RomBitItem *nextrow=0; //Linked list of row starters.
 
     //Row and columnn are -1 until known by alignment.

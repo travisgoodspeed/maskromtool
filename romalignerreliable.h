@@ -21,7 +21,6 @@ public:
 private:
     QList<RomBitItem *> rowstarts; //All left-most bits of a row.
     QList<RomBitItem *> leftsorted; //All bits sorted from left.
-    QList<RomBitItem *> topsorted; //All bits sorted from left.
 
     //Nearest bit from existing rows.
     RomBitItem* nearestBit(RomBitItem *item);

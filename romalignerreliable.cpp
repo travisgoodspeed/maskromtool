@@ -15,6 +15,7 @@ RomBitItem* RomAlignerReliable::markBitTable(MaskRomTool* mrt){
         bit->marked=false;
         bit->nextrow=0;
         bit->nexttoright=0;
+        bit->lastinrow=0;
         bit->row=-1;
         bit->col=-1;
     }
@@ -24,7 +25,6 @@ RomBitItem* RomAlignerReliable::markBitTable(MaskRomTool* mrt){
     // We'll need presorted collections by X and Y.
     for(RomBitItem *bit: bits){
         leftsorted<<bit;
-        topsorted<<bit;
     }
     //We read each row from the left.  Presorting doesn't help determinism.
     std::sort(leftsorted.begin(), leftsorted.end(), leftOf);
@@ -59,8 +59,17 @@ RomBitItem* RomAlignerReliable::nearestBit(RomBitItem *item){
     RomBitItem* nearest=0;
     qreal nearestdy=1000.0;
 
-    for(RomBitItem *bit: rowstarts){
+    for(RomBitItem* bit: rowstarts){
+        /* Rather than chase the entire linked list, we try to keep the frist
+         * bit of each row pointing to either the end or some item near the end.
+         * This drops one test case from 1m24s to 6s.
+         */
+        RomBitItem* startbit=bit;
+        if(bit->lastinrow)
+            bit=bit->lastinrow;
         while(bit->nexttoright) bit=bit->nexttoright;
+        startbit->lastinrow=bit;
+
         qreal dy=qFabs(item->y()-bit->y());
         if(dy<nearestdy){
             nearestdy=dy;
