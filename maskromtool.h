@@ -162,6 +162,7 @@ public:
 
     //Selectable Strategies
     RomAligner *aligner=0;
+    QSet<RomAligner*> aligners;
     RomBitSampler *sampler=0;
     QSet<RomBitSampler*> samplers;
 
@@ -171,6 +172,11 @@ public:
     void setSamplerSize(int size);
     int getSamplerSize();
     bool inverted=false; //Bits are often inverted by photography.
+
+    //Alignment strategies.
+    void addAligner(RomAligner *aligner);
+    void chooseAligner(QString name);
+
 
     //Navigation
     void centerOn(QGraphicsItem* item);

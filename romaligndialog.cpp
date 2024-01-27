@@ -19,6 +19,13 @@ void RomAlignDialog::setMaskRomTool(MaskRomTool* parent){
     mrt->getAlignSkipCountThreshold(threshold);
 
     ui->editMaxSkip->setText(QString::number(threshold));
+
+    if(ui->comboBox->count()==0){ //Only update the first time.
+        foreach(RomAligner* aligner, mrt->aligners){
+            ui->comboBox->addItem(aligner->name);
+        }
+    }
+    ui->comboBox->setCurrentText(mrt->aligner->name);
 }
 
 
@@ -37,9 +44,7 @@ void RomAlignDialog::on_editMaxSkip_textChanged(const QString &arg1){
 
 
 void RomAlignDialog::on_comboBox_activated(int index){
-    /* Expect something weird here, as we don't yet support
-     * more than one strategy in the combo box.
-     */
     mrt->markUndoPoint();
+    mrt->chooseAligner(ui->comboBox->itemText(index));
 }
 

@@ -18,10 +18,10 @@
  */
 
 //Do we drift east or west as we go south?
-static int driftcount=0;
+static long int driftcount=0;
 
 //FIXME: We also need rotation matrix sorting, to avoid tilt bugs.
-static bool leftOf(RomBitItem * left, RomBitItem * right){
+bool leftOf(RomBitItem * left, RomBitItem * right){
     qreal a=left->x();
     qreal b=right->x();
     qreal distance=qFabs(left->x()-right->x());
@@ -32,10 +32,12 @@ static bool leftOf(RomBitItem * left, RomBitItem * right){
      * will break the alignment unless the column is *totally* vertical.
      */
     if(distance<0.01){
+        /*
         if(verbose)
             qDebug()<<"WARNING: Bit distance "<<distance<<a<<b<<" leaning "
                      <<driftcount;
-        if(driftcount<0)
+        */
+        if(driftcount<=0)
             return left->y()>right->y();  //Use this one.
         else
             return left->y()<right->y(); //This one breaks my samples.
@@ -43,7 +45,7 @@ static bool leftOf(RomBitItem * left, RomBitItem * right){
 
     return (a<b);
 }
-static bool above(RomBitItem * top, RomBitItem * bottom){
+bool above(RomBitItem * top, RomBitItem * bottom){
     return (top->y() < bottom->y());
 }
 /*
@@ -51,6 +53,10 @@ static bool below(RomBitItem * top, RomBitItem * bottom){
     return (top->y() > bottom->y());
 }
 */
+
+RomAlignerNew::RomAlignerNew(){
+    name="RomAlignerNew";
+}
 
 //This one should be a lot faster.
 //Remove this comment when we know it to be accurate.
@@ -221,7 +227,7 @@ void RomAlignerNew::markRowStarts(){
             lastx=bit->x();
 
             //if(verbose) qDebug()<<"Bit at"<<bit->x()<<bit->y()<<"row"<<rowcount++;
-            //bit->setToolTip(QString("Row header."));
+            bit->setToolTip(QString("Row header."));
             bit->marked=true; //Necessary so we don't double-count.
             skipcount=0;
         }else{  //Different column.
@@ -243,6 +249,10 @@ void RomAlignerNew::markRowStarts(){
      * the sorting.
      */
     std::sort(rowstarts.begin(), rowstarts.end(), above);
+    if(rowstarts.isEmpty()){
+        qDebug()<<"Alignment list is empty!";
+        return;
+    }
     lastx=rowstarts[0]->x();
     driftcount=0; //Are we drifting west or east as we move south?
     for(RomBitItem *bit: rowstarts){
@@ -278,9 +288,11 @@ RomBitItem* RomAlignerNew::linkresults(){
             bit=bit->nexttoright;
             col++;
         }
+        /* Alignment will fail.
         if(expectedcols && expectedcols!=col){
             qDebug()<<"WARNING: Column counts don't match.";
         }
+        */
         row++;
         expectedcols=col;
     }

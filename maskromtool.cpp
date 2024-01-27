@@ -14,6 +14,7 @@
 #include "aboutdialog.h"
 
 #include "romalignernew.h"
+#include "romalignerreliable.h"
 #include "rombitsamplerwide.h"
 #include "rombitsamplertall.h"
 
@@ -79,8 +80,9 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     lineColor = QColor(Qt::black);
 
     //Strategies should be initialized.
-    aligner=new RomAlignerNew();
-    addSampler(new RomBitSampler());
+    addAligner(new RomAlignerNew());        //First is default.
+    addAligner(new RomAlignerReliable());
+    addSampler(new RomBitSampler());        //First is default.
     addSampler(new RomBitSamplerWide());
     addSampler(new RomBitSamplerTall());
 
@@ -231,6 +233,30 @@ void MaskRomTool::chooseSampler(QString name){
     qDebug()<<"Missing sampler algorithm"<<name;
     qDebug()<<"Defaulting to sampler algoirthm"<<sampler->name;
 }
+
+//Alignment strategies.
+void MaskRomTool::addAligner(RomAligner *aligner){
+    aligners.insert(aligner);
+
+    //First one is default.
+    if(!this->aligner)
+        this->aligner=aligner;
+}
+void MaskRomTool::chooseAligner(QString name){
+    if(aligner->name==name)
+        return;
+    foreach(RomAligner* aligner, aligners){
+        if(aligner->name==name){
+            this->aligner=aligner;
+            if(verbose) qDebug()<<"Changing aligner to"<<aligner->name;
+            remarkBits();
+            return;
+        }
+    }
+
+    qDebug()<<"Couldn't find aligner"<<name<<"defaulting to"<<aligner->name;
+}
+
 
 void MaskRomTool::setSamplerSize(int size){
     sampler->setSize(size);
@@ -1318,7 +1344,7 @@ QJsonObject MaskRomTool::exportJSON(){
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
-     *
+     * 2023.01.27 -- Aligner name is saved.
      * 2023.12.07 -- Gatorom strings now work.
      * 2023.09.15 -- Adds 'linecolor'.
      * 2023.09.04 -- Adds 'gatorom' with string description.
@@ -1327,7 +1353,7 @@ QJsonObject MaskRomTool::exportJSON(){
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2023.12.07";
+    root["00version"]="2023.01.27";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -1338,6 +1364,7 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold); //2023.05.05
     settings["sampler"]=sampler->name;           //2023.05.08
     settings["samplersize"]=getSamplerSize();    //2023.05.08
+    settings["aligner"]=aligner->name;           //2024.01.27
     settings["inverted"]=inverted;               //2023.05.14
     settings["gatorom"]=gr.description();        //2023.09.04
     settings["linecolor"]=lineColor.name();      //2023.09.15
@@ -1405,11 +1432,13 @@ void MaskRomTool::importJSON(QJsonObject o){
     decodeDialog.setMaskRomTool(this);
 
 
-    //New bit sampler algorithms.
+    //Bit sampler algorithms, size and alignment algorithm.
     QJsonValue sampler=settings.value("sampler");
     chooseSampler(sampler.toString("Default"));
     QJsonValue samplersize=settings.value("samplersize");
     setSamplerSize(samplersize.toInt(0));
+    QJsonValue aligner=settings.value("aligner");
+    chooseAligner(aligner.toString("Default"));
 
 
     //Line items.

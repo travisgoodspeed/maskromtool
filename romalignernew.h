@@ -3,8 +3,14 @@
 
 #include "romaligner.h"
 
+//Sorting functions, not part of a class.
+bool leftOf(RomBitItem * left, RomBitItem * right);
+bool above(RomBitItem * top, RomBitItem * bottom);
+
 //This aligner is slow as dirt on large projects.  Must be replaced.
 class RomAlignerNew : public RomAligner {
+public:
+    RomAlignerNew();
     RomBitItem* markBitTable(MaskRomTool* mrt);
 
 private:

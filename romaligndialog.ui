@@ -64,11 +64,6 @@
      <height>32</height>
     </rect>
    </property>
-   <item>
-    <property name="text">
-     <string>RomAlignerNew</string>
-    </property>
-   </item>
   </widget>
   <widget class="QLineEdit" name="editMaxSkip">
    <property name="geometry">

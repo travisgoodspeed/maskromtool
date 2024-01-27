@@ -3,9 +3,8 @@
 
 #include "romaligner.h"
 
-RomAligner::RomAligner()
-{
-
+RomAligner::RomAligner(){
+    name="RomAligner";
 }
 
 

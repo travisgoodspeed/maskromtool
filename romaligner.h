@@ -18,6 +18,7 @@ class RomAligner
 {
 public:
     RomAligner();
+    QString name="RomAligner";
 
     //Marks the table of bits, returns top-left entry.
     virtual RomBitItem* markBitTable(MaskRomTool* mrt)=0;
