@@ -1536,8 +1536,10 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
 
         if(start<=a && a<=end){
             RomRuleViolation* violation=new RomRuleViolation(b->pos(),
-                                                               QString::asprintf("Bit at 0x%x",a),
-                                                               QString::asprintf("Bit at 0x%x",a));
+                                                               QString::asprintf("bit&0x%02x at 0x%04x",
+                                                                                 (unsigned int) b->mask,a),
+                                                               QString::asprintf("bit&0x%02x at 0x%04x",
+                                                                                 (unsigned int) b->mask,a));
             violation->error=false;
             addViolation(violation);
         }else{
