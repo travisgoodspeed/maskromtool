@@ -39,6 +39,7 @@ class MaskRomTool : public QMainWindow{
 public:
     MaskRomTool(QWidget *parent = nullptr, bool opengl=true);
     ~MaskRomTool();
+    void closeEvent(QCloseEvent *event);
 
     void enableVerbose(unsigned int level=1);
     void enableOpenGL(unsigned int antialiasing=0);

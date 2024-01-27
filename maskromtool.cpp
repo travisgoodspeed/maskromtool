@@ -94,6 +94,14 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
         enableOpenGL(0);
 }
 
+void MaskRomTool::closeEvent(QCloseEvent *event){
+    /* Closing any other window leaves the program running,
+     * but closing the main window will kill it out.
+     *
+     * Perhaps we should ask about saving first?
+     */
+    exit(0);
+}
 
 /* Undo works by saving the state during important actions
  * to one of two stacks, and moving the state between those
