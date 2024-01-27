@@ -261,26 +261,6 @@ different places.  You can then use the `--diff-ascii` feature against
 the output of `--export-ascii` to compare images, reconciling their
 differences until all of your project files agree.
 
-## Correcting Alignment Errors
-
-This tool first marks the positions of the bits, then sorts them by
-the X coordinate to try and identify all of the bits in the leftmost
-column.  If that works, it can then bucket all bits to the right,
-forming a linked list of each row.
-
-But sometimes it goes wrong because it can't quite figure out when the
-first column ends.  Then the buckets don't fit, and you wind up with
-wildly different counts for each row.
-
-Use the `Edit/Alignment Constraints` menu in the GUI to change the
-number of bits in a row from the *wrong* column can be seen before the
-algorithm gives up on searching for new bits in the first row.  If the
-default of 5 is not appropriate, you probably want 0 when columns do
-not overlap at all or 20 when there is significant overlap.
-
-A better alignment algorithm might fix this, and it is tracked in
-[issue 22](https://github.com/travisgoodspeed/maskromtool/issues/22).
-
 ## Sampling Algorithms
 
 Most ROMs can be read simply by reading the color of a single pixel at
