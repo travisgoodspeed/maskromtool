@@ -42,9 +42,17 @@ void RomRuleDialog::addViolation(RomRuleViolation* violation){
     setWindowTitle(QString::asprintf("%d Rule Violations",++count));
 }
 void RomRuleDialog::removeViolation(RomRuleViolation* violation){
-    //TODO
-    qDebug()<<"Removing just one violation doesn't work yet, so I'm clearing them all.";
-    ui->listWidget->clear();
+    int count=ui->listWidget->count();
+    for(int i=0; i<count; i++){
+        RomRuleDialogEntry* entry= (RomRuleDialogEntry*) ui->listWidget->item(i);
+        if(!entry) continue;  //Empty entries.
+        if(entry->violation==violation){
+            //ui->listWidget->removeItemWidget(entry); //Does not unlink it.
+            delete entry;     //Also removed from GUI.
+            mrt->removeItem(violation);
+        }
+    }
+
     setWindowTitle(QString::asprintf("%d Rule Violations",0));
 }
 void RomRuleDialog::setMaskRomTool(MaskRomTool* maskRomTool){

@@ -1117,13 +1117,27 @@ RomBitFix* MaskRomTool::getBitFix(RomBitItem* bit, bool create){
     }
     return fix;
 }
+//Returns a violation from a bit position.
+RomRuleViolation* MaskRomTool::getBitViolation(RomBitItem* bit){
+    if(!bit)
+        return 0;
+
+    QList<QGraphicsItem*> items=scene->items(bit->pos());
+    RomRuleViolation* violation=0;
+    foreach (QGraphicsItem* item, items){
+        if(item->type()==QGraphicsItem::UserType+4)
+            violation=(RomRuleViolation*) item;
+    }
+    return violation;
+}
 //Fixes a bit at a position.
 void MaskRomTool::fixBit(QPointF point){
     if(!bitsVisible) return;
     //We fix the bit's position, not the click position.
     RomBitItem* bit=getBit(point);
-    fixBit(bit);
+    fixBit(bit);  //Not recursion!
 }
+//Fixes the bit itself.
 void MaskRomTool::fixBit(RomBitItem* bit){
     if(!bitsVisible) return;
     RomBitFix* fix=getBitFix(bit, true);
@@ -1131,6 +1145,9 @@ void MaskRomTool::fixBit(RomBitItem* bit){
         fix->setValue(!fix->bitValue());
         bit->setFix(fix);
     }
+    RomRuleViolation* violation=getBitViolation(bit);
+    if(violation)
+        violationDialog.removeViolation(violation);
 }
 //Clears all bit fixes.
 void MaskRomTool::clearBitFixes(){

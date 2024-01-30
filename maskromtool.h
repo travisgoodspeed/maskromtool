@@ -186,6 +186,7 @@ public:
     //DRC
     bool runDRC(bool all=false);
     void addViolation(RomRuleViolation* violation);
+    RomRuleViolation* getBitViolation(RomBitItem* bit);
     void clearViolations();
     void nextViolation();
 
