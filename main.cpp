@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
                                          QCoreApplication::translate("main", "file"));
     parser.addOption(rombytesExportOption);
     // Export histogram.
-    QCommandLineOption histogramExportOption(QStringList() << "histogram",
+    QCommandLineOption histogramExportOption(QStringList() << "export-histogram",
                                             QCoreApplication::translate("main", "Export histogram."),
                                             QCoreApplication::translate("main", "file"));
     parser.addOption(histogramExportOption);
