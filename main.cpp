@@ -5,6 +5,7 @@
 #include "romdecoderjson.h"
 #include "romdecoderpython.h"
 #include "romdecoderphotograph.h"
+#include "romdecoderhistogram.h"
 #include "romencoderdiff.h"
 
 #include <QApplication>
@@ -93,6 +94,12 @@ int main(int argc, char *argv[]){
                                          QCoreApplication::translate("main", "Export ROM bytes."),
                                          QCoreApplication::translate("main", "file"));
     parser.addOption(rombytesExportOption);
+    // Export histogram.
+    QCommandLineOption histogramExportOption(QStringList() << "histogram",
+                                            QCoreApplication::translate("main", "Export histogram."),
+                                            QCoreApplication::translate("main", "file"));
+    parser.addOption(histogramExportOption);
+
     // Exporting to CSV table.
     QCommandLineOption csvExportOption(QStringList() << "export-csv",
         QCoreApplication::translate("main", "Export CSV bits for use in Matlab or Excel."),
@@ -152,11 +159,18 @@ int main(int argc, char *argv[]){
 
         exporter.writeFile(&mrt, parser.value(asciiExportOption));
     }
-    //Export to ASCII.
+    //Export ROM bytes.
     if(parser.isSet(rombytesExportOption)){
         qDebug()<<"Exporting ROM";
         RomDecoderGato exporter;
         exporter.writeFile(&mrt, parser.value(rombytesExportOption));
+
+    }
+    //Export histogram bytes.
+    if(parser.isSet(histogramExportOption)){
+        qDebug()<<"Exporting Histogram";
+        RomDecoderHistogram exporter;
+        exporter.writeFile(&mrt, parser.value(histogramExportOption));
 
     }
 

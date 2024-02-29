@@ -27,6 +27,7 @@ is a Zilog Z8 ROM from a music synthesize module.
 ## Release Changelog
 
 `master` -- DRC violations are now cleared when bits are forced.
+Histogram export for ploting the color distributionsin GNUPlot.
 
 2024-01-28 -- Undo and Redo.  Strings dialog.  Backslash key for layer
 visibility.  Reliable alignment algorithm.  Closing main window closes

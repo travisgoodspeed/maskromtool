@@ -114,7 +114,7 @@ public:
     void highlightAdrRange(uint32_t start, uint32_t end);
 
     //Updates the histogram dialog.
-    void updateThresholdHistogram();
+    void updateThresholdHistogram(bool force=false);
 
     //Marks the table of bits, returns top-left entry.
     RomBitItem* markBitTable();
@@ -200,6 +200,9 @@ public:
     //We regenerate from this when needed.
     GatoROM gr;
 
+    //Histogram bits.
+    qreal reds[256], greens[256], blues[256];
+
 private slots:
     void on_openButton_triggered();
     void on_saveButton_triggered();
@@ -250,6 +253,8 @@ private slots:
     void on_actionRedo_triggered();
 
     void on_stringsButton_triggered();
+
+    void on_exportHistogram_triggered();
 
 private:
     Ui::MaskRomTool *ui;

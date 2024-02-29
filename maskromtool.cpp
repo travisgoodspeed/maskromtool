@@ -25,6 +25,7 @@
 #include "romdecoderjson.h"
 #include "romdecoderphotograph.h"
 #include "romdecodergato.h"
+#include "romdecoderhistogram.h"
 //Importers too, weird as they are.
 #include "romencoderdiff.h"
 
@@ -780,6 +781,15 @@ void MaskRomTool::on_exportPhotograph_triggered(){
     }
 }
 
+//Exports a GNUPlot data file.
+void MaskRomTool::on_exportHistogram_triggered(){
+    RomDecoderHistogram hist;
+    QString filename = QFileDialog::getSaveFileName(this,tr("Save Histogram"), tr("histogram.txt"));
+    if(!filename.isEmpty()){
+        hist.writeFile(this, filename);
+    }
+}
+
 //Pop up the about dialog.
 void MaskRomTool::on_aboutButton_triggered(){
     aboutDialog about;
@@ -835,11 +845,10 @@ void MaskRomTool::on_alignconstrainButton_triggered(){
 }
 
 //Updates the histogram, iff the window is visible.
-void MaskRomTool::updateThresholdHistogram(){
-    if(!thresholdDialog.isVisible())
+void MaskRomTool::updateThresholdHistogram(bool force){
+    if(!thresholdDialog.isVisible() && !force)
         return;
 
-    qreal reds[256], greens[256], blues[256];
     qreal skyhigh=0;//Maximum value.
 
     //Zero the score.
@@ -1599,4 +1608,6 @@ void MaskRomTool::on_stringsButton_triggered(){
     gatorom();
     stringsDialog.show();
 }
+
+
 
