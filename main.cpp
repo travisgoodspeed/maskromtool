@@ -56,10 +56,15 @@ int main(int argc, char *argv[]){
     parser.addOption(exitOption);
 
 
-    // We used to have an option for OpenGL.  Deprecated now that it's default.
+    /* We try to guess at the right OpenGL settings, but this are for forcing it
+     * if that isn't the right decision.
+     */
     QCommandLineOption disableOpenglOption(QStringList() << "disable-opengl",
-                                  QCoreApplication::translate("main", "Disable OpenGL."));
+                                           QCoreApplication::translate("main", "Disable OpenGL."));
     parser.addOption(disableOpenglOption);
+    QCommandLineOption enableOpenglOption(QStringList() << "enable-opengl",
+                                           QCoreApplication::translate("main", "Enable OpenGL."));
+    parser.addOption(enableOpenglOption);
 
 
     // Design Rule Check
@@ -129,9 +134,13 @@ int main(int argc, char *argv[]){
 
     const QStringList args = parser.positionalArguments();
 
-    MaskRomTool mrt(0,
-                    //OpenGL is on by default, unless the platform is offscreen.
-                    !parser.isSet(disableOpenglOption) && !a.platformName().contains("offscreen"));
+    //Wayland and offscreen don't like OpenGL, but we respect the user's explicit choice.
+    bool opengl=!a.platformName().contains("offscreen");
+    if(a.platformName().contains("wayland")) opengl=false;
+    if(parser.isSet(disableOpenglOption)) opengl=false;
+    if(parser.isSet(enableOpenglOption)) opengl=true;
+
+    MaskRomTool mrt(0, opengl);
     if(parser.isSet(verboseOption)){
         //Don't print anything because the function takes care of it for us.
         mrt.enableVerbose();
@@ -215,10 +224,13 @@ int main(int argc, char *argv[]){
     //We let the GUI take hold unless asked to do otherwise.
     if(!parser.isSet(exitOption)){
         if(a.platformName().contains("wayland")){
+            /*
             QMessageBox msgBox;
             msgBox.setWindowTitle("Wayland is Unstable");
             msgBox.setText("The wayland driver is unstable.  Please pass '-platform xcb' to maskromtool to use Xorg instead.");
             msgBox.exec();
+             */
+            qDebug()<<"If Wayland is unstable, pass '-platform xcb' to use Xorg/OpenGL instead.";
         }
 
         //We never launch the GUI when offscreen, because it should always exit.
