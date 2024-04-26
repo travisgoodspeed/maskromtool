@@ -5,6 +5,8 @@
 
 
 RomBitFix::RomBitFix(RomBitItem* bit){
+    //Need to manually enable caching.
+    setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 
     //We take a null bit only for JSON imports.
     if(bit){ //Real fix.

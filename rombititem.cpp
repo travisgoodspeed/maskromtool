@@ -5,6 +5,9 @@
 #include <QDebug>
 
 RomBitItem::RomBitItem(QPointF pos, qreal size){
+    //Need to manually enable caching.
+    setCacheMode(QGraphicsItem::DeviceCoordinateCache);
+
     setPos(pos);
     setBitSize(size);
 }

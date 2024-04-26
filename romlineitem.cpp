@@ -4,6 +4,8 @@ RomLineItem::RomLineItem(int linetype)
 {
     //Remember my type.
     this->linetype=linetype;
+    //Need to manually enable caching.
+    setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 }
 
 

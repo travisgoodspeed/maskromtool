@@ -63,6 +63,9 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     : QMainWindow(parent)
     , ui(new Ui::MaskRomTool) {
 
+    //Setup caches
+    QPixmapCache::setCacheLimit(0x100000); //1GB
+    qDebug()<<"Cache limit is "<<QPixmapCache::cacheLimit()<<"kb";
 
     //Set up the main window.
     ui->setupUi(this);

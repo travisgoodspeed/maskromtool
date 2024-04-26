@@ -126,6 +126,7 @@ void RomScene::updateStatus(){
             maskRomTool->bitcount/1024/8
             )
         );
+
 }
 
 //Store the last seen mouse position.
