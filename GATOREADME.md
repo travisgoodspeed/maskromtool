@@ -29,15 +29,16 @@ bits may be conveniently rotated, flipped or inverted.
 Run with no parameters for usage information.
 
 ```
-dell% gatorom 
 Usage: gatorom [options] bitstream
 Gato ROM: A Decoder for Mask ROM Bits
 
 Options:
   -h, --help                        Displays help on commandline options.
-  --help-all                        Displays help, including generic Qt
+  --help-all                        Displays help including Qt specific
                                     options.
   -v, --version                     Displays version information.
+  -V, --verbose                     Talk too much.
+  -w, --wordsize <8>                Word size.bits
   -r, --rotate <degrees>            Rotates the image in multiples of 90
                                     degrees.
   --flipx                           Flips the bits along the X axis.
@@ -51,7 +52,6 @@ Options:
   -I, --info                        Info about input.
   --print                           Print with a GUI dialog.
   --printpdf <file.pdf>             Print to a PDF file.
-  --decode-arm6                     Decodes as ARM6 (MYK82).
   --decode-msp430                   Decodes as MSP430. (Broken.)
   --decode-tlcs47font               Decodes as a TMP47C434N Font.
   --decode-z86x1                    Decodes as a Zilog Z86x1.
@@ -120,6 +120,25 @@ Game](https://seanriddle.com/mc6805p2.html).
 ```
 gatorom --seanriddle 256 miltonraw.bin -o solved.bin \
         --solve --solve-bytes "0:23,1:05,2:06"
+```
+
+The MYK82 Clipper Chip has an ARM6 core and a 32-bit ROM.  If we
+hypothesize that it has a `mov pc, lr` instruction somewhere in the
+ROM, we can solve in little endian like this.  The first line is the
+correct answer, and the others are false positives that match the
+solver case.
+
+```
+carbon% gatorom -w 32 --solve --solve-string "0e,f0,a0,e1" rom20x6.txt
+Grade 100   	9b 06 00 ea 63 00 00 ea 	-w 32 --decode-cols-left -r 0 
+Grade 100   	81 6c 08 67 04 fb 13 72 	-w 32 --decode-cols-left -r 180 --flipx 
+Grade 100   	05 d2 a0 e3 04 80 bd e8 	-w 32 --decode-cols-right -r 0 
+Grade 100   	00 00 00 00 9c 3f 14 14 	-w 32 --decode-cols-right -r 180 --flipx 
+Grade 100   	05 d2 a0 e3 04 b0 1b e5 	-w 32 --decode-cols-downl -r 0 
+Grade 100   	00 00 00 00 64 e3 e7 fd 	-w 32 --decode-cols-downl -r 180 --flipx 
+Grade 100   	9b 06 00 ea 02 db 8d e2 	-w 32 --decode-cols-downr -r 0 
+Grade 100   	81 6c 08 67 f8 50 91 ad 	-w 32 --decode-cols-downr -r 180 --flipx 
+carbon% 
 ```
 
 ## Library Usage
