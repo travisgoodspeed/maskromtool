@@ -16,7 +16,6 @@
 //Custom decoders.
 #include "gatodecoderinfo.h"
 //#include "gatodecoderarm6.h"  //MYK82 Fortezza.  Use cols-left in 32-bit mode instead.
-#include "gatodecodermsp430.h"
 #include "gatodecodertlcsfont.h"
 #include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
@@ -137,10 +136,6 @@ int main(int argc, char *argv[]) {
     //Hide this one because it is deprecated.
     arm6Option.setFlags(QCommandLineOption::HiddenFromHelp);
     parser.addOption(arm6Option);
-    QCommandLineOption msp430Option(QStringList()<<"decode-msp430",
-                                    "Decodes as MSP430. (Broken.)"
-                                    );
-    parser.addOption(msp430Option);
     QCommandLineOption tlcsfontOption(QStringList()<<"decode-tlcs47font",
                                   "Decodes as a TMP47C434N Font."
                                   );
@@ -342,9 +337,7 @@ int main(int argc, char *argv[]) {
             //This is deprecated, but we still support it for backward compatibility.
             gr->decoder=new GatoDecoderColsLeft();
             gr->wordsize=32;
-        }else if(parser.isSet(msp430Option))
-            gr->decoder=new GatoDecoderMSP430();
-        else if(parser.isSet(tlcsfontOption))
+        }else if(parser.isSet(tlcsfontOption))
             gr->decoder=new GatoDecoderTLCSFont();
         else if(parser.isSet(z86x1Option))
             gr->decoder=new GatoDecoderZ86x1();

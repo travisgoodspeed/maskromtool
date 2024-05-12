@@ -6,7 +6,6 @@
 #include "gatoprinter.h"
 
 //Custom decoders.
-#include "gatodecodermsp430.h"
 #include "gatodecodertlcsfont.h"
 #include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
@@ -137,9 +136,7 @@ void GatoROM::setDecoderByName(QString name){
         //ARM6 is no longer special, but we can provide support anyways to be polite.
         decoder=new GatoDecoderColsLeft();
         wordsize=32;
-    }else if(name=="msp430")
-        decoder=new GatoDecoderMSP430();
-    else if(name=="tlcs47font")
+    }else if(name=="tlcs47font")
         decoder=new GatoDecoderTLCSFont();
     else if(name=="z86x1")
         decoder=new GatoDecoderZ86x1();
