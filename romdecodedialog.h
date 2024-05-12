@@ -33,7 +33,7 @@ private slots:
     void on_checkInvertBits_stateChanged(int arg1);
     void on_spinRotation_valueChanged(int arg1);
     void on_listBank_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
-;
+    void on_wordsizeEdit_textEdited(const QString &arg1);
 
 private:
     Ui::RomDecodeDialog *ui;

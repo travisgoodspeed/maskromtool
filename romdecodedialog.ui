@@ -16,6 +16,9 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Main</string>
@@ -233,6 +236,29 @@
        </property>
        <property name="text">
         <string>Bank</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>70</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Wordsize</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="wordsizeEdit">
+       <property name="geometry">
+        <rect>
+         <x>272</x>
+         <y>70</y>
+         <width>91</width>
+         <height>25</height>
+        </rect>
        </property>
       </widget>
      </widget>

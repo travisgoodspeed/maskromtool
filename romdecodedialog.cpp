@@ -20,6 +20,7 @@ void RomDecodeDialog::setMaskRomTool(MaskRomTool* maskRomTool){
     ui->spinRotation->setValue(mrt->gr.angle);
     ui->listBank->item(mrt->gr.bank)->setSelected(true);
     ui->checkZorrom->setCheckState(mrt->gr.zorrommode ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+    ui->wordsizeEdit->setText(QString::number(mrt->gr.wordsize));
 
     if(mrt->gr.decoder){
         auto item =
@@ -109,5 +110,20 @@ void RomDecodeDialog::on_listBank_currentItemChanged(QListWidgetItem *current,
     updateString();
 }
 
+void RomDecodeDialog::on_wordsizeEdit_textEdited(const QString &arg1)
+{
+    Q_ASSERT(mrt);
 
+    int wordsize=8;
+    bool okay;
+    wordsize=ui->wordsizeEdit->text().toInt(&okay);
+
+    //Only update if the size looks good.
+    if(okay && wordsize>0 && wordsize<=32){
+        mrt->markUndoPoint();
+        mrt->gr.wordsize=wordsize;
+        updateString();
+        qDebug()<<"wordsizeEdit changed to:"<<ui->wordsizeEdit->text();
+    }
+}
 
