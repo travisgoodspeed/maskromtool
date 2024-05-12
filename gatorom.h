@@ -108,6 +108,7 @@ public:
     int angle=0;        //Angle of rotation.
     int bank=0;         //1 for left, 2 for right.
     int strictmode=0;   //1 will crash on illegal fetches, used for CLI but not GUI.
+    int wordsize=8;     //Bits per word.  Default fits most 8-bit chips.
 
     //Should I talk too much?
     int verbose=0;
@@ -128,7 +129,7 @@ class GatoDecoder{
 public:
     QString name;
     virtual QByteArray decode(GatoROM *gr)=0;
-    int wordsize=8;
+    //int wordsize=8;  //Now defined in the GatoROM class.
 };
 
 #endif // GATOROM_H

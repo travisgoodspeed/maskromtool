@@ -55,6 +55,14 @@ int main(int argc, char *argv[]) {
                                     );
     parser.addOption(verboseOption);
 
+    //Word size before the very beginning.
+    QCommandLineOption wordsizeOption(QStringList()<<"w"<<"wordsize",
+                                      "Word size."
+                                      "bits",
+                                      "8"
+                                      );
+    parser.addOption(wordsizeOption);
+
     //Rotations come first.
     QCommandLineOption rotateOption(QStringList()<<"r"<<"rotate",
                                     "Rotates the image in multiples of 90 degrees.",
@@ -289,6 +297,10 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
 
+        //Word size.
+        if(parser.isSet(wordsizeOption))
+            gr->wordsize=parser.value(wordsizeOption).toInt();
+
         //Compatibility.
         if(parser.isSet(zorromOption))
             gr->zorrommode=1;
@@ -324,9 +336,10 @@ int main(int argc, char *argv[]) {
         //Parsing formats.
         if(parser.isSet(infoOption))
             gr->decoder=new GatoDecoderInfo();
-        else if(parser.isSet(arm6Option))
+        else if(parser.isSet(arm6Option)){
             gr->decoder=new GatoDecoderARM6();
-        else if(parser.isSet(msp430Option))
+            gr->wordsize=32;  //FIXME
+        }else if(parser.isSet(msp430Option))
             gr->decoder=new GatoDecoderMSP430();
         else if(parser.isSet(tlcsfontOption))
             gr->decoder=new GatoDecoderTLCSFont();

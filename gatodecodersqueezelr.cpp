@@ -3,6 +3,8 @@
 /* This decoder is based on Zorrom's squeeze-lr module.
  * Within each row, the even bits come in from the left
  * and the odd bits come in from the right.
+ *
+ * This only works in 8-bit mode.
  */
 
 GatoDecoderSqueezeLR::GatoDecoderSqueezeLR(){
@@ -13,12 +15,13 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
     uint32_t leftadr=0, rightadr=0;
     QByteArray left, right;
     QByteArray ba;
+    int wordsize=gr->wordsize;
 
     gr->eval();
 
     //We might be dynamic, but we still don't want to crash.
-    if(gr->outputcols%8!=0) return ba;
-    int skip=gr->outputcols/8;
+    if(wordsize!=8 || gr->outputcols%wordsize!=0) return ba;
+    int skip=gr->outputcols/wordsize;
 
     //Each row contains many 8-bit words.
     //We calculate that dynamically to be more generic.
@@ -32,10 +35,10 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
 
 
         //cols-left
-        for(int word=(gr->outputcols/8)-1; word>=0; word--){
+        for(int word=(gr->outputcols/wordsize)-1; word>=0; word--){
             uint32_t w=0;
 
-            for(int bit=7; bit>=0; bit--){
+            for(int bit=wordsize-1; bit>=0; bit--){
                 GatoBit *B=gr->outputbit(row, bit*skip+word);
                 assert(B); //If this fails, we're about to crash.
 
@@ -52,10 +55,10 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
         }
 
         //cols-right
-        for(unsigned int word=0; word<(gr->outputcols/8); word++){
+        for(unsigned int word=0; word<(gr->outputcols/wordsize); word++){
             uint32_t w=0;
 
-            for(int bit=7; bit>=0; bit--){
+            for(int bit=wordsize-1; bit>=0; bit--){
                 GatoBit *B=gr->outputbit(row,bit*skip+word);
                 assert(B); //If this fails, we're about to crash.
 

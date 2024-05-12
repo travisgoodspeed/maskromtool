@@ -13,6 +13,7 @@ GatoDecoderColsDownL::GatoDecoderColsDownL(){
 QByteArray GatoDecoderColsDownL::decode(GatoROM *gr){
     uint32_t adr=0;
     QByteArray ba;
+    int wordsize=gr->wordsize;
 
     gr->eval();
 

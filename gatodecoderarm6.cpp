@@ -14,6 +14,5 @@
 
 GatoDecoderARM6::GatoDecoderARM6(){
     name="arm6";
-    wordsize=32;
 }
 

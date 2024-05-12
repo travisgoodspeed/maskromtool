@@ -12,6 +12,8 @@
  *  actual row numbers top to bottom are T1 T0 0 1 3 2 4 5 7 6 ... up to 3f or 7f.
  *
  *  Decoder module by Lord Nightmare.
+ *
+ *  Limited to 8-bit words.
  */
 
 GatoDecoderZ86x1::GatoDecoderZ86x1(){
@@ -41,7 +43,7 @@ QByteArray GatoDecoderZ86x1::decode(GatoROM *gr){
     //
     int wordorder[32];
     int colcount=(gr->outputcols/8);
-    if(colcount>=sizeof(wordorder)) return ba;  //Fail when poor match.
+    if(gr->wordsize!=8 || colcount>=sizeof(wordorder)) return ba;  //Fail when poor match.
 
     //Strictly check the size.  FIXME: Make this more generic.
     if((gr->outputrows!=2+64 && gr->outputrows!=2+128) || gr->outputcols!=32*8)

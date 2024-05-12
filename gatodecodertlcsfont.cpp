@@ -6,6 +6,8 @@
  * which is much like down-left except that:
  * 1. Bytes are interleaved in each row.  (word, wordi)
  * 2. Every 64 bytes (8 rows), the rows reverse direction. (row, rowi).
+ *
+ * FIXME: Make this more generic and support code ROMs.
  */
 
 GatoDecoderTLCSFont::GatoDecoderTLCSFont(){
@@ -23,7 +25,7 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
     //const int wordorder[]={0,2,4,6,1,3,5,7};
     int wordorder[1024];
     int colcount=(gr->outputcols/8);
-    if(colcount>=sizeof(wordorder)) return ba;  //Fail when poor match.
+    if(gr->wordsize!=8 || colcount>=sizeof(wordorder)) return ba;  //Fail when poor match.
 
     //Quickly produce an interleave table of words within the row.
     for(int i=0; i<colcount; i++){

@@ -9,8 +9,6 @@
  * positions.  Go first down, then to the right.
  *
  * In Zorrom, the equivalent would be cols-downr.
- *
- * GatoDecoderARM6 is just a 32-bit case of this.  I'd like to merge them.
  */
 
 GatoDecoderColsDownR::GatoDecoderColsDownR(){
@@ -21,6 +19,7 @@ GatoDecoderColsDownR::GatoDecoderColsDownR(){
 QByteArray GatoDecoderColsDownR::decode(GatoROM *gr){
     QByteArray ba;
     uint32_t adr=0;
+    int wordsize=gr->wordsize;
 
     gr->eval();
 

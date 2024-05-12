@@ -56,6 +56,9 @@ GatoBit* GatoROM::outputbit(int row, int col){
 QString GatoROM::description(){
     QString d="";
 
+    if(wordsize!=8)
+        d.append("-w "+QString::number(wordsize)+" ");
+
     if(zorrommode)
         d.append("-z ");
     if(decoder)
@@ -116,13 +119,25 @@ void GatoROM::configFromDescription(QString d){
             //rotate(rotation, true);
         }
     }
+
+    static QRegularExpression wordsize("-w (\\d+) ");
+    match=wordsize.match(d);
+    if(match.hasMatch()){
+        bool okay=true;
+        int wordsize=match.captured(1).toInt(&okay,10);
+
+        if(okay){ //Only apply proper angles.
+            this->wordsize=wordsize;
+        }
+    }
 }
 
 //Sets the secoder by an ASCII name.
 void GatoROM::setDecoderByName(QString name){
-    if(name=="arm6")
+    if(name=="arm6"){
         decoder=new GatoDecoderARM6();
-    else if(name=="msp430")
+        wordsize=32; //FIXME
+    }else if(name=="msp430")
         decoder=new GatoDecoderMSP430();
     else if(name=="tlcs47font")
         decoder=new GatoDecoderTLCSFont();
