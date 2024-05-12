@@ -115,41 +115,6 @@
        </property>
        <item>
         <property name="text">
-         <string>arm6</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>msp430</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>tlcs47font</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>z86x1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>cols-downl-swap</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>cols-downl</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>cols-downr</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>cols-left</string>
         </property>
        </item>
@@ -160,7 +125,32 @@
        </item>
        <item>
         <property name="text">
+         <string>cols-downl</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>cols-downl-swap</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>cols-downr</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>squeeze-lr</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>tlcs47font</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>z86x1</string>
         </property>
        </item>
       </widget>
