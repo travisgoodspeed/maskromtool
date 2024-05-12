@@ -15,7 +15,7 @@
 
 //Custom decoders.
 #include "gatodecoderinfo.h"
-#include "gatodecoderarm6.h"  //MYK82 Fortezza
+//#include "gatodecoderarm6.h"  //MYK82 Fortezza.  Use cols-left in 32-bit mode instead.
 #include "gatodecodermsp430.h"
 #include "gatodecodertlcsfont.h"
 #include "gatodecoderz86x1.h"
@@ -134,6 +134,8 @@ int main(int argc, char *argv[]) {
     QCommandLineOption arm6Option(QStringList()<<"decode-arm6",
                                     "Decodes as ARM6 (MYK82)."
                                     );
+    //Hide this one because it is deprecated.
+    arm6Option.setFlags(QCommandLineOption::HiddenFromHelp);
     parser.addOption(arm6Option);
     QCommandLineOption msp430Option(QStringList()<<"decode-msp430",
                                     "Decodes as MSP430. (Broken.)"
@@ -337,8 +339,9 @@ int main(int argc, char *argv[]) {
         if(parser.isSet(infoOption))
             gr->decoder=new GatoDecoderInfo();
         else if(parser.isSet(arm6Option)){
-            gr->decoder=new GatoDecoderARM6();
-            gr->wordsize=32;  //FIXME
+            //This is deprecated, but we still support it for backward compatibility.
+            gr->decoder=new GatoDecoderColsLeft();
+            gr->wordsize=32;
         }else if(parser.isSet(msp430Option))
             gr->decoder=new GatoDecoderMSP430();
         else if(parser.isSet(tlcsfontOption))

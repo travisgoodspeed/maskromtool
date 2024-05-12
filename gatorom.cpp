@@ -6,7 +6,6 @@
 #include "gatoprinter.h"
 
 //Custom decoders.
-#include "gatodecoderarm6.h"  //MYK82 Fortezza
 #include "gatodecodermsp430.h"
 #include "gatodecodertlcsfont.h"
 #include "gatodecoderz86x1.h"
@@ -135,8 +134,9 @@ void GatoROM::configFromDescription(QString d){
 //Sets the secoder by an ASCII name.
 void GatoROM::setDecoderByName(QString name){
     if(name=="arm6"){
-        decoder=new GatoDecoderARM6();
-        wordsize=32; //FIXME
+        //ARM6 is no longer special, but we can provide support anyways to be polite.
+        decoder=new GatoDecoderColsLeft();
+        wordsize=32;
     }else if(name=="msp430")
         decoder=new GatoDecoderMSP430();
     else if(name=="tlcs47font")

@@ -45,7 +45,7 @@ set(GATOROM_SOURCES
     gatograderascii.h gatograderascii.cpp
     # Decoders that are new to GatoRom.
     gatodecoderinfo.h gatodecoderinfo.cpp  # Just info, no details.
-    gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder
+    # gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder.  Use cols-left instead.
     gatodecodermsp430.h gatodecodermsp430.cpp # MSP430 ROM
     gatodecodertlcsfont.h gatodecodertlcsfont.cpp # TMP47C434N Font ROM
     gatodecoderz86x1.h gatodecoderz86x1.cpp # Zilog Z8 Z86x1
