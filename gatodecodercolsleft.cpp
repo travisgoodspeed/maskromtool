@@ -37,7 +37,7 @@ QByteArray GatoDecoderColsLeft::decode(GatoROM *gr){
                     w|=B->mask;
             }
 
-            //This is implicitly big endian.
+            //This is implicitly little endian.
             for(int bitcount=wordsize; bitcount>0; bitcount-=8){
                 ba.append(w&0xFF);
                 w=w>>8;
