@@ -128,6 +128,7 @@ class GatoDecoder{
 public:
     QString name;
     virtual QByteArray decode(GatoROM *gr)=0;
+    int wordsize=8;
 };
 
 #endif // GATOROM_H

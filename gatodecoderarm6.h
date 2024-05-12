@@ -1,7 +1,7 @@
 #ifndef GATODECODERARM6_H
 #define GATODECODERARM6_H
 
-#include "gatorom.h"
+#include "gatodecodercolsleft.h"
 
 /* This is a decoder for the ARM firmware ROMs found in
  * the MYK82 chip from the Clipper/Capstone family.
@@ -15,11 +15,10 @@
  * Other RISC ROMs from 32-bit architectures might look similar.
  */
 
-class GatoDecoderARM6 : public GatoDecoder
-{
+class GatoDecoderARM6 : public GatoDecoderColsLeft{
 public:
     GatoDecoderARM6();
-    QByteArray decode(GatoROM *gr);
+//    QByteArray decode(GatoROM *gr);
 };
 
 #endif // GATODECODERARM6_H
