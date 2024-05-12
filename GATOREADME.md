@@ -52,7 +52,6 @@ Options:
   -I, --info                        Info about input.
   --print                           Print with a GUI dialog.
   --printpdf <file.pdf>             Print to a PDF file.
-  --decode-msp430                   Decodes as MSP430. (Broken.)
   --decode-tlcs47font               Decodes as a TMP47C434N Font.
   --decode-z86x1                    Decodes as a Zilog Z86x1.
   --decode-cols-downl-swap          Decodes as a uCOM4 ROM.
