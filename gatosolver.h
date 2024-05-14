@@ -20,6 +20,13 @@ public:
     virtual int grade(QByteArray ba)=0;
 };
 
+class GatoGraderAll : public GatoGrader
+{
+public:
+    GatoGraderAll();
+    int grade(QByteArray ba);
+};
+
 class GatoSolver{
 public:
     //Instantiate the solver on a ROM and a Grader.

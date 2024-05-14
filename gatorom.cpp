@@ -345,8 +345,6 @@ void GatoROM::rotate(uint32_t degrees, bool zerofirst){
     if(zerofirst)
         angle=0;
 
-    //qDebug()<<"Rotating"<<degrees<<"degrees from"<<angle<<(zerofirst?"with":"without")<<"zeroing.";
-
     //Continually update.
     angle+=degrees;
     angle%=360;

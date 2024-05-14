@@ -214,11 +214,18 @@ int main(int argc, char *argv[]) {
                                    );
     parser.addOption(solveasciiOption);
     QCommandLineOption stringOption(QStringList()<<"solve-string",
-                                   "Byte string as a hint to the solver. 31,fe,ff",
-                                   "bytes",
-                                   ""
-                                   );
+                                    "Byte string as a hint to the solver. 31,fe,ff",
+                                    "bytes",
+                                    ""
+                                    );
     parser.addOption(stringOption);
+    QCommandLineOption solvesetOption(QStringList()<<"solve-set",
+                                    "Exports all potential solutions.",
+                                    "prefix",
+                                    ""
+                                    );
+    parser.addOption(solvesetOption);
+
 
     
     //Actually read the arguments.
@@ -394,16 +401,28 @@ int main(int argc, char *argv[]) {
             }else if(parser.isSet(solveasciiOption)){
                 grader=new GatoGraderASCII();
             }else{
-                qDebug()<<"No solver criteria has been specified.  Try --solve-bytes or --solve-string.";
-                return 1;
+                //qDebug()<<"No solver criteria has been specified.  Try --solve-bytes or --solve-string.";
+                grader=new GatoGraderAll();
             }
 
             GatoSolver solver(gr, grader);
             for(solver.init(); !solver.finished(); solver.next()){
-                if(solver.grade()>0){
-                    std::cout<<"Grade "<<solver.grade()<<"   \t"
+                int state=solver.state;
+
+                //We aren't interested in zero scores or empty results.
+                if(solver.grade()>0 && gr->preview().length()>0){
+                    std::cout<<solver.grade()<<"   \t"
+                              <<QString::number(state,16).toStdString()<<"\t"
                               <<gr->preview().toStdString()<<"\t"
                               <<gr->description().toStdString()<<"\n";
+                    //All outputs go when we're dumping the set.
+                    if(parser.isSet(solvesetOption)){
+
+                        QFile outfile(parser.value(solvesetOption)+"-"+QString::number(state,16)+".bin");
+                        outfile.open(QIODevice::WriteOnly);
+                        outfile.write(gr->decoded);
+                        outfile.close();
+                    }
                 }
 
                 //Perfect solutions go to the output file.
@@ -414,6 +433,8 @@ int main(int argc, char *argv[]) {
                     outfile.write(gr->decoded);
                     outfile.close();
                 }
+
+
             }
         }
 

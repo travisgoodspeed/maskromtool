@@ -13,6 +13,14 @@
 #include "gatodecoderz86x1.h"
 
 
+// Default solver is a dummy state that covers everything.
+GatoGraderAll::GatoGraderAll(){}
+// Approves of every state.
+int GatoGraderAll::grade(QByteArray ba){
+    return 100;
+}
+
+
 GatoSolver::GatoSolver(GatoROM *rom, GatoGrader *grader){
     assert(grader);
     assert(rom);

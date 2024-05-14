@@ -1,6 +1,16 @@
 #ifndef ROMRULEDIALOG_H
 #define ROMRULEDIALOG_H
 
+
+/* This dialog displays design rule violations.  Hitting V will populate
+ * it with the standard rules, such as RomRuleCount to mark rows of unexpected
+ * length and RomRuleAmbiguous to mark bits whose colors look wrong.
+ *
+ * The same dialog is used for things like showing bits from a selection in the hex
+ * dialog or differences from an imported bitstream.  These are not really DRC
+ * violations, but the abstraction remains useful.
+ */
+
 #include <QDialog>
 #include <QListWidgetItem>
 class RomRuleViolation;
