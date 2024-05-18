@@ -2,6 +2,7 @@
 #define ROMSOLUTIONSDIALOG_H
 
 #include <QDialog>
+#include <QListWidget>
 
 /* This dialog shows solutions from the solver as a list.  Selecting
  * a solution will decode the ROM in that style in the rest of the
@@ -23,10 +24,15 @@ public:
     ~RomSolutionsDialog();
     void setMaskRomTool(MaskRomTool *mrt);
 
+    void clearSolutions();
+    void registerSolution(int score, QString solution);
+
+private slots:
+    void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::RomSolutionsDialog *ui;
     MaskRomTool *mrt=0;
-    void registerSolution(int score, QString solution);
 };
 
 #endif // ROMSOLUTIONSDIALOG_H

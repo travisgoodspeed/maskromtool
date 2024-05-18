@@ -13,7 +13,7 @@
 #include "romthresholddialog.h"
 #include "aboutdialog.h"
 
-#include "romalignernew.h"
+//#include "romalignernew.h" //Deprecated May 2024.
 #include "romalignerreliable.h"
 #include "rombitsamplerwide.h"
 #include "rombitsamplertall.h"

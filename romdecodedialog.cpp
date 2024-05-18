@@ -39,6 +39,10 @@ void RomDecodeDialog::updateString(){
     mrt->stringsDialog.updatebinary(ba);
 }
 
+void RomDecodeDialog::setString(QString str){
+
+}
+
 RomDecodeDialog::~RomDecodeDialog(){
     delete ui;
 }

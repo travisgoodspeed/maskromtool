@@ -5,6 +5,8 @@
 
 class MaskRomTool;
 
+#include "gatosolver.h"
+
 namespace Ui {
 class RomSolverDialog;
 }
@@ -17,6 +19,9 @@ public:
     explicit RomSolverDialog(QWidget *parent = nullptr);
     ~RomSolverDialog();
     void setMaskRomTool(MaskRomTool *mrt);
+
+private slots:
+    void on_butSolve_clicked();
 
 private:
     Ui::RomSolverDialog *ui;
