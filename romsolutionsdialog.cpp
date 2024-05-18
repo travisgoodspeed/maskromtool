@@ -42,10 +42,17 @@ void RomSolutionsDialog::registerSolution(int score, QString solution){
 void RomSolutionsDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item){
     Q_ASSERT(mrt);
 
+    //Mark one undo point and prevent others from being made.
+    mrt->markUndoPoint();
+    mrt->importLock++;
+
     //Maybe move this to the tooltip, so that the text can be more descriptive?
     QString solution=item->text();
     qDebug()<<"Loading solution"<<solution;
     mrt->gr.configFromDescription(solution);
     mrt->decodeDialog.update();
+
+    //We're done, so allow undo points again.
+    mrt->importLock--;
 }
 

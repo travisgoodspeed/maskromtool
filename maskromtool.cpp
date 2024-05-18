@@ -1540,6 +1540,9 @@ void MaskRomTool::importJSON(QJsonObject o){
     thresholdDialog.setMaskRomTool(this);
     updateThresholdHistogram();
 
+    //And update the decoding.
+    decodeDialog.update();
+
     importLock--;
 }
 
