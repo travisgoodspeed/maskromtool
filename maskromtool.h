@@ -20,6 +20,7 @@
 #include "romsecond.h"
 #include "romsolverdialog.h"
 #include "romsolutionsdialog.h"
+#include "romdisdialog.h"
 
 #include "gatorom.h"
 
@@ -164,6 +165,7 @@ public:
     RomStringsDialog stringsDialog;
     RomSolverDialog solverDialog;
     RomSolutionsDialog solutionsDialog;
+    RomDisDialog disDialog;
 
     //Selectable Strategies
     RomAligner *aligner=0;
@@ -261,6 +263,7 @@ private slots:
     void on_exportHistogram_triggered();
 
     void on_actionSolver_triggered();
+    void on_actionDisassembly_triggered();
 
 private:
     Ui::MaskRomTool *ui;

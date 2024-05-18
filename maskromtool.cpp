@@ -75,6 +75,7 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     view=ui->graphicsView;
 
     //Some child dialogs need pointers back to the main project.
+    disDialog.setMaskRomTool(this);
     violationDialog.setMaskRomTool(this);
     decodeDialog.setMaskRomTool(this);
     hexDialog.setMaskRomTool(this);
@@ -1620,5 +1621,11 @@ void MaskRomTool::on_stringsButton_triggered(){
 void MaskRomTool::on_actionSolver_triggered(){
     gatorom();
     solverDialog.show();
+}
+
+
+void MaskRomTool::on_actionDisassembly_triggered(){
+    gatorom();
+    disDialog.show();
 }
 

@@ -36,6 +36,8 @@ private slots:
     void on_listBank_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void on_wordsizeEdit_textEdited(const QString &arg1);
 
+    void on_listArchitecture_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+
 private:
     Ui::RomDecodeDialog *ui;
     MaskRomTool *mrt=0;  //GUI project.

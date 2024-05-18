@@ -99,6 +99,7 @@ set(MRT_SOURCES
         romdecoderpython.h romdecoderpython.cpp
         romruleambiguous.h romruleambiguous.cpp
         romruledialog.h romruledialog.cpp romruledialog.ui
+        romdisdialog.h romdisdialog.cpp romdisdialog.ui
 # Sampler Strategies
         rombitsampler.h rombitsampler.cpp
         rombitsamplerwide.h rombitsamplerwide.cpp

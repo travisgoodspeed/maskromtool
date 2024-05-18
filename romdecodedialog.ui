@@ -21,7 +21,7 @@
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Main</string>
+       <string>Bits</string>
       </attribute>
       <widget class="QLabel" name="label">
        <property name="geometry">
@@ -254,8 +254,31 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Extras</string>
+       <string>Disassembly</string>
       </attribute>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>81</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Architecture:</string>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="listArchitecture">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>341</width>
+         <height>441</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>
