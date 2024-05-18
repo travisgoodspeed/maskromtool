@@ -116,6 +116,14 @@ int main(int argc, char *argv[]) {
                                     );
     parser.addOption(infoOption);
 
+    //Disassembly
+    QCommandLineOption disOption(QStringList()<<"d"<<"dis",
+                                  "Disassemble.",
+                                 "arch"
+                                  );
+    parser.addOption(disOption);
+
+
     //Print with a dialog.
     QCommandLineOption printOption(QStringList()<<"print",
                                    "Print with a GUI dialog."
@@ -450,6 +458,12 @@ int main(int argc, char *argv[]) {
             QPrinter printer(QPrinter::HighResolution);
             printer.setOutputFileName(parser.value(printpdfOption));
             gr->print(printer);
+        }
+
+        //Disassemble the target.
+        if(parser.isSet(disOption)){
+            gr->arch=parser.value(disOption);
+            std::cout<<gr->dis().toStdString();
         }
 
         //Done with the file.

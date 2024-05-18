@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QPrinter>
 #include <QRegularExpression>
+#include <QProcess>
 
 #include "gatorom.h"
 #include "gatoprinter.h"
@@ -287,10 +288,24 @@ QByteArray GatoROM::decode(){
 
     return decoded;
 }
+
+// Disassembly, produced by Unidasm.
+QString GatoROM::dis(){
+    QProcess process;
+    //process.start("hexdump", QStringList() << "-c" << "-");
+    process.start("unidasm", QStringList() << "-arch" << arch << "-");
+    process.write(decode());
+    process.closeWriteChannel();
+    process.waitForFinished(3000);
+    QString res=process.readAllStandardOutput();
+    //process.close();
+
+    return res;
+}
+
 //Performs a sanity check.  Call this after decode(), error if false.
 bool GatoROM::checkSanity(){
     //Sanity check for accuracy of the markup.
-    //This should probably move into the GatoROM class.
     for(unsigned int row=0; row<outputrows; row++){
         for(unsigned int col=0; col<outputcols; col++){
             GatoBit *gb=outputbits[row][col];

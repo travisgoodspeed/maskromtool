@@ -84,6 +84,8 @@ public:
     //Decodes the ROM using the configured decoder.
     QByteArray decode();
     QByteArray decoded; //Output bytes, produced by decode().
+    QString dis(); // Disassembly, produced by Unidasm.
+
     //Performs a sanity check.  Call this after decode(), error if false.
     bool checkSanity();
 
@@ -109,6 +111,7 @@ public:
     int bank=0;         //1 for left, 2 for right.
     int strictmode=0;   //1 will crash on illegal fetches, used for CLI but not GUI.
     int wordsize=8;     //Bits per word.  Default fits most 8-bit chips.
+    QString arch;       //Architecture, from Unidasm.
 
     //Should I talk too much?
     int verbose=0;
