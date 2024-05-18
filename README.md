@@ -30,8 +30,7 @@ is a Zilog Z8 ROM from a music synthesize module.
 Histogram export for ploting the color distributions in GNUPlot.
 Support for Wayland.  Explicit wordsize support in CLI, GUI, solver
 and basic decoders.  Solver sets, exporting all potential solutions as
-binary files.  Unreliable aligner has been deprecated.  Partial GUI
-solver, not yet functional.
+binary files.  Unreliable aligner has been deprecated.  GUI solver.
 
 2024-01-28 -- Undo and Redo.  Strings dialog.  Backslash key for layer
 visibility.  Reliable alignment algorithm.  Closing main window closes

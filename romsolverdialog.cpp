@@ -31,6 +31,7 @@ void RomSolverDialog::setMaskRomTool(MaskRomTool *mrt){
 void RomSolverDialog::on_butSolve_clicked(){
     GatoGrader *grader=0;
     GatoROM *gr=&(mrt->gr);
+    QString oldstate=gr->description();
     mrt->solutionsDialog.clearSolutions();
     mrt->solutionsDialog.show();
 
@@ -62,6 +63,9 @@ void RomSolverDialog::on_butSolve_clicked(){
             mrt->solutionsDialog.registerSolution(grade, statestring);
         }
     }
+
+    mrt->gr.configFromDescription(oldstate);
+    mrt->decodeDialog.update();
 
 
     if(grader)
