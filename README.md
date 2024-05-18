@@ -29,7 +29,9 @@ is a Zilog Z8 ROM from a music synthesize module.
 `master` -- DRC violations are now cleared when bits are forced.
 Histogram export for ploting the color distributions in GNUPlot.
 Support for Wayland.  Explicit wordsize support in CLI, GUI, solver
-and basic decoders.
+and basic decoders.  Solver sets, exporting all potential solutions as
+binary files.  Unreliable aligner has been deprecated.  Partial GUI
+solver, not yet functional.
 
 2024-01-28 -- Undo and Redo.  Strings dialog.  Backslash key for layer
 visibility.  Reliable alignment algorithm.  Closing main window closes

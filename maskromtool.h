@@ -18,6 +18,8 @@
 #include "romruledialog.h"
 #include "romstringsdialog.h"
 #include "romsecond.h"
+#include "romsolverdialog.h"
+#include "romsolutionsdialog.h"
 
 #include "gatorom.h"
 
@@ -160,6 +162,8 @@ public:
     RomDecodeDialog decodeDialog;
     RomHexDialog hexDialog;
     RomStringsDialog stringsDialog;
+    RomSolverDialog solverDialog;
+    RomSolutionsDialog solutionsDialog;
 
     //Selectable Strategies
     RomAligner *aligner=0;
@@ -256,14 +260,14 @@ private slots:
 
     void on_exportHistogram_triggered();
 
+    void on_actionSolver_triggered();
+
 private:
     Ui::MaskRomTool *ui;
     qreal thresholdR, thresholdG, thresholdB;
     qreal bitSize=10;
     bool alignmentdirty=true;
     uint32_t alignSkipThreshold=5;
-
-
 
     //Marks the bit fixes.
     void markFixes();

@@ -79,13 +79,15 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     decodeDialog.setMaskRomTool(this);
     hexDialog.setMaskRomTool(this);
     stringsDialog.setMaskRomTool(this);
+    solverDialog.setMaskRomTool(this);
+    solutionsDialog.setMaskRomTool(this);
 
     RomRuleViolation::bitSize=bitSize;
     lineColor = QColor(Qt::black);
 
     //Strategies should be initialized.
     addAligner(new RomAlignerReliable());   //First is default.
-    addAligner(new RomAlignerNew());
+    //addAligner(new RomAlignerNew());      //Deprecated.
     addSampler(new RomBitSampler());        //First is default.
     addSampler(new RomBitSamplerWide());
     addSampler(new RomBitSamplerTall());
@@ -1612,5 +1614,8 @@ void MaskRomTool::on_stringsButton_triggered(){
     stringsDialog.show();
 }
 
-
+void MaskRomTool::on_actionSolver_triggered(){
+    gatorom();
+    solverDialog.show();
+}
 

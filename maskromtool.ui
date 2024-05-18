@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -81,14 +81,16 @@
      <string>View</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="asciiButton"/>
+    <addaction name="actionSolver"/>
     <addaction name="stringsButton"/>
-    <addaction name="actionHexView"/>
     <addaction name="actionViolationsDialog"/>
+    <addaction name="separator"/>
+    <addaction name="asciiButton"/>
+    <addaction name="actionHexView"/>
+    <addaction name="actionHighlightHexSelection"/>
+    <addaction name="separator"/>
     <addaction name="actionOpenGL"/>
     <addaction name="actionSecond"/>
-    <addaction name="separator"/>
-    <addaction name="actionHighlightHexSelection"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -143,7 +145,8 @@
   </widget>
   <action name="openButton">
    <property name="icon">
-    <iconset theme="document-open"/>
+    <iconset theme="document-open">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Open ROM</string>
@@ -151,7 +154,8 @@
   </action>
   <action name="saveButton">
    <property name="icon">
-    <iconset theme="document-save"/>
+    <iconset theme="document-save">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -200,7 +204,8 @@
   </action>
   <action name="aboutButton">
    <property name="icon">
-    <iconset theme="help-about"/>
+    <iconset theme="help-about">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>About MaskRomTool</string>
@@ -208,7 +213,8 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset theme="printer"/>
+    <iconset theme="printer">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Print</string>
@@ -293,7 +299,8 @@
   </action>
   <action name="actionRunDRC">
    <property name="icon">
-    <iconset theme="scanner"/>
+    <iconset theme="scanner">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Evaluate Rules (v)</string>
@@ -422,7 +429,8 @@
   </action>
   <action name="decoderButton">
    <property name="icon">
-    <iconset theme="utilities-system-monitor"/>
+    <iconset theme="utilities-system-monitor">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Decoding</string>
@@ -445,7 +453,8 @@
   </action>
   <action name="actionClearForcedBits">
    <property name="icon">
-    <iconset theme="edit-clear"/>
+    <iconset theme="edit-clear">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Clear Forced Bits</string>
@@ -453,7 +462,8 @@
   </action>
   <action name="actionSelectNextViolation">
    <property name="icon">
-    <iconset theme="dialog-error"/>
+    <iconset theme="dialog-error">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Select Next Violation (e)</string>
@@ -461,7 +471,8 @@
   </action>
   <action name="actionUndo">
    <property name="icon">
-    <iconset theme="edit-undo"/>
+    <iconset theme="edit-undo">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Undo</string>
@@ -469,7 +480,8 @@
   </action>
   <action name="actionRedo">
    <property name="icon">
-    <iconset theme="edit-redo"/>
+    <iconset theme="edit-redo">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Redo</string>
@@ -483,6 +495,11 @@
   <action name="exportHistogram">
    <property name="text">
     <string>Histogram of Colors</string>
+   </property>
+  </action>
+  <action name="actionSolver">
+   <property name="text">
+    <string>Solver</string>
    </property>
   </action>
  </widget>

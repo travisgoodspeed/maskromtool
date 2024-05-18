@@ -75,6 +75,8 @@ set(MRT_SOURCES
         asciidialog.h asciidialog.cpp asciidialog.ui
         romhexdialog.h romhexdialog.cpp romhexdialog.ui
         romstringsdialog.h romstringsdialog.cpp romstringsdialog.ui
+        romsolverdialog.h romsolverdialog.cpp romsolverdialog.ui
+        romsolutionsdialog.h romsolutionsdialog.cpp romsolutionsdialog.ui
 # Decoders
         romdecoder.h
         romdecodergato.h romdecodergato.cpp

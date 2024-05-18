@@ -2,6 +2,7 @@
 #include <QString>
 #include <QList>
 #include <QDebug>
+#include <QRegularExpression>
 
 #include "gatograderstring.h"
 
@@ -11,7 +12,7 @@
  * "3a,2b,97,6c", for example.
  */
 GatoGraderString::GatoGraderString(QString setting){
-    QStringList settings=setting.split(",");
+    QStringList settings=setting.split(QRegularExpression(",|\\s+"));
     QByteArray ba;
     bool okay;
 

@@ -3,8 +3,8 @@
 #include "romalignernew.h"
 #include "maskromtool.h"
 
-/* This is the default aligner for MaskRomTool, though we hope to replace
- * it someday.  It works from a leftmost sorting of the bits, first generating
+/* This was the default aligner for MaskRomTool, but it has been deprecated in favor
+ * of RomAlignerReliable.  It works from a leftmost sorting of the bits, first generating
  * the leftmost column and then constructing a linked list by sorting each new
  * bit into a row.
  *

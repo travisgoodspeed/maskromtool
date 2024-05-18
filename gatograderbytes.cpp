@@ -1,11 +1,12 @@
 #include<QDebug>
+#include <QRegularExpression>
 #include "gatograderbytes.h"
 
 GatoGraderBytes::GatoGraderBytes(QString setting){
     /* The setting string is a set of comma-delimited
      * values of an address, a byte value, and a bitmask.
      */
-    QStringList settings=setting.split(",");
+    QStringList settings=setting.split(QRegularExpression(",|\\s+"));
     for(int i=0; i<settings.length(); i++){
         GatoGraderBytesRule *rule=new GatoGraderBytesRule(settings[i]);
         rules.insert(rule);
