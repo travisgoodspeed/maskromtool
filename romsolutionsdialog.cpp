@@ -46,6 +46,6 @@ void RomSolutionsDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item){
     QString solution=item->text();
     qDebug()<<"Loading solution"<<solution;
     mrt->gr.configFromDescription(solution);
-    mrt->decodeDialog.updateString();
+    mrt->decodeDialog.update();
 }
 

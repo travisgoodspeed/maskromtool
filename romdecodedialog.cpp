@@ -14,6 +14,19 @@ void RomDecodeDialog::setMaskRomTool(MaskRomTool* maskRomTool){
     Q_ASSERT(maskRomTool);
     mrt=maskRomTool;
 
+    update();
+}
+
+//Updates the string to match the configuration.
+void RomDecodeDialog::updateString(){
+    ui->textFlags->setPlainText(mrt->gr.description());
+
+    QByteArray ba=mrt->gr.decode();
+    mrt->hexDialog.updatebinary(ba);
+    mrt->stringsDialog.updatebinary(ba);
+}
+
+void RomDecodeDialog::update(){
     ui->checkFlipX->setCheckState(mrt->gr.flippedx ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     ui->checkFlipY->setCheckState(mrt->gr.flippedy ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     ui->checkInvertBits->setCheckState(mrt->gr.inverted ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
@@ -27,20 +40,7 @@ void RomDecodeDialog::setMaskRomTool(MaskRomTool* maskRomTool){
             ui->listDecoder->findItems(mrt->gr.decoder->name, Qt::MatchFlag::MatchExactly);
         ui->listDecoder->setCurrentItem(item.value(0));
     }
-
     updateString();
-}
-
-void RomDecodeDialog::updateString(){
-    ui->textFlags->setPlainText(mrt->gr.description());
-
-    QByteArray ba=mrt->gr.decode();
-    mrt->hexDialog.updatebinary(ba);
-    mrt->stringsDialog.updatebinary(ba);
-}
-
-void RomDecodeDialog::setString(QString str){
-
 }
 
 RomDecodeDialog::~RomDecodeDialog(){

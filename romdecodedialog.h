@@ -24,7 +24,7 @@ public:
     ~RomDecodeDialog();
     void setMaskRomTool(MaskRomTool* maskRomTool);
     void updateString();
-    void setString(QString str);
+    void update();
 
 private slots:
     void on_listDecoder_itemSelectionChanged();
