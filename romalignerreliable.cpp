@@ -107,5 +107,8 @@ RomBitItem* RomAlignerReliable::linkresults(){
         }
         row++;
     }
-    return rowstarts[0];
+    if(row)
+        return rowstarts[0];
+
+    return 0;
 }
