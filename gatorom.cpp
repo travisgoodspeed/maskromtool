@@ -303,7 +303,7 @@ QString GatoROM::dis(){
     process.closeWriteChannel();
     process.waitForFinished(3000);
     QString res=process.readAllStandardOutput();
-    if(process.exitStatus()==QProcess::NormalExit)
+    if(process.exitStatus()==QProcess::NormalExit && res.length()>0)
         return res;
     return QString("ERROR: Is MAME's Unidasm in the path?");
 }
