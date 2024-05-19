@@ -293,7 +293,7 @@ QByteArray GatoROM::decode(){
 QString GatoROM::dis(){
     QProcess process;
     if(arch=="")
-        return QString("ERROR: Archiecture not set in Edit/Decoding.");
+        return QString("ERROR: Architecture not set in Edit/Decoding.");
     QByteArray bytes=decode();
     if(bytes.length()==0)
         return QString("ERROR: No bytes to disassemble.");
