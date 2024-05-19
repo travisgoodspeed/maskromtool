@@ -32,7 +32,6 @@ RomScene::RomScene(QObject *parent)
 }
 
 void RomScene::keyPressEvent(QKeyEvent *event){
-
     RomLineItem *rlitem;
     QPointF dpos;
 
@@ -112,18 +111,19 @@ void RomScene::updateCrosshairs(bool dragging){
 
 }
 
-
+//Updates the status bar to describe the position.
 void RomScene::updateStatus(){
     static QString str;
     maskRomTool->statusBar()->showMessage(
         str.asprintf(
-            "%04x to %04x -- %05d x %05d -- %ld rows, %ld cols -- %2lld violations -- %ld bits, %ldkB",
+            "%04x to %04x -- %05d x %05d -- %ld rows, %ld cols -- %2lld violations -- %ld bits, %ld words, %ldkB",
             maskRomTool->hexDialog.start,
             maskRomTool->hexDialog.end,
             (int) scenepos.x(), (int) scenepos.y(),
             maskRomTool->rowcount, maskRomTool->colcount,
             maskRomTool->violations.size(),
             maskRomTool->bitcount,
+            maskRomTool->bitcount/maskRomTool->gr.wordsize,
             maskRomTool->bitcount/1024/8
             )
         );
@@ -242,15 +242,14 @@ void RomScene::setFocusItem(QGraphicsItem* item){
     for(QSet<RomLineItem*>::iterator i = maskRomTool->cols.begin(), end = maskRomTool->cols.end(); i != end; ++i){
         ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
     }
-    if(!item)
+    if(!item){
         //No item to mark, so don't worry about investigating it.
         return;
-    else if(item->type()==QGraphicsItem::UserType){
+    }else if(item->type()==QGraphicsItem::UserType){
         //row
         maskRomTool->lastrow=((RomLineItem*)item)->line();
         ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
-    }
-    else if(item->type()==QGraphicsItem::UserType+1){
+    }else if(item->type()==QGraphicsItem::UserType+1){
         //column
         maskRomTool->lastcol=((RomLineItem*)item)->line();
         ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
