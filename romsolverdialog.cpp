@@ -53,13 +53,13 @@ void RomSolverDialog::on_butSolve_clicked(){
 
     GatoSolver solver(gr, grader);
     for(solver.init(); !solver.finished(); solver.next()){
-        int state=solver.state;
+        //int state=solver.state;
         int grade=solver.grade();
         //QString statestring=QString::asprintf("%04x", state);
         QString statestring=gr->description();
 
-        if(grade>0){
-            qDebug()<<"Solution: "<<state;
+        if(grade>=90){
+            //qDebug()<<"Solution: "<<state;
             mrt->solutionsDialog.registerSolution(grade, statestring);
         }
     }
