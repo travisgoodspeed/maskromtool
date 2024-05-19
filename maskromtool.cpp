@@ -107,7 +107,9 @@ void MaskRomTool::closeEvent(QCloseEvent *event){
      *
      * Perhaps we should ask about saving first?
      */
-    exit(0);
+
+    //Use this instead of exit(0) to avoid crashing OpenGL on Windows.
+    QCoreApplication::quit();
 }
 
 /* Undo works by saving the state during important actions
