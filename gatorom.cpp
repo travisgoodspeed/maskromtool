@@ -292,15 +292,16 @@ QByteArray GatoROM::decode(){
 // Disassembly, produced by Unidasm.
 QString GatoROM::dis(){
     QProcess process;
-    //process.start("hexdump", QStringList() << "-c" << "-");
+    if(arch=="")
+        return QString("ERROR: Archiecture not set in Edit/Decoding.");
     process.start("unidasm", QStringList() << "-arch" << arch << "-");
     process.write(decode());
     process.closeWriteChannel();
     process.waitForFinished(3000);
     QString res=process.readAllStandardOutput();
-    //process.close();
-
-    return res;
+    if(process.exitStatus()==QProcess::NormalExit)
+        return res;
+    return QString("ERROR: Is MAME's Unidasm in the path?");
 }
 
 //Performs a sanity check.  Call this after decode(), error if false.

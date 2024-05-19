@@ -118,6 +118,12 @@ void RomDecodeDialog::update(){
             ui->listDecoder->findItems(mrt->gr.decoder->name, Qt::MatchFlag::MatchExactly);
         ui->listDecoder->setCurrentItem(item.value(0));
     }
+    for(int i=0; i<ui->listArchitecture->count(); i++){
+        QListWidgetItem *item=ui->listArchitecture->item(i);
+        if(item->text()==mrt->gr.arch)
+            ui->listArchitecture->setCurrentItem(item);
+    }
+
     updateString();
 }
 

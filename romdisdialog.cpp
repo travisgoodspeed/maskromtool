@@ -31,4 +31,5 @@ void RomDisDialog::update(){
     Q_ASSERT(mrt);
 
     ui->plainTextEdit->setPlainText(mrt->gr.dis());
+    setWindowTitle(mrt->gr.arch+" Disassembly");
 }
