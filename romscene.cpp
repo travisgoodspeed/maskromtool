@@ -42,21 +42,22 @@ void RomScene::keyPressEvent(QKeyEvent *event){
     case Qt::Key_Down:
     case Qt::Key_Left:
     case Qt::Key_Right:
-            if(focusItem()){
-                switch(focusItem()->type()){
-                    case QGraphicsItem::UserType: //row
-                    case QGraphicsItem::UserType+1: //column
-                        rlitem = (RomLineItem*)focusItem();
-                        dpos = QPointF(0,0);
-                        switch(event->key()){
-                            case Qt::Key_Up: dpos.setY(-1);break;
-                            case Qt::Key_Down: dpos.setY(1);break;
-                            case Qt::Key_Left: dpos.setX(-1);break;
-                            case Qt::Key_Right: dpos.setX(1);break;
-                        }
-                        maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
-                        break;
+        if(focusItem()){
+            maskRomTool->markUndoPoint();
+            switch(focusItem()->type()){
+            case QGraphicsItem::UserType: //row
+            case QGraphicsItem::UserType+1: //column
+                rlitem = (RomLineItem*)focusItem();
+                dpos = QPointF(0,0);
+                switch(event->key()){
+                case Qt::Key_Up: dpos.setY(-1);break;
+                case Qt::Key_Down: dpos.setY(1);break;
+                case Qt::Key_Left: dpos.setX(-1);break;
+                case Qt::Key_Right: dpos.setX(1);break;
                 }
+                maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
+                break;
+            }
             break;
         }else{// no selected item, default arrows handler will move the whole scene
             QGraphicsScene::keyPressEvent(event);
@@ -169,9 +170,11 @@ void RomScene::setColAngle(qreal angle){
 //Store the last pressed mouse position.
 void RomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
     //This could be handy in the selection.
-    //if(mouseEvent->buttons()&Qt::LeftButton){
-        presspos=mouseEvent->scenePos();
-    //}
+    presspos=mouseEvent->scenePos();
+
+    //Right mouse can drag a line, so we mark an undo point before moving.
+    if(mouseEvent->buttons()==Qt::RightButton)
+        maskRomTool->markUndoPoint();
 }
 
 //Store the last pressed mouse position.
@@ -208,8 +211,6 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
             qDebug()<<"Failing to set more than one focus item.";
             setFocusItem(0);
         }
-    }else{
-        //qDebug()<<"Released"<<mouseEvent->button();
     }
 }
 
