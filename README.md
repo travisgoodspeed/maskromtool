@@ -1,6 +1,6 @@
 Howdy y'all,
 
-This is my little CAD tool for taking photographs of a mask ROMs and
+This is my CAD tool for taking photographs of a mask ROMs and
 extracting the bits, so that the contents of the ROM can be recovered.
 
 The keyboard shortcuts in this tool are *not* optional.  Please read
@@ -31,6 +31,7 @@ Histogram export for ploting the color distributions in GNUPlot.
 Support for Wayland.  Explicit wordsize support in CLI, GUI, solver
 and basic decoders.  Solver sets, exporting all potential solutions as
 binary files.  Unreliable aligner has been deprecated.  GUI solver.
+Disassembler callsouts to MAME's Unidasm.
 
 2024-01-28 -- Undo and Redo.  Strings dialog.  Backslash key for layer
 visibility.  Reliable alignment algorithm.  Closing main window closes
@@ -66,11 +67,8 @@ crash when hitting `V` after deleting a line.
 
 ## Building
 
-This tool works in Windows, Linux, FreeBSD and MacOS, using QT6 with the
-QtCharts extension.  Be sure to manually enable QtCharts in the [QT
-Unified
-Installer](https://download.qt.io/official_releases/online_installers/),
-as it's not enabled by default!
+This tool works in Windows, Linux, FreeBSD and MacOS, using QT6 with
+the QtCharts extension.
 
 Building the tool is easiest from the CLI.  In Debian Bullseye (11.x),
 ```
@@ -96,26 +94,6 @@ For the convenience of Windows and macOS users, we have also made some
 [Prebuilt
 Releases](https://github.com/travisgoodspeed/maskromtool/releases).
 
-## High Level Design
-
-I've designed the GUI around a `QGraphicsScene`.  The underlying data
-objects use the QT coordinate system, with floats for
-better-than-pixel precision.
-
-After loading a ROM photograph, the user places Columns and Rows onto
-the photograph.  Every intersection of a Column and a Row is
-considered to be a Bit, and a configurable color threshold determines
-the value of that Bit.  Where the photograph is misread, you can also
-Force the bit to a known value.
-
-Once all of the Bits have been marked and the Threshold chosen, the
-software will mark every light bit as Blue (0) and every dark bit as
-Red (1).  These bits are then Aligned into linked lists of rows for
-export as ASCII, for use in other tools.
-
-To identify errors, a set of Design Rule Checks (DRC) will critique
-the open project.  While the primary interface is the GUI, a CLI is
-also available for scripting and testing.
 
 ## GUI Usage
 
@@ -248,6 +226,27 @@ retaining a log on the CLI.  We solve this by producing two
 executables; please use `maskromtool.exe` for the GUI and
 `maskromtoolcli.exe` for the CLI.
 
+
+## High Level Design
+
+I've designed the GUI around a `QGraphicsScene`.  The underlying data
+objects use the QT coordinate system, with floats for
+better-than-pixel precision.
+
+After loading a ROM photograph, the user places Columns and Rows onto
+the photograph.  Every intersection of a Column and a Row is
+considered to be a Bit, and a configurable color threshold determines
+the value of that Bit.  Where the photograph is misread, you can also
+Force the bit to a known value.
+
+Once all of the Bits have been marked and the Threshold chosen, the
+software will mark every light bit as Blue (0) and every dark bit as
+Red (1).  These bits are then Aligned into linked lists of rows for
+export as ASCII, for use in other tools.
+
+To identify errors, a set of Design Rule Checks (DRC) will critique
+the open project.  While the primary interface is the GUI, a CLI is
+also available for scripting and testing.
 
 ## Correcting Bit Errors
 

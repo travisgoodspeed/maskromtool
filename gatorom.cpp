@@ -294,8 +294,12 @@ QString GatoROM::dis(){
     QProcess process;
     if(arch=="")
         return QString("ERROR: Archiecture not set in Edit/Decoding.");
+    QByteArray bytes=decode();
+    if(bytes.length()==0)
+        return QString("ERROR: No bytes to disassemble.");
     process.start("unidasm", QStringList() << "-arch" << arch << "-");
     process.write(decode());
+
     process.closeWriteChannel();
     process.waitForFinished(3000);
     QString res=process.readAllStandardOutput();
