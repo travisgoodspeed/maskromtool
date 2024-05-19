@@ -134,9 +134,10 @@ int main(int argc, char *argv[]){
 
     const QStringList args = parser.positionalArguments();
 
-    //Wayland and offscreen don't like OpenGL, but we respect the user's explicit choice.
-    bool opengl=!a.platformName().contains("offscreen");
-    if(a.platformName().contains("wayland")) opengl=false;
+    //OpenGL is now stable, but off by default.
+    bool opengl=false;
+    if(a.platformName().contains("offscreen")) opengl=false; //Doesn't work.
+    if(a.platformName().contains("wayland")) opengl=false;   //Unstable.
     if(parser.isSet(disableOpenglOption)) opengl=false;
     if(parser.isSet(enableOpenglOption)) opengl=true;
 
@@ -224,13 +225,7 @@ int main(int argc, char *argv[]){
     //We let the GUI take hold unless asked to do otherwise.
     if(!parser.isSet(exitOption)){
         if(a.platformName().contains("wayland")){
-            /*
-            QMessageBox msgBox;
-            msgBox.setWindowTitle("Wayland is Unstable");
-            msgBox.setText("The wayland driver is unstable.  Please pass '-platform xcb' to maskromtool to use Xorg instead.");
-            msgBox.exec();
-             */
-            qDebug()<<"If Wayland is unstable, pass '-platform xcb' to use Xorg/OpenGL instead.";
+            qDebug()<<"If Wayland is unstable, pass '-platform xcb' to use Xorg instead.";
         }
 
         //We never launch the GUI when offscreen, because it should always exit.
