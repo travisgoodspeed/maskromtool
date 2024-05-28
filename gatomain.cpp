@@ -31,6 +31,7 @@
 #include "gatograderbytes.h"
 #include "gatograderstring.h"
 #include "gatograderascii.h"
+#include "gatograderyara.h"
 
 
 /* This is a quick CLI wrapper for GatoROM, which you might run on textfiles
@@ -227,6 +228,12 @@ int main(int argc, char *argv[]) {
                                     ""
                                     );
     parser.addOption(stringOption);
+    QCommandLineOption solveyaraOption(QStringList()<<"solve-yara",
+                                    "Yara rule file.",
+                                    "rule",
+                                    ""
+                                    );
+    parser.addOption(solveyaraOption);
     QCommandLineOption solvesetOption(QStringList()<<"solve-set",
                                     "Exports all potential solutions.",
                                     "prefix",
@@ -395,6 +402,7 @@ int main(int argc, char *argv[]) {
 
             QString bytes=parser.value(bytesOption);
             QString string=parser.value(stringOption);
+            QString yararule=parser.value(solveyaraOption);
 
             if(gr->inputrows==0 || gr->inputcols==0){
                 qDebug()<<"Cannot solve an empty ROM.";
@@ -408,6 +416,8 @@ int main(int argc, char *argv[]) {
                 grader=new GatoGraderString(string);
             }else if(parser.isSet(solveasciiOption)){
                 grader=new GatoGraderASCII();
+            }else if(parser.isSet(solveyaraOption)){
+                grader=new GatoGraderYara(yararule);
             }else{
                 //qDebug()<<"No solver criteria has been specified.  Try --solve-bytes or --solve-string.";
                 grader=new GatoGraderAll();
