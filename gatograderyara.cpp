@@ -32,11 +32,21 @@ int GatoGraderYara::grade(QByteArray ba){
     process.waitForFinished();
 
     //Result is an integer number of rule matches.
-    QString result=process.readAllStandardOutput();
+    result=process.readAllStandardOutput();
+    error=process.readAllStandardError();
+
     bool okay=false;
     int res=result.toInt(&okay);
     if(okay)
         return 100*res;
 
+
+    //Something when wrong.
+    if(result.length()==0 && error.length()==0)
+        qDebug()<<"Is yara missing from the path?";
+    else if(error.length()>0)
+        qDebug()<<"Error: "<<error;
+    else
+        qDebug()<<"Unexpected result from Yara."<<result;
     return 0;
 }

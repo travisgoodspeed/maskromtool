@@ -20,6 +20,9 @@ public:
     GatoGraderYara(QString rulefile);
     int grade(QByteArray ba);
 
+    QString result="";
+    QString error="";
+
 private:
     QString rulefile="";
 };
