@@ -333,6 +333,9 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
      * If 'fromsets' is false, we're just removing the bits and probably moving the line.
      */
 
+    //Removing a line always dirties the alignment.
+    alignmentdirty=true;
+
     //qDebug()<<"Removing all bits from a line.";
     foreach(QGraphicsItem* item, scene->collidingItems(line)){
         if(item->type()==QGraphicsItem::UserType+2){  //Is it a bit?
@@ -363,7 +366,7 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
         break;
     case QGraphicsItem::UserType+2: //bit
         bits.remove((RomBitItem*) item);
-        //alignmentdirty=true;
+        alignmentdirty=true;
         break;
     case QGraphicsItem::UserType+3: //bit fix
         bitfixes.remove((RomBitFix*) item);
