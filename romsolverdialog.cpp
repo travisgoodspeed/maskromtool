@@ -4,6 +4,7 @@
 #include "gatograderascii.h"
 #include "gatograderbytes.h"
 #include "gatograderstring.h"
+#include "gatograderyara.h"
 
 #include "maskromtool.h"
 #include "gatosolver.h"
@@ -45,6 +46,9 @@ void RomSolverDialog::on_butSolve_clicked(){
         break;
     case 2: // ASCII
         grader=new GatoGraderASCII();
+        break;
+    case 3: // Yara
+        grader=new GatoGraderYara(ui->editYara->toPlainText());
         break;
     default:
         qDebug()<<"Unknown solver tab"<<index;
