@@ -1390,7 +1390,8 @@ QJsonObject MaskRomTool::exportJSON(){
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
-     * 2024.05.19 -- Architecture is now recorded.  Unidasm only for now."
+     * 2024.06.05 -- Yara rule included in GUI.
+     * 2024.05.19 -- Architecture is now recorded.  Unidasm only for now.
      * 2023.12.07 -- Gatorom strings now work.
      * 2023.01.27 -- Aligner name is saved.
      * 2023.09.15 -- Adds 'linecolor'.
@@ -1400,7 +1401,7 @@ QJsonObject MaskRomTool::exportJSON(){
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2024.05.19";
+    root["00version"]="2024.06.05";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -1416,6 +1417,7 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["gatorom"]=gr.description();        //2023.09.04
     settings["linecolor"]=lineColor.name();      //2023.09.15
     settings["arch"]=gr.arch;                    //2024.05.19
+    settings["yararule"]=solverDialog.yararule;  //2024.06.05
     root["settings"]=settings;
 
 
@@ -1481,6 +1483,12 @@ void MaskRomTool::importJSON(QJsonObject o){
     QJsonValue grsetting=settings.value("gatorom");
     this->gr.configFromDescription(grsetting.toString(""));
     decodeDialog.setMaskRomTool(this);
+
+    //Solver rules.
+    QJsonValue yararule=settings.value("yararule");
+    QString yararulestr=yararule.toString("");
+    if(yararulestr.length()>0)
+        this->solverDialog.setYaraRule(yararulestr);
 
     //Bit sampler algorithms, size and alignment algorithm.
     QJsonValue sampler=settings.value("sampler");
