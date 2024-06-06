@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabBytes">
       <attribute name="title">
@@ -112,7 +112,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QPlainTextEdit" name="editYara"/>
+        <widget class="QPlainTextEdit" name="editYara">
+         <property name="plainText">
+          <string>rule ExampleRule
+{
+    strings:
+        $hex = { 9b 06 00 ea }
+
+    condition:
+        $hex
+}
+</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

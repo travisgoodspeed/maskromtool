@@ -4,6 +4,7 @@
 #include "gatograderascii.h"
 #include "gatograderbytes.h"
 #include "gatograderstring.h"
+#include "gatograderyara.h"
 
 #include "maskromtool.h"
 #include "gatosolver.h"
@@ -32,6 +33,8 @@ void RomSolverDialog::on_butSolve_clicked(){
     GatoGrader *grader=0;
     GatoROM *gr=&(mrt->gr);
     QString oldstate=gr->description();
+    QString yararule;
+
     mrt->solutionsDialog.clearSolutions();
     mrt->solutionsDialog.show();
 
@@ -45,6 +48,15 @@ void RomSolverDialog::on_butSolve_clicked(){
         break;
     case 2: // ASCII
         grader=new GatoGraderASCII();
+        break;
+    case 3: // Yara
+        tmpfile.open();
+        yararule=ui->editYara->toPlainText();
+        tmpfile.write(yararule.toStdString().data());
+        tmpfile.flush();
+        tmpfile.close();
+
+        grader=new GatoGraderYara(tmpfile.fileName());
         break;
     default:
         qDebug()<<"Unknown solver tab"<<index;

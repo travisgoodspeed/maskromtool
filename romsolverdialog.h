@@ -2,6 +2,7 @@
 #define ROMSOLVERDIALOG_H
 
 #include <QDialog>
+#include <QTemporaryFile>
 
 class MaskRomTool;
 
@@ -26,6 +27,7 @@ private slots:
 private:
     Ui::RomSolverDialog *ui;
     MaskRomTool *mrt=0;
+    QTemporaryFile tmpfile;
 };
 
 #endif // ROMSOLVERDIALOG_H
