@@ -40,16 +40,15 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
     if(gr->outputrows%8!=0) return ba;
 
     //Strictly check the size.  FIXME: Make this more generic.
-    if(gr->outputrows!=48 || gr->outputcols!=64)
-        return ba;
+    //if(gr->outputrows!=48 || gr->outputcols!=64) return ba;
 
     //Top to bottom
     uint32_t adr=0;
     for(unsigned int row=0; row<gr->outputrows; row++){
         int rowi=row&~0x7;
 
-        /* Every 64 bytes or 8 rows, the rows reverse direction.
-         * That's exact in the font ROM, but might be different
+        /* Every 8 rows, the rows reverse direction.
+         * That's 64 bytes in the font ROM, but might be different
          * in program ROMs, which are larger.
          */
         if(row&0x8)
@@ -57,16 +56,17 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
         else
             rowi=row;
 
-        for(int word=(gr->outputcols/8)-1; word>=0; word--){
+        for(int word=colcount-1; word>=0; word--){
             uint8_t w=0;
             Q_ASSERT(word<sizeof(wordorder));
             int wordi=wordorder[word];  //Interleave the bytes.
             for (int bit = 0; bit < 8; bit++) {
-                int coli=bit*8+wordi;
+                int coli=bit*colcount+wordi;
                 GatoBit *gatobit=gr->outputbit(rowi,coli);
 
-                if(!gatobit)   //Sizes don't line up.
+                if(!gatobit){   //Sizes don't line up.
                     return QByteArray();
+                }
                 gatobit->adr=adr;     //Mark the address.
                 gatobit->mask=1<<bit; //Mark the bit.
 
@@ -75,6 +75,9 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
             }
             ba.append(w&0xFF);
             adr++;
+
+
+
         }
     }
 
