@@ -35,7 +35,12 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
 
                We can't set the address and mask yet because we don't know them.
              */
-            mrt->gr.inputbit(row,col)->ptr=bit;
+            GatoBit* gb=mrt->gr.inputbit(row,col);
+            if(!gb){
+                qDebug()<<"Bailing early from RomDecoderGato::gatorom() as alignment is bad.";
+                return mrt->gr;
+            }
+            gb->ptr=bit;
 
             bit=bit->nexttoright;  //Skip down the row.
             col++;
