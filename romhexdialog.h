@@ -37,6 +37,8 @@ public:
 private slots:
     void on_plaintextHex_selectionChanged();
 
+    void on_buttonShow_clicked();
+
 private:
     Ui::RomHexDialog *ui;
     MaskRomTool *mrt=0;

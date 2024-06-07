@@ -1575,10 +1575,8 @@ void MaskRomTool::on_actionSecond_triggered(){
 
 // This hilights all bits in the range selected in the Hex viewer.
 void MaskRomTool::on_actionHighlightHexSelection_triggered(){
-    highlightAdrRange(
-        hexDialog.start,
-        hexDialog.end
-        );
+    //Hidden for now, might cut later.
+    highlightAdrRange(hexDialog.start,hexDialog.end);
 }
 
 // Marks a warning for bits in range.

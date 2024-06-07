@@ -138,3 +138,8 @@ int RomHexDialog::adrToEndPosition(uint32_t adr){
     return adrToPosition(adr-1)+2;
 }
 
+
+void RomHexDialog::on_buttonShow_clicked(){
+    mrt->highlightAdrRange(start,end);
+}
+
