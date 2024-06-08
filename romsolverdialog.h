@@ -30,7 +30,7 @@ private slots:
 private:
     Ui::RomSolverDialog *ui;
     MaskRomTool *mrt=0;
-    QTemporaryFile tmpfile;
+    QTemporaryFile *tmpfile=0;
 };
 
 #endif // ROMSOLVERDIALOG_H

@@ -60,11 +60,14 @@ void RomSolverDialog::on_butSolve_clicked(){
         grader=new GatoGraderASCII();
         break;
     case 3: // Yara
-        tmpfile.open();
-        tmpfile.write(yararule.toStdString().data());
-        tmpfile.flush();
-        tmpfile.close();
-        grader=new GatoGraderYara(tmpfile.fileName());
+        if(tmpfile)
+            delete tmpfile;
+        tmpfile=new QTemporaryFile();
+        tmpfile->open();
+        tmpfile->write(yararule.toStdString().data());
+        tmpfile->flush();
+        tmpfile->close();
+        grader=new GatoGraderYara(tmpfile->fileName());
         break;
     default:
         qDebug()<<"Unknown solver tab"<<index;
