@@ -123,9 +123,15 @@ key when the mouse is above the end position.  Deleting an item or
 Setting its position will apply to the most recently placed line,
 unless you drag a box to select a line.
 
-The most recent object is already selected, so you can remove a
-mistake with `D` or adjust its position a little with `S`.  On macOS,
-`^` means Command instead of Ctrl.
+Select an item by dragging over it with a left mouse click and
+watching for it to turn green.  The most recently placed item is
+automatically selected.
+
+You can delete a mistake with `D` or adjust its position a little with
+`S`, the arrow keys, or a right-click drag.
+
+
+On macOS, `^` means Command instead of Ctrl.
 
 ```
 Tab      -- Show/Hide bits.
@@ -143,18 +149,19 @@ D        -- Delete the one selected object.
 SHIFT D  -- Delete all selected objects.
 S        -- Set the selected object to the mouse position.
 F        -- Jump to the selected item.
+ARROWS   -- Move the selected item.
 
-R        -- Draw a row from the last click position.
+R        -- Draw a row from the last left-click position.
 SHIFT R  -- Repeat the shape of the last row.
 SPACE    -- Repeat the shape of the last row.
-C        -- Draw a column from the last click position.
+C        -- Draw a column from the last left-click position.
 SHIFT C  -- Repeat the shape of the last column.
 
 SHIFT F  -- Force a bit's value. (Again to flip.)
 SHIFT A  -- Force a bit's ambiguity.  (Again to flip.)
 
 M        -- Mark all of the bits.
-SHIFT M  -- Decode to Hex bytes.
+SHIFT M  -- Update hex decoding and disassembly.
 V        -- Run the Design Rule Checks.
 SHIFT V  -- Clear the DRC violations.
 E        -- Jump to next violation.
@@ -313,9 +320,18 @@ From the decoder, you can highlight hex bytes and use View/Highlight
 Hex Selection to visualize the selected bytes.  Here we see the first
 three words of the [MYK82
 ROM](https://github.com/travisgoodspeed/myk82rom), which pack 32 bits
-into each position.
+into each position.  Disassembly is also available when `unidasm` from
+MAME is in the path.
 
 ![Screenshot of selected first three MYK82 words.](screenshots/selection.png)
+
+A scripted solver is also supported, in which simple masks or Yara
+rules describe the expected firmware.  All matches are enumerated, and
+by jumping between them you can quickly decipher images that do not
+use interleving, row reversal, or other complications.
+
+![Screenshot of the Yara solver.](screenshots/solver.png)
+
 
 ## Related Tools
 
