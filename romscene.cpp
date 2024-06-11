@@ -249,9 +249,11 @@ void RomScene::setFocusItem(QGraphicsItem* item){
         //row
         maskRomTool->lastrow=((RomLineItem*)item)->line();
         ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+        maskRomTool->updateCrosshairAngle((RomLineItem*)item);
     }else if(item->type()==QGraphicsItem::UserType+1){
         //column
         maskRomTool->lastcol=((RomLineItem*)item)->line();
         ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+        maskRomTool->updateCrosshairAngle((RomLineItem*)item);
     }
 }

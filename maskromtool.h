@@ -93,6 +93,8 @@ public:
     void markBit(QPointF point);
     //Marks bits off of one line.
     void markLine(RomLineItem* line);
+    //Updates the crosshair's angle.
+    void updateCrosshairAngle(RomLineItem* line);
     //Remove bits and a line.
     void removeLine(RomLineItem* line, bool fromsets=true);
     //Moves a line to a new location.

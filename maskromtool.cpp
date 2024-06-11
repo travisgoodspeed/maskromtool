@@ -1254,6 +1254,12 @@ void MaskRomTool::markLine(RomLineItem* line){
         }
     }
 
+    updateCrosshairAngle(line);
+}
+
+
+//Updates the crosshair's angle.
+void MaskRomTool::updateCrosshairAngle(RomLineItem* line){
     //We also adjust the crosshairs to the last lines made.
     switch(line->linetype){
     case RomLineItem::LINEROW:

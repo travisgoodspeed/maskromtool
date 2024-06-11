@@ -26,7 +26,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
-`master` -- Yara rule solving.  Stability improvements.
+`master` -- Yara rule solving.  Stability improvements.  Crosshairs
+update to the angles of selected lines.
 
 2024-05-19 -- DRC violations are now cleared when bits are forced.
 Histogram export for ploting the color distributions in GNUPlot.
