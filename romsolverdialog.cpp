@@ -84,6 +84,14 @@ void RomSolverDialog::on_butSolve_clicked(){
         }
     }
 
+    //Only show last error to avoid flooding.
+    if(grader && grader->error.length()>0){
+        QMessageBox msgBox;
+        msgBox.setText(grader->error);
+        msgBox.exec();
+    }
+
+
     mrt->gr.configFromDescription(oldstate);
     mrt->decodeDialog.update();
 

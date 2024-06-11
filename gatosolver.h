@@ -2,6 +2,7 @@
 #define GATOSOLVER_H
 
 #include <QByteArray>
+#include <QString>
 class GatoROM;
 class GatoDecoder;
 
@@ -19,6 +20,9 @@ public:
     //Negative grades are a hard rejection, 100 is hard success.
     virtual int grade(QByteArray ba)=0;
     virtual ~GatoGrader();
+
+    //Missing external tool?  Just put the string here when grading.
+    QString error="";
 };
 
 class GatoGraderAll : public GatoGrader

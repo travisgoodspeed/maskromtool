@@ -22,7 +22,6 @@ public:
     int grade(QByteArray ba);
 
     QString result="";
-    QString error="";
 
 private:
     QString rulefile="";

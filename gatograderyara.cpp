@@ -46,11 +46,13 @@ int GatoGraderYara::grade(QByteArray ba){
 
 
     //Something when wrong.
-    if(result.length()==0 && error.length()==0)
-        qDebug()<<"Is yara missing from the path?";
-    else if(error.length()>0)
+    if(result.length()==0 && error.length()==0){
+        error=QString("Is Yara missing from the path?");
+        qDebug()<<error;
+    }else if(error.length()>0){
         qDebug()<<"Error: "<<error;
-    else
+    }else{
         qDebug()<<"Unexpected result from Yara."<<result;
+    }
     return 0;
 }
