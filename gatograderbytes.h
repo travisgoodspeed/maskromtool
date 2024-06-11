@@ -25,6 +25,7 @@ class GatoGraderBytes : public GatoGrader
 {
 public:
     GatoGraderBytes(QString setting);
+    ~GatoGraderBytes();
     int grade(QByteArray ba);
 private:
     QSet<GatoGraderBytesRule*> rules;

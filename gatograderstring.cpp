@@ -27,6 +27,10 @@ GatoGraderString::GatoGraderString(QString setting){
     target=ba;
 }
 
+GatoGraderString::~GatoGraderString(){
+
+}
+
 /* 100 if we contain the string.
  *   0 if we don't.
  *

@@ -20,6 +20,10 @@ int GatoGraderAll::grade(QByteArray ba){
     return 100;
 }
 
+GatoGrader::~GatoGrader(){
+
+}
+
 
 GatoSolver::GatoSolver(GatoROM *rom, GatoGrader *grader){
     assert(grader);

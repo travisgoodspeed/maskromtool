@@ -9,6 +9,10 @@ GatoGraderYara::GatoGraderYara(QString rulefile){
     this->rulefile=rulefile;
 }
 
+GatoGraderYara::~GatoGraderYara(){
+
+}
+
 
 int GatoGraderYara::grade(QByteArray ba){
     //No sense grading an empty result.

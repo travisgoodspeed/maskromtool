@@ -8,6 +8,10 @@ GatoGraderASCII::GatoGraderASCII(){
 
 }
 
+GatoGraderASCII::~GatoGraderASCII(){
+
+}
+
 int GatoGraderASCII::grade(QByteArray ba){
     QString longest="";
     QString last="";

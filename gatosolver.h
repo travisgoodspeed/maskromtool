@@ -18,6 +18,7 @@ public:
     //Returns a grade of a byte array.
     //Negative grades are a hard rejection, 100 is hard success.
     virtual int grade(QByteArray ba)=0;
+    virtual ~GatoGrader();
 };
 
 class GatoGraderAll : public GatoGrader

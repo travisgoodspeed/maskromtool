@@ -13,6 +13,10 @@ GatoGraderBytes::GatoGraderBytes(QString setting){
     }
 }
 
+GatoGraderBytes::~GatoGraderBytes(){
+
+}
+
 int GatoGraderBytes::grade(QByteArray ba){
     int grade=0;
     int attempts=0, passes=0;

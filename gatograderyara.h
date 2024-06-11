@@ -18,6 +18,7 @@ class GatoGraderYara : public GatoGrader
 {
 public:
     GatoGraderYara(QString rulefile);
+    ~GatoGraderYara();
     int grade(QByteArray ba);
 
     QString result="";

@@ -9,6 +9,7 @@ class GatoGraderASCII : public GatoGrader
 {
 public:
     GatoGraderASCII();
+    ~GatoGraderASCII();
     int grade(QByteArray ba);
 };
 

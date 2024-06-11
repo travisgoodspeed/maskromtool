@@ -15,6 +15,7 @@ class GatoGraderString : public GatoGrader
 {
 public:
     GatoGraderString(QString setting);
+    ~GatoGraderString();
     int grade(QByteArray ba);
 private:
     QByteArray target; //String that we're hunting for.
