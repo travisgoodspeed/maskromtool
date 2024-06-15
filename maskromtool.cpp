@@ -991,8 +991,10 @@ void MaskRomTool::fileOpen(QString filename){
     progress.setValue(5);
 
     if(!filename.endsWith(".json")){
-        imagefilename=filename;
+        //When replacing the image we first clear the objects.
+        clear();
 
+        imagefilename=filename;
 
         //This is necessary in QT6, but isn't defined in QT5.
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
