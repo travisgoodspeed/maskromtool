@@ -544,22 +544,14 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         break;
 
     //Modify the focus object.
-    case Qt::Key_D: //Delete an object.  With Shift, it deletes many.
-        if(shift){
+    case Qt::Key_D: //Delete an object or many objects.
             markUndoPoint();
-            foreach(QGraphicsItem* item, scene->selection){
-                removeItem(item);
-            }
+            if(scene->focusItem())
+                removeItem(scene->focusItem());
+            else foreach(QGraphicsItem* item, scene->selection)
+                    removeItem(item);
             scene->setFocusItem(0);
-            statusBar()->showMessage(tr("Deleted all selected items."));
-        }else if(scene->focusItem()){
-            markUndoPoint();
-            removeItem(scene->focusItem());
-            scene->setFocusItem(0);
-            statusBar()->showMessage(tr("Deleted item."));
-        }else{
-            statusBar()->showMessage(tr("There's no item to delete.  Maybe SHIFT+D?"));
-        }
+            statusBar()->showMessage(tr("Deleted item(s)."));
 
         break;
 

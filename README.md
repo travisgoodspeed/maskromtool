@@ -146,8 +146,7 @@ Z        -- Zoom out.
 H        -- Jump to home position.
 SHIFT H  -- Set the home position.
 
-D        -- Delete the one selected object.
-SHIFT D  -- Delete all selected objects.
+D        -- Delete the selected objects.
 S        -- Set the selected object to the mouse position.
 F        -- Jump to the selected item.
 ARROWS   -- Move the selected item.
