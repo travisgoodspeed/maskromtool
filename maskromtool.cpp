@@ -365,6 +365,15 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
     }
     lastitem=item;
 
+    /* It's critically important that we remove
+     * the item from any active selections.  Without that,
+     * a user who selects both lines and bits on those lines
+     * might trigger a double-free in erasing the selection.
+     */
+    if(scene->selection.contains(item))
+        scene->selection.removeAll(item);
+
+
     switch(item->type()){
     case QGraphicsItem::UserType: //row
     case QGraphicsItem::UserType+1: //column
@@ -476,20 +485,22 @@ bool MaskRomTool::insertLine(RomLineItem* rlitem){
             item->type()==QGraphicsItem::UserType+1   //Column
             ){
             RomLineItem* oldline=(RomLineItem*) item;
-            qDebug()<<"Potential collision.";
             if(oldline->line()==rlitem->line()){
                 /* By this point, we are trying to place a line exactly over itself.
                  * So we'll refuse it and return.
                  */
                 qDebug()<<"Removing old line to avoid duplication.";
-                removeLine(oldline);
+                removeItem(oldline);
                 //return false;
             }
         }
     }
 
     scene->setFocusItem(rlitem);
-    rows.insert(rlitem);
+    if(rlitem->type()==QGraphicsItem::UserType) //row
+        rows.insert(rlitem);
+    else //Column
+        cols.insert(rlitem);
     markLine(rlitem);
 
     return true;
@@ -590,11 +601,12 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
          * item and one or more selections.
          */
         if(scene->focusItem()){
-            scene->selection.removeOne(scene->focusItem());
+            scene->selection.removeAll(scene->focusItem());
             removeItem(scene->focusItem());
         }else foreach(QGraphicsItem* item, scene->selection){
-            scene->selection.removeOne(item);
-            removeItem(item);
+                if(scene->selection.contains(item))
+                    removeItem(item);
+                scene->selection.removeAll(item);
         }
 
         scene->setFocusItem(0);
