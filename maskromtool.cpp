@@ -458,6 +458,18 @@ void MaskRomTool::centerOn(QGraphicsItem* item){
     view->centerOn(item);
 }
 
+//Inserts a new line, either row or column.
+void MaskRomTool::insertLine(RomLineItem* rlitem){
+    /* We add the line to the scene here, but the parent
+     * function is responsible for marking the undo point.
+     */
+    scene->addItem(rlitem);
+    rlitem->setPos(scene->scenepos);
+    scene->setFocusItem(rlitem);
+    rows.insert(rlitem);
+    markLine(rlitem);
+}
+
 
 //We might be a GUI, but keyboards are where it's add!
 void MaskRomTool::keyPressEvent(QKeyEvent *event){
@@ -572,28 +584,29 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //These insert an object and set its focus.
     case Qt::Key_Space:
+        markUndoPoint();
+        rlitem=new RomLineItem(lastlinetype);
+        rlitem->setLine(lastlinetype==RomLineItem::LINEROW
+                            ? lastrow : lastcol);
+        insertLine(rlitem);
+        break;
     case Qt::Key_R: //Row line.
         markUndoPoint();
-        rlitem=new RomLineItem(RomLineItem::LINEROW);
+        rlitem=new RomLineItem(lastlinetype=RomLineItem::LINEROW);
         if(event->key()==Qt::Key_Space
-                || shift)
+            || shift)
             rlitem->setLine(lastrow);
         else
             rlitem->setLine(0, 0,
-                        scene->presspos.x()-scene->scenepos.x(),
-                        scene->presspos.y()-scene->scenepos.y()
-                    );
-        lastrow=rlitem->globalline();
-        scene->addItem(rlitem);
-        rlitem->setPos(scene->scenepos);
-        scene->setFocusItem(rlitem);
-        rows.insert(rlitem);
-        markLine(rlitem);
+                            scene->presspos.x()-scene->scenepos.x(),
+                            scene->presspos.y()-scene->scenepos.y()
+                            );
+        insertLine(rlitem);
         break;
 
     case Qt::Key_C: //Column line.
         markUndoPoint();
-        rlitem=new RomLineItem(RomLineItem::LINECOL);
+        rlitem=new RomLineItem(lastlinetype=RomLineItem::LINECOL);
         if(shift)
             rlitem->setLine(lastcol);
         else

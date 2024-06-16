@@ -99,6 +99,8 @@ public:
     void removeLine(RomLineItem* line, bool fromsets=true);
     //Moves a line to a new location.
     void moveLine(RomLineItem* line, QPointF newpoint);
+    //Inserts a new line, either row or column.
+    void insertLine(RomLineItem* line);
 
     //Get a bit at a point.
     RomBitItem* getBit(QPointF point);
@@ -205,6 +207,8 @@ public:
     RomView* view;
     //Last row and column.
     QLineF lastrow, lastcol;
+    //Was the last line dropped a row or a column?
+    int lastlinetype=0;
     //We regenerate from this when needed.
     GatoROM gr;
 

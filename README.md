@@ -152,10 +152,10 @@ F        -- Jump to the selected item.
 ARROWS   -- Move the selected item.
 
 R        -- Draw a row from the last left-click position.
-SHIFT R  -- Repeat the shape of the last row.
-SPACE    -- Repeat the shape of the last row.
+SHIFT R  -- Repeat the last row.
 C        -- Draw a column from the last left-click position.
-SHIFT C  -- Repeat the shape of the last column.
+SHIFT C  -- Repeat the last column.
+SPACE    -- Repeat the last row or column.
 
 SHIFT F  -- Force a bit's value. (Again to flip.)
 SHIFT A  -- Force a bit's ambiguity.  (Again to flip.)
