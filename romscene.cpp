@@ -192,8 +192,9 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
         selection=items(presspos.rx(), presspos.ry(),
                         releasepos.rx()-presspos.rx(), releasepos.ry()-presspos.ry(),
                         //Qt::ItemSelectionMode::ContainsItemBoundingRect,  //Useful for bits.
-                        //Qt::ItemSelectionMode::IntersectsItemBoundingRect,  //Useful for a near miss?
-                        Qt::ItemSelectionMode::IntersectsItemShape, //Maybe best for lines?
+                        //Qt::ItemSelectionMode::ContainsItemShape, // Only when fully covered.
+                        Qt::ItemSelectionMode::IntersectsItemBoundingRect,  //Useful for a near miss?
+                        //Qt::ItemSelectionMode::IntersectsItemShape, //Maybe best for lines?
                         Qt::DescendingOrder,
                         QTransform()
                         );
@@ -208,7 +209,7 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
         //More than one isn't supported right now.
         if(selection.count()>1){
-            qDebug()<<"Failing to set more than one focus item.";
+            //qDebug()<<"Failing to set more than one focus item.";
             setFocusItem(0);
         }
     }
