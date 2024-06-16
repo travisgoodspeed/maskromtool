@@ -357,6 +357,14 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
 
 //Always call this to remove an item, to keep things clean.
 void MaskRomTool::removeItem(QGraphicsItem* item){
+    static QGraphicsItem* lastitem=0;
+
+    if(lastitem==item){
+        qDebug()<<"Returning rather than twice free"<<((uint64_t*) item);
+        return;
+    }
+    lastitem=item;
+
     switch(item->type()){
     case QGraphicsItem::UserType: //row
     case QGraphicsItem::UserType+1: //column
@@ -451,15 +459,40 @@ void MaskRomTool::centerOn(QGraphicsItem* item){
 }
 
 //Inserts a new line, either row or column.
-void MaskRomTool::insertLine(RomLineItem* rlitem){
+bool MaskRomTool::insertLine(RomLineItem* rlitem){
     /* We add the line to the scene here, but the parent
      * function is responsible for marking the undo point.
      */
     scene->addItem(rlitem);
     rlitem->setPos(scene->scenepos);
+
+
+    /* Duplicate lines will appear when the space bar is hit twice.
+     * We have to handle this situation, or users will get confused
+     * with broken projects.
+     */
+    foreach(QGraphicsItem* item, scene->collidingItems(rlitem)){
+        if(item->type()==QGraphicsItem::UserType ||   //Row
+            item->type()==QGraphicsItem::UserType+1   //Column
+            ){
+            RomLineItem* oldline=(RomLineItem*) item;
+            qDebug()<<"Potential collision.";
+            if(oldline->line()==rlitem->line()){
+                /* By this point, we are trying to place a line exactly over itself.
+                 * So we'll refuse it and return.
+                 */
+                qDebug()<<"Removing old line to avoid duplication.";
+                removeLine(oldline);
+                //return false;
+            }
+        }
+    }
+
     scene->setFocusItem(rlitem);
     rows.insert(rlitem);
     markLine(rlitem);
+
+    return true;
 }
 
 
@@ -549,13 +582,23 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //Modify the focus object.
     case Qt::Key_D: //Delete an object or many objects.
-            markUndoPoint();
-            if(scene->focusItem())
-                removeItem(scene->focusItem());
-            else foreach(QGraphicsItem* item, scene->selection)
-                    removeItem(item);
-            scene->setFocusItem(0);
-            statusBar()->showMessage(tr("Deleted item(s)."));
+
+        markUndoPoint();
+
+        /* Inserting an item focuses it but does not select it,
+         * so we need logic for dealing with both a focused
+         * item and one or more selections.
+         */
+        if(scene->focusItem()){
+            scene->selection.removeOne(scene->focusItem());
+            removeItem(scene->focusItem());
+        }else foreach(QGraphicsItem* item, scene->selection){
+            scene->selection.removeOne(item);
+            removeItem(item);
+        }
+
+        scene->setFocusItem(0);
+        statusBar()->showMessage(tr("Deleted item(s)."));
 
         break;
 
@@ -585,8 +628,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     case Qt::Key_R: //Row line.
         markUndoPoint();
         rlitem=new RomLineItem(lastlinetype=RomLineItem::LINEROW);
-        if(event->key()==Qt::Key_Space
-            || shift)
+        if(shift)
             rlitem->setLine(lastrow);
         else
             rlitem->setLine(0, 0,
@@ -595,7 +637,6 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
                             );
         insertLine(rlitem);
         break;
-
     case Qt::Key_C: //Column line.
         markUndoPoint();
         rlitem=new RomLineItem(lastlinetype=RomLineItem::LINECOL);
@@ -603,15 +644,10 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
             rlitem->setLine(lastcol);
         else
             rlitem->setLine(0, 0,
-                        scene->presspos.x()-scene->scenepos.x(),
-                        scene->presspos.y()-scene->scenepos.y()
-                    );
-        lastcol=rlitem->globalline();
-        scene->addItem(rlitem);
-        rlitem->setPos(scene->scenepos);
-        scene->setFocusItem(rlitem);
-        cols.insert(rlitem);
-        markLine(rlitem);
+                            scene->presspos.x()-scene->scenepos.x(),
+                            scene->presspos.y()-scene->scenepos.y()
+                            );
+        insertLine(rlitem);
         break;
 
 

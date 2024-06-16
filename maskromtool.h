@@ -100,7 +100,7 @@ public:
     //Moves a line to a new location.
     void moveLine(RomLineItem* line, QPointF newpoint);
     //Inserts a new line, either row or column.
-    void insertLine(RomLineItem* line);
+    bool insertLine(RomLineItem* line);
 
     //Get a bit at a point.
     RomBitItem* getBit(QPointF point);
