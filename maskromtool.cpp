@@ -338,10 +338,8 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
 
     //qDebug()<<"Removing all bits from a line.";
     foreach(QGraphicsItem* item, scene->collidingItems(line)){
-        if(item->type()==QGraphicsItem::UserType+2){  //Is it a bit?
-            //qDebug()<<"Removing a bit.";
+        if(item->type()==QGraphicsItem::UserType+2)  //Is it a bit?
             removeItem(item);
-        }
     }
 
     //After removing the bits, we've gotta remove the line itself.
@@ -406,11 +404,10 @@ void MaskRomTool::nextMode(){
 
 void MaskRomTool::on_actionPhotograph_triggered(){
     static QBrush whitebrush(Qt::GlobalColor::white, Qt::SolidPattern);
-    if(ui->actionPhotograph->isChecked()){
+    if(ui->actionPhotograph->isChecked())
         view->setBackgroundBrush(background);
-    }else{
+    else
         view->setBackgroundBrush(whitebrush);
-    }
 }
 void MaskRomTool::on_actionRowsColumns_triggered(){
     setLinesVisible(ui->actionRowsColumns->isChecked());
@@ -431,26 +428,21 @@ void MaskRomTool::on_actionCrosshair_triggered(){
 
 void MaskRomTool::setLinesVisible(bool b){
     linesVisible=b;
-    foreach (QGraphicsLineItem* item, rows){
+    foreach (QGraphicsLineItem* item, rows)
         item->setVisible(b);
-    }
-    foreach (QGraphicsLineItem* item, cols){
+    foreach (QGraphicsLineItem* item, cols)
         item->setVisible(b);
-    }
 }
 void MaskRomTool::setBitsVisible(bool b){
     bitsVisible=b; //Default for new bits.
-    foreach (QGraphicsItem* item, bits){
+    foreach (QGraphicsItem* item, bits)
         item->setVisible(b);
-    }
-    foreach (QGraphicsItem* item, bitfixes){
+    foreach (QGraphicsItem* item, bitfixes)
         item->setVisible(b);
-    }
 }
 void MaskRomTool::setViolationsVisible(bool b){
-    foreach (QGraphicsItem* item, violations){
+    foreach (QGraphicsItem* item, violations)
         item->setVisible(b);
-    }
 }
 
 //Highlights one item close to the center.
