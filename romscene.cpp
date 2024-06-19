@@ -32,8 +32,7 @@ RomScene::RomScene(QObject *parent)
 }
 
 void RomScene::keyPressEvent(QKeyEvent *event){
-    RomLineItem *rlitem;
-    QPointF dpos;
+    QPointF dpos=QPointF(0,0);
 
     switch(event->key()){
     // selected item translation via arrow keys
@@ -41,13 +40,10 @@ void RomScene::keyPressEvent(QKeyEvent *event){
     case Qt::Key_Down:
     case Qt::Key_Left:
     case Qt::Key_Right:
-        if(focusItem()){
-            maskRomTool->markUndoPoint();
-            switch(focusItem()->type()){
-            case QGraphicsItem::UserType: //row
-            case QGraphicsItem::UserType+1: //column
-                rlitem = (RomLineItem*)focusItem();
-                dpos = QPointF(0,0);
+        maskRomTool->markUndoPoint();
+        foreach(QGraphicsItem* item, selection){
+            if(item && (item->type()==QGraphicsItem::UserType || item->type()==QGraphicsItem::UserType+1)){
+                RomLineItem *rlitem=(RomLineItem*) item;
                 switch(event->key()){
                 case Qt::Key_Up: dpos.setY(-1);break;
                 case Qt::Key_Down: dpos.setY(1);break;
@@ -55,11 +51,7 @@ void RomScene::keyPressEvent(QKeyEvent *event){
                 case Qt::Key_Right: dpos.setX(1);break;
                 }
                 maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
-                break;
             }
-            break;
-        }else{// no selected item, default arrows handler will move the whole scene
-            QGraphicsScene::keyPressEvent(event);
         }
         break;
     default:
