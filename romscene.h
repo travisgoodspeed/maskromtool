@@ -34,6 +34,7 @@ public:
     //Return just one focused item.
     QGraphicsItem* focusItem();
     void setFocusItem(QGraphicsItem* item);
+    void highlightSelection();
     MaskRomTool* maskRomTool=0;
 
     //Reasonable defaults, adjustable when background image is set.

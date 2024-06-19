@@ -189,29 +189,35 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
         //Grab the intersecting items, which might be of many different types.
         releasepos=mouseEvent->scenePos();
-        selection=items(presspos.rx(), presspos.ry(),
-                        releasepos.rx()-presspos.rx(), releasepos.ry()-presspos.ry(),
-                        //Qt::ItemSelectionMode::ContainsItemBoundingRect,  //Useful for bits.
-                        //Qt::ItemSelectionMode::ContainsItemShape, // Only when fully covered.
-                        Qt::ItemSelectionMode::IntersectsItemBoundingRect,  //Useful for a near miss?
-                        //Qt::ItemSelectionMode::IntersectsItemShape, //Maybe best for lines?
-                        Qt::DescendingOrder,
-                        QTransform()
+
+        qreal x=presspos.rx(),
+              y=presspos.ry(),
+              w=releasepos.rx()-presspos.rx(),
+              h=releasepos.ry()-presspos.ry();
+
+        //qDebug()<<"Selection: "<<x<<y<<w<<h;
+
+        selection=items(x, y, w, h,
+
+                          //Qt::ItemSelectionMode::ContainsItemBoundingRect,  //Useful for bits.
+                          //Qt::ItemSelectionMode::ContainsItemShape, // Only when fully covered.
+                          //Qt::ItemSelectionMode::IntersectsItemBoundingRect,  //Useful for a near miss, sometimes too wide.
+                          Qt::ItemSelectionMode::IntersectsItemShape, // Best for lines.
+
+                          Qt::DescendingOrder
                         );
 
         //Restore visibility of the crosshairs.
         setCrosshairVisible(crosshairVisible);
 
-        foreach(QGraphicsItem* item, selection){
-            if(selection.count()==1)
-                setFocusItem(item);
-        }
+        //The item is only focused if there is exactly one item.
+        if(selection.count()==1)
+            focusitem=selection[0];
+        else
+            focusitem=0;
 
-        //More than one isn't supported right now.
-        if(selection.count()>1){
-            //qDebug()<<"Failing to set more than one focus item.";
-            setFocusItem(0);
-        }
+        //Update the highlighting so the user knows what's going on.
+        highlightSelection();
     }
 }
 
@@ -226,16 +232,10 @@ void RomScene::setCrosshairVisible(bool v){
 
 QGraphicsItem* RomScene::focusItem(){
     //We have a single selection after placing a new item.
-    if(focusitem)
-        return focusitem;
-
-    //Otherwise return zero.
-    return 0;
+    return focusitem;
 }
 
-void RomScene::setFocusItem(QGraphicsItem* item){
-    focusitem=item;
-    
+void RomScene::highlightSelection(){
     //reset line focus first, would be nice if we knew the last one that was in focus
     for(QSet<RomLineItem*>::iterator i = maskRomTool->rows.begin(), end = maskRomTool->rows.end(); i != end; ++i){
         ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
@@ -243,18 +243,31 @@ void RomScene::setFocusItem(QGraphicsItem* item){
     for(QSet<RomLineItem*>::iterator i = maskRomTool->cols.begin(), end = maskRomTool->cols.end(); i != end; ++i){
         ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
     }
-    if(!item){
-        //No item to mark, so don't worry about investigating it.
-        return;
-    }else if(item->type()==QGraphicsItem::UserType){
-        //row
-        maskRomTool->lastrow=((RomLineItem*)item)->line();
-        ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
-        maskRomTool->updateCrosshairAngle((RomLineItem*)item);
-    }else if(item->type()==QGraphicsItem::UserType+1){
-        //column
-        maskRomTool->lastcol=((RomLineItem*)item)->line();
-        ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
-        maskRomTool->updateCrosshairAngle((RomLineItem*)item);
+
+    //Highlight all selected lines.
+    //qDebug()<<"Selected "<<selection.count()<<" items";
+    foreach(QGraphicsItem* item, selection){
+        if(!item){
+            //qDebug()<<"Null item.";
+        }else if(item->type()==QGraphicsItem::UserType){
+            //row
+            maskRomTool->lastrow=((RomLineItem*)item)->line();
+            ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+            maskRomTool->updateCrosshairAngle((RomLineItem*)item);
+        }else if(item->type()==QGraphicsItem::UserType+1){
+            //column
+            maskRomTool->lastcol=((RomLineItem*)item)->line();
+            ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+            maskRomTool->updateCrosshairAngle((RomLineItem*)item);
+        }
     }
+}
+
+void RomScene::setFocusItem(QGraphicsItem* item){
+    //Update the focus item and the selection list.
+    focusitem=item;
+    selection=QList<QGraphicsItem*>();
+    selection<<item;
+    
+    highlightSelection();
 }

@@ -363,6 +363,10 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
         qDebug()<<"Returning rather than twice free"<<((uint64_t*) item);
         return;
     }
+    if(!item){
+        qDebug()<<"Cowardly refusing to delete null item.";
+        return;
+    }
     lastitem=item;
 
     /* It's critically important that we remove
@@ -496,7 +500,10 @@ bool MaskRomTool::insertLine(RomLineItem* rlitem){
         }
     }
 
+    //Focus on the new item, and also select it as the only item of a list.
     scene->setFocusItem(rlitem);
+
+
     if(rlitem->type()==QGraphicsItem::UserType) //row
         rows.insert(rlitem);
     else //Column
@@ -553,7 +560,6 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         nextMode();
         break;
     case Qt::Key_Backslash:
-
         if(!ctrl && !shift && !alt){ // No modifiers for lines.
             setLinesVisible(!linesVisible);
         }else if(ctrl && !shift && !alt){           // Ctrl for background.
@@ -593,17 +599,16 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //Modify the focus object.
     case Qt::Key_D: //Delete an object or many objects.
-
         markUndoPoint();
 
-        /* Inserting an item focuses it but does not select it,
-         * so we need logic for dealing with both a focused
-         * item and one or more selections.
-         */
+        /* Previously we preferred the focus item to the selection.
+         * Now we try to only work on the selection.
         if(scene->focusItem()){
             scene->selection.removeAll(scene->focusItem());
             removeItem(scene->focusItem());
-        }else foreach(QGraphicsItem* item, scene->selection){
+        }else
+        */
+        foreach(QGraphicsItem* item, scene->selection){
                 if(scene->selection.contains(item))
                     removeItem(item);
                 scene->selection.removeAll(item);
