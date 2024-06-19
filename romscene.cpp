@@ -145,16 +145,16 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
     //here instead of on release so we can have preview
     if(mouseEvent->buttons()==Qt::RightButton){
         QPointF dpos = mouseEvent->scenePos() - presspos;
-        RomLineItem *rlitem = (RomLineItem *)focusItem();
-        if(rlitem){
-            switch(rlitem->type()){
-                case QGraphicsItem::UserType: //row
-                case QGraphicsItem::UserType+1: //column
-                    maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
-                    presspos = scenepos; // update because we already moved it
-                    break;
+
+        foreach(QGraphicsItem* item, selection){
+            if(item && (item->type()==QGraphicsItem::UserType || item->type()==QGraphicsItem::UserType+1)){
+                RomLineItem *rlitem=(RomLineItem*) item;
+                maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
             }
         }
+
+        // update because we already moved it
+        presspos = scenepos;
     }
 }
 
