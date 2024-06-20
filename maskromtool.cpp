@@ -354,6 +354,34 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
         }
 }
 
+//Duplicates an item, returning a pointer to the clone.
+QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item){
+    RomLineItem* line=0;
+
+    switch(item->type()){
+    case QGraphicsItem::UserType:   //Row
+        line=new RomLineItem(RomLineItem::LINEROW);
+    case QGraphicsItem::UserType+1: //Column
+        if(!line)
+            line=new RomLineItem(RomLineItem::LINECOL);
+        line->setPos(((RomLineItem*) item)->pos());
+        line->setLine(((RomLineItem*) item)->line());
+        if(line->type()==QGraphicsItem::UserType) //row
+            rows.insert(line);
+        else
+            cols.insert(line);
+        scene->addItem(line);
+        markLine(line);
+        return line;
+
+        break;
+    }
+
+
+    //Shit happens.  Return null if we can't copy the item.
+    return 0;
+}
+
 
 //Always call this to remove an item, to keep things clean.
 void MaskRomTool::removeItem(QGraphicsItem* item){
@@ -386,6 +414,7 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
     case QGraphicsItem::UserType+2: //bit
         bits.remove((RomBitItem*) item);
         alignmentdirty=true;
+        bitcount--;
         break;
     case QGraphicsItem::UserType+3: //bit fix
         bitfixes.remove((RomBitFix*) item);
@@ -601,21 +630,27 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     case Qt::Key_D: //Delete an object or many objects.
         markUndoPoint();
 
-        /* Previously we preferred the focus item to the selection.
-         * Now we try to only work on the selection.
-        if(scene->focusItem()){
-            scene->selection.removeAll(scene->focusItem());
-            removeItem(scene->focusItem());
-        }else
-        */
-        foreach(QGraphicsItem* item, scene->selection){
-                if(scene->selection.contains(item))
-                    removeItem(item);
+        if(shift){  //Duplicate
+            /* This works by duplicating each selected line.  The original
+             * plan was to then select the duplicates, but it makes just as
+             * much sense to hold a selection of the original lines.
+             */
+            foreach(QGraphicsItem* item, scene->selection){
+                if(item &&
+                    (item->type()==QGraphicsItem::UserType
+                             || item->type()==QGraphicsItem::UserType+1))
+                    duplicateItem(item);
+            }
+            statusBar()->showMessage(tr("Duplicated items."));
+        }else{      //Delete
+            foreach(QGraphicsItem* item, scene->selection){
+                removeItem(item);
                 scene->selection.removeAll(item);
-        }
+            }
 
-        scene->setFocusItem(0);
-        statusBar()->showMessage(tr("Deleted item(s)."));
+            scene->setFocusItem(0);
+            statusBar()->showMessage(tr("Deleted items."));
+        }
 
         break;
 

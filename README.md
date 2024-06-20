@@ -28,7 +28,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 `master` -- Yara rule solving.  Stability improvements.  Crosshairs
 update to the angles of selected lines.  Space now repeats the last
-line, whether row or column.
+line, whether row or column.  Multiple items can be selected, and
+SHIFT+D duplicates them.
 
 2024-05-19 -- DRC violations are now cleared when bits are forced.
 Histogram export for ploting the color distributions in GNUPlot.
@@ -148,6 +149,7 @@ H        -- Jump to home position.
 SHIFT H  -- Set the home position.
 
 D        -- Delete the selected objects.
+SHIFT D  -- Duplicate the selected lines.
 S        -- Set the selected object to the mouse position.
 F        -- Jump to the selected item.
 ARROWS   -- Move the selected item.

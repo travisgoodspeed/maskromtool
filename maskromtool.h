@@ -69,7 +69,9 @@ public:
     QSet<RomRuleViolation*> violations;  //DRC Errors and warnings.
     long bitcount=0;             //Total count of bits from the latest marking.
     long rowcount=0, colcount=0;
-    void removeItem(QGraphicsItem* item);    //Removed an item of any type from the view and its QSet.
+    void removeItem(QGraphicsItem* item);    //Removes an item of any type from the view and its QSet.
+    QGraphicsItem* duplicateItem(QGraphicsItem* item);    //Duplicates an item and returns a pointer to the new one.
+
 
 
     /* This giant function handles our keypresses, including ones that maybe
