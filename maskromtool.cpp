@@ -387,10 +387,13 @@ QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item){
 void MaskRomTool::removeItem(QGraphicsItem* item){
     static QGraphicsItem* lastitem=0;
 
+    /* Uncomment this if you have tons of crashes, but know that it will cause some memory leaks.
     if(lastitem==item){
         qDebug()<<"Returning rather than twice free"<<((uint64_t*) item);
         return;
     }
+    */
+
     if(!item){
         qDebug()<<"Cowardly refusing to delete null item.";
         return;
@@ -412,6 +415,7 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
         removeLine((RomLineItem*) item);
         break;
     case QGraphicsItem::UserType+2: //bit
+        //qDebug()<<"Removing bit "<<item;
         bits.remove((RomBitItem*) item);
         alignmentdirty=true;
         bitcount--;
@@ -1372,6 +1376,9 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
 
     //Restore visibility.
     setBitsVisible(bitswerevisible);
+
+    //We sometimes lose bits when lines cross, so mark it dirty.
+    alignmentdirty=true;
 }
 
 //Mark up all of the bits where rows and columns collide.
@@ -1388,8 +1395,11 @@ void MaskRomTool::markBits(){
     alignmentdirty=true;
 
     //First we remove all the old bits.  This is very slow.
-    foreach (QGraphicsItem* item, bits)
-        removeItem(item);
+    foreach (QGraphicsItem* item, bits){
+        //removeItem(item);
+        bits.remove((RomBitItem*) item);
+        delete item;
+    }
 
     bitcount=0;
     setBitsVisible(false);
