@@ -187,8 +187,9 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
               w=releasepos.rx()-presspos.rx(),
               h=releasepos.ry()-presspos.ry();
 
-        //Negative widths confuse Qt, so we make it positive.
+        //Negative sizes confuse Qt, so we make it positive.
         if(w<0) x-=(w=qFabs(w));
+        if(h<0) y-=(h=qFabs(h));
 
         //qDebug()<<"Selection: "<<x<<y<<w<<h;
 
