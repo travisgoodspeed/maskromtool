@@ -219,7 +219,8 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
          * arrangement.  As a workaround, we remark the bits after releasing the
          * button from a moving drag.
          */
-        maskRomTool->markBits();
+        if(maskRomTool->bitsVisible)
+            maskRomTool->markBits();
     }
 }
 
