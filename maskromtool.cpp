@@ -434,16 +434,13 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
         qDebug()<<"Removing unknown type"<<item->type()<<"in object"<<item;
     }
 
-    //Remove the item if it's a part of the scene.
-    if(item->scene()==scene){
-        /* Documentation of QGraphicsItem says that it's
-         * faster to remove it first and then destroy it,
-         * but my benchmarking says the opposite.
-         * --Travis
-         */
+    /* Documentation of QGraphicsItem says that it's
+     * faster to remove it first and then destroy it,
+     * but my benchmarking says the opposite.
+     * --Travis
+     */
+    //if(item->scene()==scene) scene->removeItem(item);
 
-        //scene->removeItem(item);
-    }
     //Leaking memory would be bad.
     delete item;
 }
@@ -454,6 +451,9 @@ void MaskRomTool::nextMode(){
     setViolationsVisible(bitsVisible);
     ui->actionBits->setChecked(bitsVisible);
     ui->actionViolations->setChecked(bitsVisible);
+
+    //Mark the bits when bringing them back.
+    if(bitsVisible) markBits();
 }
 
 void MaskRomTool::on_actionPhotograph_triggered(){
@@ -1367,15 +1367,25 @@ void MaskRomTool::updateCrosshairAngle(RomLineItem* line){
 
 //Moves a line to a new position.
 void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
+    /* This used to always update the bits, but that's wasteful when bits are
+     * invisible.  The new behavior is to ignore the bit positions when they
+     * are not shown, so that large sections can be dragged if th bits are turned off.
+     */
+
     bool bitswerevisible=bitsVisible;
-    setBitsVisible(true);
 
-    removeLine(line,false);  //Remove the line's bits, but not the line itself.
-    line->setPos(newpoint);
-    markLine(line); //Remark the line.
+    if(bitswerevisible){
+        setBitsVisible(true);
 
-    //Restore visibility.
-    setBitsVisible(bitswerevisible);
+        removeLine(line,false);  //Remove the line's bits, but not the line itself.
+        line->setPos(newpoint);
+        markLine(line); //Remark the line.
+
+        //Restore visibility.
+        setBitsVisible(bitswerevisible);
+    }else{
+        line->setPos(newpoint);
+    }
 
     //We sometimes lose bits when lines cross, so mark it dirty.
     alignmentdirty=true;
@@ -1386,7 +1396,6 @@ void MaskRomTool::markBits(){
     static long lastbitcount=50000;
     bool bitswerevisible=bitsVisible;
     bool lineswerevisible=linesVisible;
-
 
     if(!lineswerevisible)
         setLinesVisible(true);

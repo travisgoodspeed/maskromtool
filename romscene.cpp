@@ -187,6 +187,9 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
               w=releasepos.rx()-presspos.rx(),
               h=releasepos.ry()-presspos.ry();
 
+        //Negative widths confuse Qt, so we make it positive.
+        if(w<0) x-=(w=qFabs(w));
+
         //qDebug()<<"Selection: "<<x<<y<<w<<h;
 
         selection=items(x, y, w, h,
@@ -210,6 +213,12 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
         //Update the highlighting so the user knows what's going on.
         highlightSelection();
+    }else if(mouseEvent->button()==Qt::RightButton){
+        /* The right mouse is used for dragging, but dragging often breaks the bit
+         * arrangement.  As a workaround, we remark the bits after releasing the
+         * button from a moving drag.
+         */
+        maskRomTool->markBits();
     }
 }
 
