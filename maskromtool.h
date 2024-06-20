@@ -92,7 +92,7 @@ public:
     //Re-marks bits at all of the old positions, but new samples.
     void remarkBits();
     //Marks one bit.
-    void markBit(QPointF point);
+    void markBit(RomLineItem* row, RomLineItem* col);
     //Marks bits off of one line.
     void markLine(RomLineItem* line);
     //Updates the crosshair's angle.

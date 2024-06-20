@@ -5,6 +5,7 @@
 #include <QJsonObject>
 
 class RomBitFix;
+class RomLineItem;
 class MaskRomTool;
 
 /* This is a graphical item that represents one bit of the ROM.
@@ -23,7 +24,8 @@ class RomBitItem : public QGraphicsRectItem
 {
 public:
     //Creates a bit at a crossing point.
-    RomBitItem(QPointF pos, qreal size);
+    RomBitItem(QPointF pos, qreal size,
+               RomLineItem *rlrow, RomLineItem *rlcol);
 
     //Sample the color of the bit.
     QRgb bitvalue_raw(MaskRomTool *mrt, QImage &bg);
@@ -59,6 +61,7 @@ public:
 
     //Row and columnn are -1 until known by alignment.
     long row=-1, col=-1;
+    RomLineItem *rlrow=0, *rlcol=0;
 
     //Allows for fast lookups.
     virtual int type() const override;

@@ -1,15 +1,18 @@
 #include "maskromtool.h"
 #include "rombitfix.h"
+#include "romlineitem.h"
 
 #include <QBrush>
 #include <QDebug>
 
-RomBitItem::RomBitItem(QPointF pos, qreal size){
+RomBitItem::RomBitItem(QPointF pos, qreal size, RomLineItem *rlrow, RomLineItem *rlcol){
     //Need to manually enable caching.
     setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 
     setPos(pos);
     setBitSize(size);
+    this->rlcol=rlcol;
+    this->rlrow=rlrow;
 }
 
 int RomBitItem::type() const{

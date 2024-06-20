@@ -338,8 +338,11 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
 
     //qDebug()<<"Removing all bits from a line.";
     foreach(QGraphicsItem* item, scene->collidingItems(line)){
-        if(item->type()==QGraphicsItem::UserType+2)  //Is it a bit?
-            removeItem(item);
+        if(item->type()==QGraphicsItem::UserType+2){  //Is it a bit?
+            RomBitItem *bit=(RomBitItem*) item;
+            if(bit->rlcol==line || bit->rlrow==line)
+                removeItem(item);
+        }
     }
 
     //After removing the bits, we've gotta remove the line itself.
@@ -1299,14 +1302,18 @@ void MaskRomTool::on_saveButton_triggered(){
     fout.write(ba);
 }
 
-
-
 //Marks an individual bit.
-void MaskRomTool::markBit(QPointF point){
+void MaskRomTool::markBit(RomLineItem* row, RomLineItem* col){
+    /* Previously this just took a location.  By instead knowing
+     * the parent row and column, we can have lines and their bits
+     * briefly overlap during movement without deleting the wrong
+     * bits unexpectedly.
+     */
     alignmentdirty=true;
 
     //This rectangle will be a small box around the pixel.
-    RomBitItem *bit=new RomBitItem(point, bitSize);
+    QPointF point=bitLocation(row, col);
+    RomBitItem *bit=new RomBitItem(point, bitSize, row, col);
     scene->addItem(bit);
     bit->setVisible(bitsVisible);
     bits.insert(bit);
@@ -1316,6 +1323,7 @@ void MaskRomTool::markBit(QPointF point){
 
     bitcount++;
 }
+
 
 
 //Marks all of the bits that are on a line.
@@ -1334,14 +1342,12 @@ void MaskRomTool::markLine(RomLineItem* line){
                 && item->type()==item->UserType+1  //Is the colliding item a column?
             ){
             RomLineItem* col=(RomLineItem*) item;
-            QPointF point=bitLocation(line, col);
-            markBit(point);
+            markBit(line, col);
         }else if(line->linetype==RomLineItem::LINECOL
                    && item->type()==item->UserType  //Is the colliding item a row?
                    ){
             RomLineItem* row=(RomLineItem*) item;
-            QPointF point=bitLocation(row, line);
-            markBit(point);
+            markBit(row, line);
         }
     }
 
