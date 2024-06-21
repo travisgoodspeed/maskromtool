@@ -29,12 +29,13 @@ bits may be conveniently rotated, flipped or inverted.
 Run with no parameters for usage information.
 
 ```
+forum% gatorom 
 Usage: gatorom [options] bitstream
 Gato ROM: A Decoder for Mask ROM Bits
 
 Options:
   -h, --help                        Displays help on commandline options.
-  --help-all                        Displays help including Qt specific
+  --help-all                        Displays help, including generic Qt
                                     options.
   -v, --version                     Displays version information.
   -V, --verbose                     Talk too much.
@@ -50,6 +51,7 @@ Options:
   --rawwidth, --seanriddle <width>  Width of a raw binary input, in Sean
                                     Riddle's style.
   -I, --info                        Info about input.
+  -d, --dis <arch>                  Disassemble.
   --print                           Print with a GUI dialog.
   --printpdf <file.pdf>             Print to a PDF file.
   --decode-tlcs47font               Decodes as a TMP47C434N Font.
@@ -74,6 +76,8 @@ Options:
   --solve-ascii                     Look for ASCII strings.
   --solve-string <bytes>            Byte string as a hint to the solver.
                                     31,fe,ff
+  --solve-yara <rule>               Yara rule file.
+  --solve-set <prefix>              Exports all potential solutions.
 
 Arguments:
   bitstream                         ASCII art of ROM to decode.

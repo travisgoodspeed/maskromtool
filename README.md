@@ -29,7 +29,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 `master` -- Yara rule solving.  Stability improvements.  Crosshairs
 update to the angles of selected lines.  Space now repeats the last
 line, whether row or column.  Multiple items can be selected, and
-SHIFT+D duplicates them.
+SHIFT+D duplicates them.  Select with SHIFT to add more lines or CTRL
+(CMD on macOS) to remove lines.  Right dragging moves multiple lines.
 
 2024-05-19 -- DRC violations are now cleared when bits are forced.
 Histogram export for ploting the color distributions in GNUPlot.
@@ -128,7 +129,8 @@ unless you drag a box to select a line.
 
 Select an item by dragging over it with a left mouse click and
 watching for it to turn green.  The most recently placed item is
-automatically selected.
+automatically selected.  Some commands work on multiple selected
+items; others just one.
 
 You can delete a mistake with `D` or adjust its position a little with
 `S`, the arrow keys, or a right-click drag.
@@ -137,40 +139,49 @@ You can delete a mistake with `D` or adjust its position a little with
 On macOS, `^` means Command instead of Ctrl.
 
 ```
-Tab      -- Show/Hide bits.
-\        -- Show/Hide rows and columns.
-^\       -- Show/Hide background.
-ALT \    -- Show/Hide crosshair.
+Tab         -- Show/Hide bits.
+\           -- Show/Hide rows and columns.
+^\          -- Show/Hide background.
+ALT \       -- Show/Hide crosshair.
 
-Q        -- Zoom to zero.
-A        -- Zoom in.
-Z        -- Zoom out.
-H        -- Jump to home position.
-SHIFT H  -- Set the home position.
 
-D        -- Delete the selected objects.
-SHIFT D  -- Duplicate the selected lines.
-S        -- Set the selected object to the mouse position.
-F        -- Jump to the selected item.
-ARROWS   -- Move the selected item.
+R           -- Draw a row from the last left-click position.
+SHIFT R     -- Repeat the last row.
+C           -- Draw a column from the last left-click position.
+SHIFT C     -- Repeat the last column.
+SPACE       -- Repeat the last row or column.
 
-R        -- Draw a row from the last left-click position.
-SHIFT R  -- Repeat the last row.
-C        -- Draw a column from the last left-click position.
-SHIFT C  -- Repeat the last column.
-SPACE    -- Repeat the last row or column.
 
-SHIFT F  -- Force a bit's value. (Again to flip.)
-SHIFT A  -- Force a bit's ambiguity.  (Again to flip.)
+D           -- Delete the selected objects.
+SHIFT D     -- Duplicate the selected lines.
+S           -- Set the selected object to the mouse position.
+F           -- Jump to the selected item.
+ARROWS      -- Move the selected items.
 
-M        -- Mark all of the bits.
-SHIFT M  -- Update hex decoding and disassembly.
-V        -- Run the Design Rule Checks.
-SHIFT V  -- Clear the DRC violations.
-E        -- Jump to next violation.
+right-drag  -- Move the selected items. (SHIFT or ^)
+middle-drag -- Pan the view.
+^ wheel     -- Zoom.
 
-^Z       -- Undo
-SHIFT ^Z -- Redo
+Q           -- Zoom to zero.
+A           -- Zoom in.
+Z           -- Zoom out.
+H           -- Jump to home position.
+SHIFT H     -- Set the home position.
+
+
+SHIFT F     -- Force a bit's value. (Again to flip.)
+SHIFT A     -- Force a bit's ambiguity.  (Again to flip.)
+
+M           -- Remark all of the bits.
+SHIFT M     -- Update hex decoding and disassembly.
+V           -- Run the Design Rule Checks.
+SHIFT V     -- Clear the DRC violations.
+E           -- Jump to next violation.
+
+^Z          -- Undo
+SHIFT ^Z    -- Redo
+
+^S          -- Save changes.
 ```
 
 When you first begin to mark bits, the software won't yet know the
@@ -182,6 +193,13 @@ force bit values where you see that the software is wrong.  `SHIFT+A`
 is similar, and marks a bit as being ambiguous or damaged.  The `DRC`
 menu contains Design Rule Checks that will highlight problems in your
 project, such as weak bits or broken alignment.
+
+If placing many lines becomes tedious, select a group with your left
+mouse button and duplicate the entire set with `SHIFT+D`.  You can
+then drag it with the right mouse button to the new position, leaving
+another copy in the original position.  If the framerate drops for
+this, use the `TAB` key to temporarily hide all bits, which greatly
+speeds up moving many lines in dense areas.
 
 The crosshairs will adjust themselves to your most recently placed row
 and column.  This should let them tilt a little to match the reality
@@ -202,7 +220,7 @@ parameters, and the `--exit` switch if you'd prefer the GUI not stay
 open for interactive use.
 
 ```
-dell% maskromtool --help
+forum% maskromtool --help
 Usage: maskromtool [options] image json
 Mask ROM Tool
 
@@ -214,12 +232,14 @@ Options:
   --stress                   Stress test bit marking.
   -e, --exit                 Exit after processing arguments.
   --disable-opengl           Disable OpenGL.
+  --enable-opengl            Enable OpenGL.
   -d, --drc                  Run default Design Rule Checks.
   -D, --DRC                  Run all Design Rule Checks.
   --sampler <Default>        Bit Sampling Algorithm.
   --diff-ascii <file>        Compares against ASCII art, for finding errors.
   -a, --export-ascii <file>  Export ASCII bits.
   -o, --export <file>        Export ROM bytes.
+  --export-histogram <file>  Export histogram.
   --export-csv <file>        Export CSV bits for use in Matlab or Excel.
   --export-json <file>       Export JSON bit positions.
   --export-python <file>     Export Python arrays.
@@ -237,6 +257,64 @@ On Windows, it's awkward for an executable to have a GUI while
 retaining a log on the CLI.  We solve this by producing two
 executables; please use `maskromtool.exe` for the GUI and
 `maskromtoolcli.exe` for the CLI.
+
+A separate executable, `gatorom`, wraps the ROM bit decoder without
+the graphics.  See [GatoROM](GATOREADME.md) for details.
+
+```
+forum% gatorom 
+Usage: gatorom [options] bitstream
+Gato ROM: A Decoder for Mask ROM Bits
+
+Options:
+  -h, --help                        Displays help on commandline options.
+  --help-all                        Displays help, including generic Qt
+                                    options.
+  -v, --version                     Displays version information.
+  -V, --verbose                     Talk too much.
+  -w, --wordsize <8>                Word size.bits
+  -r, --rotate <degrees>            Rotates the image in multiples of 90
+                                    degrees.
+  --flipx                           Flips the bits along the X axis.
+  --flipy                           Flips the bits along the Y axis.
+  -i, --invert                      Inverts the bits.
+  -o, --output <out.bin>            Output file.
+  --random                          Randomize a ROM for testing.
+  --Random                          Randomize a crazy ROM.
+  --rawwidth, --seanriddle <width>  Width of a raw binary input, in Sean
+                                    Riddle's style.
+  -I, --info                        Info about input.
+  -d, --dis <arch>                  Disassemble.
+  --print                           Print with a GUI dialog.
+  --printpdf <file.pdf>             Print to a PDF file.
+  --decode-tlcs47font               Decodes as a TMP47C434N Font.
+  --decode-z86x1                    Decodes as a Zilog Z86x1.
+  --decode-cols-downl-swap          Decodes as a uCOM4 ROM.
+  --decode-cols-downr               Decodes first down then right like a
+                                    Gameboy.
+  --decode-cols-downl               Decodes first down then left.
+  --decode-cols-left                Decodes left-to-right.
+  --decode-cols-right               Decodes right-to-left.
+  --decode-squeeze-lr               Decodes even bits from the left, odd bits
+                                    from right like in the TMS32C15.
+  -z, --zorrom                      Zorrom compatibility mode, with flipx
+                                    before rotation.
+  --leftbank                        Only the left half of the bits.
+  --rightbank                       Only the right half of the bits.
+  -a, --print-bits                  Prints ASCII art of the transformed bits.
+  -A, --print-pretty-bits           Prints ASCII art with spaces.
+  --solve                           Solves for an unknown format.
+  --solve-bytes <bytes>             Bytes as a hint to the solver.
+                                    0:31,1:fe,2:ff
+  --solve-ascii                     Look for ASCII strings.
+  --solve-string <bytes>            Byte string as a hint to the solver.
+                                    31,fe,ff
+  --solve-yara <rule>               Yara rule file.
+  --solve-set <prefix>              Exports all potential solutions.
+
+Arguments:
+  bitstream                         ASCII art of ROM to decode.
+```
 
 
 ## High Level Design
