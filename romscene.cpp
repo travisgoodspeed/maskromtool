@@ -193,7 +193,7 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
         //qDebug()<<"Selection: "<<x<<y<<w<<h;
 
-        selection=items(x, y, w, h,
+        auto newselection=items(x, y, w, h,
 
                           //Qt::ItemSelectionMode::ContainsItemBoundingRect,  //Useful for bits.
                           //Qt::ItemSelectionMode::ContainsItemShape, // Only when fully covered.
@@ -202,6 +202,17 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
                           Qt::DescendingOrder
                         );
+        switch(mouseEvent->modifiers()){
+        case Qt::CTRL: //Subtract from group.
+            foreach(QGraphicsItem* item, newselection)
+                selection.removeAll(item);
+            break;
+        case Qt::SHIFT: //Add to group.
+            selection.append(newselection);
+            break;
+        default:
+            selection=newselection;
+        }
 
         //Restore visibility of the crosshairs.
         setCrosshairVisible(crosshairVisible);
