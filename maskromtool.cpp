@@ -85,6 +85,7 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
 
     RomRuleViolation::bitSize=bitSize;
     lineColor = QColor(Qt::black);
+    selectionColor = QColor(Qt::green);
 
     //Strategies should be initialized.
     addAligner(new RomAlignerReliable());   //First is default.
@@ -922,22 +923,39 @@ void MaskRomTool::on_thresholdButton_triggered(){
     updateThresholdHistogram();
 }
 
-
+//Choose the main line color.
 void MaskRomTool::on_linecolorButton_triggered(){
     QColor color = QColorDialog::getColor(Qt::black, this );
-    if( color.isValid() ){
-        markUndoPoint();
+    if(!color.isValid())
+        return;
 
-        lineColor = color;
-        //update&redraw
-        for(QSet<RomLineItem*>::iterator i = rows.begin(), end = rows.end(); i != end; ++i){
-            ((QGraphicsLineItem*)*i)->setPen(QPen(lineColor, 2));
-        }
-        for(QSet<RomLineItem*>::iterator i = cols.begin(), end = cols.end(); i != end; ++i){
-            ((QGraphicsLineItem*)*i)->setPen(QPen(lineColor, 2));
-        }
-    }
+    markUndoPoint();
+    lineColor = color;
+    scene->highlightSelection();
 }
+//Choose the selection color.
+void MaskRomTool::on_selectioncolorButton_triggered(){
+    QColor color = QColorDialog::getColor(Qt::green, this );
+    if(!color.isValid())
+        return;
+
+    markUndoPoint();
+    selectionColor = color;
+    scene->highlightSelection();
+}
+//Choose the crosshair color.
+void MaskRomTool::on_crosshaircolorButton_triggered(){
+    QColor color = QColorDialog::getColor(Qt::gray, this );
+    if(!color.isValid())
+        return;
+
+    markUndoPoint();
+    crosshairColor = color;
+    scene->highlightSelection();
+}
+
+
+
 
 //Shows the decoder dialog.
 void MaskRomTool::on_decoderButton_triggered(){
@@ -1510,6 +1528,7 @@ QJsonObject MaskRomTool::exportJSON(){
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
+     * 2024.06.22 -- Adds 'selectioncolor' and 'crosshaircolor'.
      * 2024.06.05 -- Yara rule included in GUI.
      * 2024.05.19 -- Architecture is now recorded.  Unidasm only for now.
      * 2023.12.07 -- Gatorom strings now work.
@@ -1521,7 +1540,7 @@ QJsonObject MaskRomTool::exportJSON(){
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2024.06.05";
+    root["00version"]="2024.06.22";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -1530,14 +1549,16 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["blue"]=thresholdB;
     settings["bitsize"]=bitSize;
     settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold); //2023.05.05
-    settings["sampler"]=sampler->name;           //2023.05.08
-    settings["samplersize"]=getSamplerSize();    //2023.05.08
-    settings["aligner"]=aligner->name;           //2024.01.27
-    settings["inverted"]=inverted;               //2023.05.14
-    settings["gatorom"]=gr.description();        //2023.09.04
-    settings["linecolor"]=lineColor.name();      //2023.09.15
-    settings["arch"]=gr.arch;                    //2024.05.19
-    settings["yararule"]=solverDialog.yararule;  //2024.06.05
+    settings["sampler"]=sampler->name;                 //2023.05.08
+    settings["samplersize"]=getSamplerSize();          //2023.05.08
+    settings["aligner"]=aligner->name;                 //2024.01.27
+    settings["inverted"]=inverted;                     //2023.05.14
+    settings["gatorom"]=gr.description();              //2023.09.04
+    settings["linecolor"]=lineColor.name();            //2023.09.15
+    settings["selectioncolor"]=selectionColor.name();  //2024.06.22
+    settings["crosshaircolor"]=crosshairColor.name();  //2024.06.22
+    settings["arch"]=gr.arch;                          //2024.05.19
+    settings["yararule"]=solverDialog.yararule;        //2024.06.05
     root["settings"]=settings;
 
 
@@ -1596,6 +1617,9 @@ void MaskRomTool::importJSON(QJsonObject o){
     this->inverted=inverted.toBool(false); //Defaults to not inverting bits.
 
     lineColor = QColor(settings.value("linecolor").toString("#000000"));
+    selectionColor = QColor(settings.value("selectioncolor").toString("#00ff00"));
+    crosshairColor = QColor(settings.value("crosshaircolor").toString("#888888"));
+
 
     //Decoder settings.
     QJsonValue grarch=settings.value("arch");
@@ -1688,9 +1712,9 @@ void MaskRomTool::importJSON(QJsonObject o){
 
 // This displays the second window.  Maybe we ought to have a third?
 void MaskRomTool::on_actionSecond_triggered(){
-    second.mrt=this;         //Apply a backreference for sharing keystrokes.
-    second.show();           //Show the window.
-    second.resize(1024,768); //Resizing it makes scrollbars visible.
+    second.mrt=this;           //Apply a backreference for sharing keystrokes.
+    second.show();             //Show the window.
+    second.resize(1280, 1024); //Resizing it makes scrollbars visible.
 }
 
 // This hilights all bits in the range selected in the Hex viewer.
@@ -1764,4 +1788,5 @@ void MaskRomTool::on_actionDisassembly_triggered(){
     gatorom();
     disDialog.show();
 }
+
 

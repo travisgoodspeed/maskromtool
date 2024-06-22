@@ -58,7 +58,7 @@ public:
 
     //Persistant user settings.
     QSettings settings();
-    QColor lineColor;
+    QColor lineColor, selectionColor, crosshairColor;
 
     //Background image of the ROM.
     QImage background;
@@ -272,6 +272,10 @@ private slots:
 
     void on_actionSolver_triggered();
     void on_actionDisassembly_triggered();
+
+    void on_selectioncolorButton_triggered();
+
+    void on_crosshaircolorButton_triggered();
 
 private:
     Ui::MaskRomTool *ui;

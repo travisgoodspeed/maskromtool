@@ -11,11 +11,6 @@ RomScene::RomScene(QObject *parent)
     addItem(&yline);
     addItem(&xline2);
     addItem(&yline2);
-    xline.setPen(QPen(Qt::gray));
-    yline.setPen(QPen(Qt::gray));
-    xline2.setPen(QPen(Qt::gray));
-    yline2.setPen(QPen(Qt::gray));
-
 
     //Linear size doesn't help.
     //setItemIndexMethod(ItemIndexMethod::NoIndex);
@@ -72,6 +67,13 @@ void RomScene::updateCrosshairs(bool dragging){
      * of the crosshair will accurately sight all of the bits in your new
      * row or column.  Nifty, huh?
      */
+
+    //Sets the colors.
+    xline.setPen(QPen(maskRomTool->crosshairColor));
+    yline.setPen(QPen(maskRomTool->crosshairColor));
+    xline2.setPen(QPen(maskRomTool->crosshairColor));
+    yline2.setPen(QPen(maskRomTool->crosshairColor));
+
 
     //The horizontal line.
     xline.setPos(scenepos.x(), scenepos.y());
@@ -271,14 +273,14 @@ void RomScene::highlightSelection(){
         }else if(item->type()==QGraphicsItem::UserType){
             //row
             maskRomTool->lastrow=((RomLineItem*)item)->line();
-            ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+            ((QGraphicsLineItem*)item)->setPen(QPen(maskRomTool->selectionColor, 2));
             ((QGraphicsLineItem*)item)->hide();
             ((QGraphicsLineItem*)item)->show();
             maskRomTool->updateCrosshairAngle((RomLineItem*)item);
         }else if(item->type()==QGraphicsItem::UserType+1){
             //column
             maskRomTool->lastcol=((RomLineItem*)item)->line();
-            ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+            ((QGraphicsLineItem*)item)->setPen(QPen(maskRomTool->selectionColor, 2));
             ((QGraphicsLineItem*)item)->hide();
             ((QGraphicsLineItem*)item)->show();
             maskRomTool->updateCrosshairAngle((RomLineItem*)item);
