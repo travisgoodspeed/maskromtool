@@ -240,12 +240,27 @@ void RomScene::setCrosshairVisible(bool v){
 }
 
 void RomScene::highlightSelection(){
+    /* Qt will redraw the main view when changing a line's pen, but for some
+     * reason it doesn't update the line's color in the secondary view.
+     * We work around this by hiding and then showing the line as we change
+     * its pen.  Perhaps overloading setPen() or a global refresh would
+     * be more efficient.
+     */
+
+
+    if(!maskRomTool->linesVisible)
+        return;
+
     //reset line focus first, would be nice if we knew the last one that was in focus
     for(QSet<RomLineItem*>::iterator i = maskRomTool->rows.begin(), end = maskRomTool->rows.end(); i != end; ++i){
         ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
+        ((QGraphicsLineItem*)*i)->hide();
+        ((QGraphicsLineItem*)*i)->show();
     }
     for(QSet<RomLineItem*>::iterator i = maskRomTool->cols.begin(), end = maskRomTool->cols.end(); i != end; ++i){
         ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
+        ((QGraphicsLineItem*)*i)->hide();
+        ((QGraphicsLineItem*)*i)->show();
     }
 
     //Highlight all selected lines.
@@ -257,11 +272,15 @@ void RomScene::highlightSelection(){
             //row
             maskRomTool->lastrow=((RomLineItem*)item)->line();
             ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+            ((QGraphicsLineItem*)item)->hide();
+            ((QGraphicsLineItem*)item)->show();
             maskRomTool->updateCrosshairAngle((RomLineItem*)item);
         }else if(item->type()==QGraphicsItem::UserType+1){
             //column
             maskRomTool->lastcol=((RomLineItem*)item)->line();
             ((QGraphicsLineItem*)item)->setPen(QPen(Qt::green, 2));
+            ((QGraphicsLineItem*)item)->hide();
+            ((QGraphicsLineItem*)item)->show();
             maskRomTool->updateCrosshairAngle((RomLineItem*)item);
         }
     }

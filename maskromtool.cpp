@@ -489,6 +489,9 @@ void MaskRomTool::setLinesVisible(bool b){
         item->setVisible(b);
     foreach (QGraphicsLineItem* item, cols)
         item->setVisible(b);
+
+    if(linesVisible)
+        scene->highlightSelection();
 }
 void MaskRomTool::setBitsVisible(bool b){
     bitsVisible=b; //Default for new bits.
