@@ -655,7 +655,6 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
                 scene->selection.removeAll(item);
             }
 
-            scene->setFocusItem(0);
             statusBar()->showMessage(tr("Deleted items."));
         }
 

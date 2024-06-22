@@ -43,7 +43,6 @@ public:
 
 private:
     bool crosshairVisible=true;
-    QGraphicsItem* focusitem=0;
     //Crosshair lines.
     QGraphicsLineItem xline, yline, xline2, yline2;
     //Crosshair angles.

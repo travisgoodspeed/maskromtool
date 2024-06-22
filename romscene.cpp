@@ -212,16 +212,11 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
             break;
         default:
             selection=newselection;
+            break;
         }
 
         //Restore visibility of the crosshairs.
         setCrosshairVisible(crosshairVisible);
-
-        //The item is only focused if there is exactly one item.
-        if(selection.count()==1)
-            focusitem=selection[0];
-        else
-            focusitem=0;
 
         //Update the highlighting so the user knows what's going on.
         highlightSelection();
@@ -242,11 +237,6 @@ void RomScene::setCrosshairVisible(bool v){
     yline.setVisible(v);
     xline2.setVisible(v);
     yline2.setVisible(v);
-}
-
-QGraphicsItem* RomScene::focusItem(){
-    //We have a single selection after placing a new item.
-    return focusitem;
 }
 
 void RomScene::highlightSelection(){
@@ -279,9 +269,14 @@ void RomScene::highlightSelection(){
 
 void RomScene::setFocusItem(QGraphicsItem* item){
     //Update the focus item and the selection list.
-    focusitem=item;
     selection=QList<QGraphicsItem*>();
     selection<<item;
-    
+
     highlightSelection();
+}
+
+QGraphicsItem* RomScene::focusItem(){
+    if(selection.count()==1)
+        return selection.at(0);
+    return 0;
 }
