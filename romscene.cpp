@@ -36,18 +36,13 @@ void RomScene::keyPressEvent(QKeyEvent *event){
     case Qt::Key_Left:
     case Qt::Key_Right:
         maskRomTool->markUndoPoint();
-        foreach(QGraphicsItem* item, selection){
-            if(item && (item->type()==QGraphicsItem::UserType || item->type()==QGraphicsItem::UserType+1)){
-                RomLineItem *rlitem=(RomLineItem*) item;
-                switch(event->key()){
-                case Qt::Key_Up: dpos.setY(-1);break;
-                case Qt::Key_Down: dpos.setY(1);break;
-                case Qt::Key_Left: dpos.setX(-1);break;
-                case Qt::Key_Right: dpos.setX(1);break;
-                }
-                maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
-            }
+        switch(event->key()){
+        case Qt::Key_Up: dpos.setY(-1);   break;
+        case Qt::Key_Down: dpos.setY(1);  break;
+        case Qt::Key_Left: dpos.setX(-1); break;
+        case Qt::Key_Right: dpos.setX(1); break;
         }
+        maskRomTool->moveList(selection, dpos);
         break;
     default:
         QGraphicsScene::keyPressEvent(event);
@@ -139,13 +134,7 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
     //here instead of on release so we can have preview
     if(mouseEvent->buttons()==Qt::RightButton){
         QPointF dpos = mouseEvent->scenePos() - presspos;
-
-        foreach(QGraphicsItem* item, selection){
-            if(item && (item->type()==QGraphicsItem::UserType || item->type()==QGraphicsItem::UserType+1)){
-                RomLineItem *rlitem=(RomLineItem*) item;
-                maskRomTool->moveLine(rlitem,rlitem->pos()+dpos);
-            }
-        }
+        maskRomTool->moveList(selection, dpos);
 
         // update because we already moved it
         presspos = scenepos;

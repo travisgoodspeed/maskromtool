@@ -1424,6 +1424,31 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
     alignmentdirty=true;
 }
 
+//Moves a group of items by an offset.
+void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
+    //We ditch the bits and move all of their lines.
+    foreach(QGraphicsItem* selecteditem, list){
+        assert(selecteditem);
+        if(bitsVisible){
+            foreach(QGraphicsItem* item, scene->collidingItems(selecteditem)){
+                if(item->type()==QGraphicsItem::UserType+2)  //Bit.
+                    removeItem(item);
+            }
+        }
+        selecteditem->setPos(selecteditem->pos()+offset);     // Move the position, but don't add bits yet.
+    }
+
+    //Then we redraw the bits, if they are still there.
+    if(bitsVisible){
+        foreach(QGraphicsItem* item, list){
+            if(item && (item->type()==QGraphicsItem::UserType || item->type()==QGraphicsItem::UserType+1)){
+                RomLineItem *rlitem=(RomLineItem*) item;
+                markLine(rlitem); //Remark the line.
+            }
+        }
+    }
+}
+
 //Mark up all of the bits where rows and columns collide.
 void MaskRomTool::markBits(){
     static long lastbitcount=50000;
