@@ -26,13 +26,13 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
-`master` -- Yara rule solving.  Stability improvements.  Crosshairs
+2024-06-23 -- Yara rule solving.  Stability improvements.  Crosshairs
 update to the angles of selected lines.  Space now repeats the last
 line, whether row or column.  Multiple items can be selected, and
 SHIFT+D duplicates them.  Select with SHIFT to add more lines or CTRL
-(CMD on macOS) to remove lines.  Right dragging moves multiple lines.
-Crosshair and selection colors are now selectable.  Background is no
-longer tiled when zooming out.
+(CMD on macOS) to remove lines.  Right dragging moves multiple lines,
+previewing only relevant bits.  Crosshair and selection colors are now
+selectable.  Background is no longer tiled when zooming out.
 
 2024-05-19 -- DRC violations are now cleared when bits are forced.
 Histogram export for ploting the color distributions in GNUPlot.
