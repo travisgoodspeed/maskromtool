@@ -167,6 +167,9 @@ void MaskRomTool::clear(){
      * calling MaskRomTool::removeItem().
      */
 
+    //Select nothing.
+    scene->selection=QList<QGraphicsItem*>();
+
     foreach (RomBitItem* item, bits){
         //removeItem(item);
         bits.remove(item);
