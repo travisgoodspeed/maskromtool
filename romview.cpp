@@ -111,7 +111,6 @@ bool RomView::viewportEvent(QEvent *event) {
     case QEvent::TouchUpdate:
     case QEvent::TouchEnd:
     {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
         const auto touchPoints = touchEvent->points();
         if (touchPoints.count()==2 ) {
@@ -144,7 +143,6 @@ bool RomView::viewportEvent(QEvent *event) {
                                                    totalScaleFactor * currentScaleFactor));
         }
         //return true;
-#endif
     }
     default:
         break;

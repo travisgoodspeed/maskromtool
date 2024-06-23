@@ -202,8 +202,11 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
             switch(item->type()){
             case QGraphicsItem::UserType:   //row
             case QGraphicsItem::UserType+1: //col
+            case QGraphicsItem::UserType+3: //bitfix
                 break;
             default: // All others.
+            case QGraphicsItem::UserType+2: //bit
+            case QGraphicsItem::UserType+4: //rule violation
                 newselection.removeAll(item);
                 break;
             }
@@ -271,7 +274,6 @@ void RomScene::highlightSelection(){
     }
 
     //Highlight all selected lines.
-    //qDebug()<<"Selected "<<selection.count()<<" items";
     foreach(QGraphicsItem* item, selection){
         if(!item){
             //qDebug()<<"Null item.";
