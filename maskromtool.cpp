@@ -395,13 +395,6 @@ QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item){
 void MaskRomTool::removeItem(QGraphicsItem* item){
     static QGraphicsItem* lastitem=0;
 
-    /* Uncomment this if you have tons of crashes, but know that it will cause some memory leaks.
-    if(lastitem==item){
-        qDebug()<<"Returning rather than twice free"<<((uint64_t*) item);
-        return;
-    }
-    */
-
     if(!item){
         qDebug()<<"Cowardly refusing to delete null item.";
         return;
@@ -415,7 +408,6 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
      */
     if(scene->selection.contains(item))
         scene->selection.removeAll(item);
-
 
     switch(item->type()){
     case QGraphicsItem::UserType: //row
@@ -465,13 +457,7 @@ void MaskRomTool::nextMode(){
 }
 
 void MaskRomTool::on_actionPhotograph_triggered(){
-    static QBrush whitebrush(Qt::GlobalColor::white, Qt::SolidPattern);
-    /*
-    if(ui->actionPhotograph->isChecked())
-        view->setBackgroundBrush(background);
-    else
-     */
-    view->setBackgroundBrush(whitebrush);
+    backgroundpixmap->setVisible(ui->actionPhotograph->isChecked());
 }
 void MaskRomTool::on_actionRowsColumns_triggered(){
     setLinesVisible(ui->actionRowsColumns->isChecked());
@@ -1402,20 +1388,17 @@ void MaskRomTool::updateCrosshairAngle(RomLineItem* line){
 void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
     /* This used to always update the bits, but that's wasteful when bits are
      * invisible.  The new behavior is to ignore the bit positions when they
-     * are not shown, so that large sections can be dragged if th bits are turned off.
+     * are not shown.
+     *
+     * Group selections ar enot moved with this function, but instead
+     * use moveList().
      */
+    if(bitsVisible){
 
-    bool bitswerevisible=bitsVisible;
-
-    if(bitswerevisible){
-        setBitsVisible(true);
 
         removeLine(line,false);  //Remove the line's bits, but not the line itself.
         line->setPos(newpoint);
         markLine(line); //Remark the line.
-
-        //Restore visibility.
-        setBitsVisible(bitswerevisible);
     }else{
         line->setPos(newpoint);
     }
@@ -1424,18 +1407,31 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
     alignmentdirty=true;
 }
 
-//Moves a group of items by an offset.
+//Moves a group of items by an offset, used while dragging.
 void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
+    /* This function's job is to move a list of items by an offset.
+     * It's called when you hit the arrow keys or drag with the right
+     * mouse button, and it's vital for it to be fast because there's
+     * the potential for redrawing a ton of bits on every frame.
+     *
+     * This implementation drops all bits that are not actively on
+     * moving lines as a necessary performance hack.  The missing bits
+     * are not on moving lines, and they will return as soon as the mouse
+     * button is released.
+     *
+     * As a workaround when movements are too slow, use the TAB key
+     * to hide the bits for a while.
+     */
+
+    if(bitsVisible)
+        //Get the old bits out of the way.
+        clearBits();
+
     //We ditch the bits and move all of their lines.
     foreach(QGraphicsItem* selecteditem, list){
         assert(selecteditem);
-        if(bitsVisible){
-            foreach(QGraphicsItem* item, scene->collidingItems(selecteditem)){
-                if(item->type()==QGraphicsItem::UserType+2)  //Bit.
-                    removeItem(item);
-            }
-        }
-        selecteditem->setPos(selecteditem->pos()+offset);     // Move the position, but don't add bits yet.
+        // Move the position, but don't add bits yet.
+        selecteditem->setPos(selecteditem->pos()+offset);
     }
 
     //Then we redraw the bits, if they are still there.
@@ -1486,6 +1482,17 @@ void MaskRomTool::markBits(){
     if(verbose)
         qDebug()<<"Marked"<<bitcount<<"bits.";
     lastbitcount=bitcount;
+}
+
+//Mark up all of the bits where rows and columns collide.
+void MaskRomTool::clearBits(){
+    //First we remove all the old bits.  This is very slow.
+    foreach (QGraphicsItem* item, bits){
+        //removeItem(item);
+        bits.remove((RomBitItem*) item);
+        delete item;
+    }
+    bitcount=0;
 }
 
 //Marks the bit fixes.
@@ -1777,8 +1784,6 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
                                                                                  (unsigned int) b->mask,a));
             violation->error=false;
             addViolation(violation);
-        }else{
-            //qDebug()<<"Skipping adr"<<a;
         }
     }
 

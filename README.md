@@ -135,7 +135,9 @@ automatically selected.  Some commands work on multiple selected
 items; others just one.
 
 You can delete a mistake with `D` or adjust its position a little with
-`S`, the arrow keys, or a right-click drag.
+`S`, the arrow keys, or a right-click drag.  During movement the bits
+of unrelated lines might be hidden for performance, and the `M` key or
+releasing the right mouse button will redraw them.
 
 
 On macOS, `^` means Command instead of Ctrl.

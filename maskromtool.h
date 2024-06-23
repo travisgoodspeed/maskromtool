@@ -91,6 +91,8 @@ public:
 
     //Marks all of the bit positions, but not their connections.
     void markBits();
+    //Clears all bits.  Useful when we want them out of the way for a bit.
+    void clearBits();
     //Re-marks bits at all of the old positions, but new samples.
     void remarkBits();
     //Marks one bit.
