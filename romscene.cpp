@@ -204,6 +204,22 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
                           Qt::DescendingOrder
                         );
+
+
+        /* We can select static items like lines but never
+         * ephemeral items like bits.
+         */
+        foreach(QGraphicsItem* item, newselection){
+            switch(item->type()){
+            case QGraphicsItem::UserType:   //row
+            case QGraphicsItem::UserType+1: //col
+                break;
+            default: // All others.
+                newselection.removeAll(item);
+                break;
+            }
+        }
+
         switch(mouseEvent->modifiers()){
         case Qt::CTRL: //Subtract from group.
             foreach(QGraphicsItem* item, newselection)
