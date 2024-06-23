@@ -62,6 +62,8 @@ public:
 
     //Background image of the ROM.
     QImage background;
+    QGraphicsPixmapItem *backgroundpixmap;
+
     QSet<RomLineItem*> rows;     //Rows produce bits where they intersect with columns.
     QSet<RomLineItem*> cols;     //Columns produce bits on rows.
     QSet<RomBitItem*> bits;      //All of the bits from crosses.

@@ -50,6 +50,7 @@
 #include <QMessageBox>
 #include <QtMath>
 #include <QProgressDialog>
+#include <QGraphicsPixmapItem>
 
 //Printing
 #include <QPrinter>
@@ -462,10 +463,12 @@ void MaskRomTool::nextMode(){
 
 void MaskRomTool::on_actionPhotograph_triggered(){
     static QBrush whitebrush(Qt::GlobalColor::white, Qt::SolidPattern);
+    /*
     if(ui->actionPhotograph->isChecked())
         view->setBackgroundBrush(background);
     else
-        view->setBackgroundBrush(whitebrush);
+     */
+    view->setBackgroundBrush(whitebrush);
 }
 void MaskRomTool::on_actionRowsColumns_triggered(){
     setLinesVisible(ui->actionRowsColumns->isChecked());
@@ -1105,22 +1108,22 @@ void MaskRomTool::fileOpen(QString filename){
     if(!filename.endsWith(".json")){
         //When replacing the image we first clear the objects.
         clear();
-
         imagefilename=filename;
 
-        //This is necessary in QT6, but isn't defined in QT5.
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         if(verbose){
             qDebug()<<"Allocation limit was "<<QImageReader::allocationLimit()<<"MB";
             qDebug()<<"Disabling allocation limit.";
         }
         QImageReader::setAllocationLimit(0);
-#endif
+
 
         //We load the image as a background, so it's not really a part of the scene.
         if(verbose)
             qDebug()<<"Loading background image: "<<imagefilename;
         background=QImage(imagefilename);
+        backgroundpixmap = scene->addPixmap(QPixmap(imagefilename));
+        backgroundpixmap->setZValue(-10);
+
         if(background.isNull()){
             qDebug()<<"Error opening "<<imagefilename;
             if(QGuiApplication::platformName()!="offscreen"){
@@ -1136,10 +1139,10 @@ void MaskRomTool::fileOpen(QString filename){
         setWindowTitle("MaskRomTool "+imagefilename);
         second.setWindowTitle("Second view of "+imagefilename);
 
-        view->setBackgroundBrush(background);
-        view->setCacheMode(QGraphicsView::CacheBackground);
-        second.view->setBackgroundBrush(background);
-        second.view->setCacheMode(QGraphicsView::CacheBackground);
+        //view->setBackgroundBrush(background);
+        //view->setCacheMode(QGraphicsView::CacheBackground);
+        //second.view->setBackgroundBrush(background);
+        //second.view->setCacheMode(QGraphicsView::CacheBackground);
 
         //With the view the same as the image dimensions, we get fancy scrollbars and stuff.
         view->setSceneRect(0,0,background.width(), background.height());
@@ -1174,7 +1177,8 @@ void MaskRomTool::fileOpen(QString filename){
     QJsonDocument jsonDoc;
     jsonDoc = QJsonDocument::fromJson(byteArray, &parseError);
     if(parseError.error != QJsonParseError::NoError){
-        qWarning() << "Parse error at " << parseError.offset << ":" << parseError.errorString();
+        qWarning() << "Parse error at " << parseError.offset
+                   << ":" << parseError.errorString();
         //FIXME: Also a dialog box?
         return;
     }
