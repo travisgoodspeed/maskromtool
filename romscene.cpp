@@ -152,8 +152,9 @@ void RomScene::setColAngle(qreal angle){
 
 //Store the last pressed mouse position.
 void RomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
-    //This could be handy in the selection.
-    presspos=mouseEvent->scenePos();
+    //Don't update the scene position when dragging with middle mouse button.
+    if(mouseEvent->buttons()!=Qt::MiddleButton)
+        presspos=mouseEvent->scenePos();
 
     //Right mouse can drag a line, so we mark an undo point before moving.
     if(mouseEvent->buttons()==Qt::RightButton)
@@ -218,6 +219,10 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
                 selection.removeAll(item);
             break;
         case Qt::SHIFT: //Add to group.
+            //Remove anything that's already there to prevent double-selection.
+            foreach(QGraphicsItem* item, newselection)
+                selection.removeAll(item);
+            //Then add the rest.
             selection.append(newselection);
             break;
         default:
