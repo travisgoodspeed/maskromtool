@@ -631,6 +631,8 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //Modify the focus object.
     case Qt::Key_D: //Delete an object or many objects.
+    case Qt::Key_Backspace:
+    case Qt::Key_Delete:
         markUndoPoint();
 
         if(shift){  //Duplicate

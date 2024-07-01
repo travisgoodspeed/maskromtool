@@ -26,7 +26,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
-`master` -- Fixes crash when deleting a double-selected item.
+`master` -- Fixes crash when deleting a double-selected item.  Delete
+and backspace now delete objects like `D`.  Multiple disassemblers.
 
 2024-06-23 -- Yara rule solving.  Stability improvements.  Crosshairs
 update to the angles of selected lines.  Space now repeats the last
