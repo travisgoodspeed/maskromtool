@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
 
     //Disassembly
     QCommandLineOption disOption(QStringList()<<"d"<<"dis",
-                                  "Disassemble.",
+                                  "Disassemble.  (unidasm/arm7 r2/msp430)",
                                  "arch"
                                   );
     parser.addOption(disOption);

@@ -10,7 +10,7 @@ RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
     ui->setupUi(this);
 
     //Architectures supported by Unidasm.
-    QString architectures=
+    QString unidasmlist=
 "  8x300          h8             m6803          sab80c515      upd177x        "
 "  adsp21xx       h8h            m68030         saturn         upd7725        "
 "  alpha          h8s2000        m68040         sc61860        upd7801        "
@@ -78,13 +78,36 @@ RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
 "  fscpu32        m68008         rsp            tx0_8kwo       z80            "
 "  g65816         m6801          rupi44         ucom4          z8000          "
 "  gigatron       m68010         rx01           unsp10                        "
-"  gt913          m6802          s2650          unsp12      "                  
+"  gt913          m6802          s2650          unsp12      "
 "  h6280          m68020         sab80515       unsp20    ";
-    QStringList alist=architectures.split(" ",Qt::SkipEmptyParts);
+    QStringList alist=unidasmlist.split(" ",Qt::SkipEmptyParts);
     alist.sort();
-    for(int i=0; i<alist.length(); i++){
-        ui->listArchitecture->addItem(alist[i]);
-    }
+    for(int i=0; i<alist.length(); i++)
+        ui->listArchitecture->addItem("unidasm/"+alist[i]);
+
+
+    /* FIXME: Somehow I built this without the Gameboy plug.  Perhaps we need to
+     * generate the list at startup, to include whatever the user has installed?
+     * --Travis
+     */
+    QString r2archs=
+        " 6502 6502.cs alpha amd29k any.as any.vasm arc arm.nz arm.v35 bf bpf.mr "
+        " chip8 cr16 cris dis ebc h8300 hppa i4004 i8080 java jdh8 kvx lanai     "
+        " lh5801 lm32 loongarch lua m680x m68k m68k.gnu mcore mcs96 mips.gnu     "
+        " msp430 nios2 null or1k pdp11 pic pickle ppc ppc.gnu propeller pyc      "
+        " riscv rsp s390 s390.gnu sh sm5xx snes sparc sparc.gnu tms320 tricore   "
+        " v810 v850 vax wasm ws x86.nasm x86.nz xap xcore xtensa z80             ";
+    QStringList r2list=r2archs.split(" ", Qt::SkipEmptyParts);
+    r2list.sort();
+    for(int i=0; i<r2list.length(); i++)
+        ui->listArchitecture->addItem("r2/"+r2list[i]);
+
+    QString gaarchs=
+        " tlcs47 ucom4 s2000 emz1001 pic16c5x marc4 ";
+    QStringList galist=gaarchs.split(" ", Qt::SkipEmptyParts);
+    galist.sort();
+    for(int i=0; i<galist.length(); i++)
+        ui->listArchitecture->addItem("goodasm/"+galist[i]);
 }
 
 void RomDecodeDialog::setMaskRomTool(MaskRomTool* maskRomTool){
@@ -104,6 +127,7 @@ void RomDecodeDialog::updateString(){
     mrt->disDialog.update();
 }
 
+//Updates the GUI to reflect mrt->gr.
 void RomDecodeDialog::update(){
     ui->checkFlipX->setCheckState(mrt->gr.flippedx ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     ui->checkFlipY->setCheckState(mrt->gr.flippedy ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
@@ -123,6 +147,7 @@ void RomDecodeDialog::update(){
         if(item->text()==mrt->gr.arch)
             ui->listArchitecture->setCurrentItem(item);
     }
+
 
     updateString();
 }
@@ -198,8 +223,7 @@ void RomDecodeDialog::on_listBank_currentItemChanged(QListWidgetItem *current,
     updateString();
 }
 
-void RomDecodeDialog::on_wordsizeEdit_textEdited(const QString &arg1)
-{
+void RomDecodeDialog::on_wordsizeEdit_textEdited(const QString &arg1){
     Q_ASSERT(mrt);
 
     int wordsize=8;
@@ -216,7 +240,10 @@ void RomDecodeDialog::on_wordsizeEdit_textEdited(const QString &arg1)
 }
 
 
-void RomDecodeDialog::on_listArchitecture_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous){
+void RomDecodeDialog::on_listArchitecture_currentItemChanged(QListWidgetItem *current,
+                                                             QListWidgetItem *previous){
+    mrt->markUndoPoint(); //Call before updating mrt.
+
     mrt->gr.arch=current->text();
     mrt->disDialog.update();
 }

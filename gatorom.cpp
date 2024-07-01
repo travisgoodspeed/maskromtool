@@ -226,8 +226,6 @@ void GatoROM::loadFromString(QString input){
     uint32_t row=0, col=0;
     Q_ASSERT(inputbits);
     for(int i=0; i<input.length(); i++){
-        //qDebug()<<"Setting row "<<row<<", col"<<col<<"to value"<<input.at(i).toLatin1();
-
         switch(input.at(i).toLatin1()){
         case '1':
             Q_ASSERT(inputbits[row]);
@@ -292,12 +290,34 @@ QByteArray GatoROM::decode(){
 // Disassembly, produced by Unidasm.
 QString GatoROM::dis(){
     QProcess process;
-    if(arch=="")
-        return QString("ERROR: Architecture not set in Edit/Decoding.");
+
     QByteArray bytes=decode();
     if(bytes.length()==0)
         return QString("ERROR: No bytes to disassemble.");
-    process.start("unidasm", QStringList() << "-arch" << arch << "-");
+
+
+    /* Architectures are optionally prefixed by the disassembler.  If none
+     * is specified, we default to Unidasm.
+     */
+    QString a=arch, assembler="unidasm";
+
+    //Janky parser.
+    QStringList tmp=arch.split("/");
+    if(tmp.count()==2){
+        assembler=tmp[0];
+        a=tmp[1];
+    }
+    if(a=="")
+        return QString("ERROR: Architecture not set in Edit/Decoding.");
+
+    if(assembler=="goodasm")
+        process.start("goodasm", QStringList() << "-dba" << "--"+a << "-");
+    else if(assembler=="r2" || assembler=="rasm2")
+        process.start("rasm2", QStringList() << "-BD" <<"-a" << a << "-f" << "-");
+    else // unidasm default.
+        process.start("unidasm", QStringList() << "-arch" << a << "-");
+
+
     process.write(decode());
 
     process.closeWriteChannel();
@@ -305,7 +325,7 @@ QString GatoROM::dis(){
     QString res=process.readAllStandardOutput();
     if(process.exitStatus()==QProcess::NormalExit && res.length()>0)
         return res;
-    return QString("ERROR: Is MAME's Unidasm in the path?");
+    return QString("ERROR: Is "+assembler+" in the path?\n\n"+process.readAllStandardError());
 }
 
 //Performs a sanity check.  Call this after decode(), error if false.
