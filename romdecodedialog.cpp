@@ -91,12 +91,14 @@ RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
      * --Travis
      */
     QString r2archs=
-        " 6502 6502.cs alpha amd29k any.as any.vasm arc arm.nz arm.v35 bf bpf.mr "
-        " chip8 cr16 cris dis ebc h8300 hppa i4004 i8080 java jdh8 kvx lanai     "
-        " lh5801 lm32 loongarch lua m680x m68k m68k.gnu mcore mcs96 mips.gnu     "
-        " msp430 nios2 null or1k pdp11 pic pickle ppc ppc.gnu propeller pyc      "
-        " riscv rsp s390 s390.gnu sh sm5xx snes sparc sparc.gnu tms320 tricore   "
-        " v810 v850 vax wasm ws x86.nasm x86.nz xap xcore xtensa z80             ";
+      "6502 6502.cs 8051 alpha amd29k any.as any.vasm arc arm.nz arm arm.gnu "
+      "arm.v35 avr bf bpf.mr bpf chip8 cr16 cris dalvik dis ebc evm fslsp gb "
+      "h8300 hppa i4004 i8080 java jdh8 kvx lanai lh5801 lm32 loongarch lua  "
+      "m680x m68k m68k.gnu mcore mcs96 mips mips.gnu msp430 nds32 nios2 null "
+      "or1k pdp11 pic pickle ppc ppc.gnu propeller pyc riscv riscv.cs rsp    "
+      "s390 s390.gnu sh sh.cs sm5xx snes sparc sparc.gnu stm8 tms320 tricore "
+      "tricore.cs v810 v850 vax wasm ws x86 x86.nasm x86.nz xap xcore xtensa "
+      "z80";
     QStringList r2list=r2archs.split(" ", Qt::SkipEmptyParts);
     r2list.sort();
     for(int i=0; i<r2list.length(); i++)
