@@ -20,6 +20,10 @@ export DEPLOYQT=~/Qt/6.7.2/macos/bin/macdeployqt
 ## Remove the old releases.
 rm -rf build release
 
+## We screwed up the 2024-06-23 release on macOS/x86_64 by forgetting to pull, so always do that.
+git pull
+
+
 mkdir build
 (cd build && $CMAKE .. && make -j 8)
 
