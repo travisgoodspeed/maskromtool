@@ -1,0 +1,90 @@
+name: Build
+
+env: 
+  # Multi-threaded compilation for MSVC
+  CL: /MP
+
+on: [workflow_dispatch, push]
+    
+jobs:
+  Build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        version: [6.5.1]
+        include:
+        - os: windows-latest
+          os-caption: Windows
+        - os: ubuntu-latest
+          os-caption: Ubuntu
+        - os: macos-latest
+          os-caption: MacOS
+
+    runs-on: ${{matrix.os}}
+    steps:
+    - name: Clone Project
+      uses: actions/checkout@v2.4.2
+
+    - name: Update packages (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        sudo apt-get update
+        sudo apt-get install make gcc g++ cmake git
+        
+    - name: Install Qt (Others)
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{matrix.version}}
+        modules: qtcharts
+        
+    - name: Configure MSVC (Windows)
+      if: contains(matrix.os, 'windows')
+      uses: ilammy/msvc-dev-cmd@v1
+      
+    - name: Make Project
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+
+    - name: Build Project (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        cd build
+        msbuild maskromtool.sln /property:Configuration=Release -maxcpucount
+
+    - name: Build Project (Others)
+      if: contains(matrix.os, 'windows') != true
+      run: |
+        cd build
+        make -j3
+        
+    - name: Packing (Ubuntu)
+      if: contains(matrix.os, 'ubuntu')
+      run: |
+        mkdir release
+        cp ./build/maskromtool ./release/
+        
+    - name: Packing (Windows)
+      if: contains(matrix.os, 'windows')
+      run: |
+        mkdir release
+        cd build
+        windeployqt --no-compiler-runtime Release
+        move Release ..\
+    
+    - name: Packing (MacOS)
+      if: contains(matrix.os, 'macos')
+      run: |
+        mkdir release
+        cp -rf build/maskromtool.app release/
+        macdeployqt release/maskromtool.app -sign-for-notarization="Developer ID Application: Travis Goodspeed"
+        hdiutil create -volname "maskromtool" -srcfolder "./release/maskromtool.app" -ov -format UDZO "./release/maskromtool.dmg"
+        rm -rf "./release/maskromtool.app"
+    
+    - name: Create Artifact
+      uses: actions/upload-artifact@v2
+      with:
+         name: "maskromtool (${{matrix.os-caption}})"
+         path: ./release/
