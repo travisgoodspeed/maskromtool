@@ -72,7 +72,7 @@ jobs:
         mkdir release
         cd build
         windeployqt --no-compiler-runtime Release
-        move Release ..\
+        move Release\* ..\release\
     
     - name: Packing (MacOS)
       if: contains(matrix.os, 'macos')
