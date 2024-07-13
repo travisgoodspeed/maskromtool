@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{matrix.os}}
     steps:
     - name: Clone Project
-      uses: actions/checkout@v2.4.2
+      uses: actions/checkout@v4
 
     - name: Update packages (Ubuntu)
       if: contains(matrix.os, 'ubuntu')
@@ -71,8 +71,8 @@ jobs:
       run: |
         mkdir release
         cd build
-        windeployqt --no-compiler-runtime Release
-        move Release ..\
+        windeployqt --no-compiler-runtime Release\maskromtool.exe
+        move Release\* ..\release\
     
     - name: Packing (MacOS)
       if: contains(matrix.os, 'macos')
@@ -84,7 +84,7 @@ jobs:
         rm -rf "./release/maskromtool.app"
     
     - name: Create Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
          name: "maskromtool (${{matrix.os-caption}})"
          path: ./release/
