@@ -5,6 +5,11 @@
 
 #include "rombititem.h"
 
+/* This dialog is used to choose the bit threshold colors,
+ * and also to view the color channel histograms that
+ * are needed to choose the right threshold.
+ */
+
 
 RomThresholdDialog::RomThresholdDialog() :
     QDialog(),
@@ -168,13 +173,13 @@ void RomThresholdDialog::on_sizeScrollBar_valueChanged(int value){
 }
 
 
-
 void RomThresholdDialog::on_redEdit_textEdited(const QString &arg1){
     bool ok=false;
     int val=arg1.toInt(&ok,10);
     if(ok){
         mrt->markUndoPoint();
         ui->redScrollBar->setValue(val);
+        mrt->gatorom();
     }
 }
 void RomThresholdDialog::on_greenEdit_textEdited(const QString &arg1){
@@ -183,6 +188,7 @@ void RomThresholdDialog::on_greenEdit_textEdited(const QString &arg1){
     if(ok){
         mrt->markUndoPoint();
         ui->greenScrollBar->setValue(val);
+        mrt->gatorom();
     }
 }
 void RomThresholdDialog::on_blueEdit_textEdited(const QString &arg1){
@@ -191,6 +197,7 @@ void RomThresholdDialog::on_blueEdit_textEdited(const QString &arg1){
     if(ok){
         mrt->markUndoPoint();
         ui->blueScrollBar->setValue(val);
+        mrt->gatorom();
     }
 }
 
@@ -207,6 +214,7 @@ void RomThresholdDialog::on_samplesizeEdit_textEdited(const QString &arg1){
         mrt->markUndoPoint();
         ui->samplesizeScrollBar->setValue(val);
         postThresholds();
+        mrt->gatorom();
     }
 }
 
@@ -219,8 +227,10 @@ void RomThresholdDialog::on_checkInverted_stateChanged(int arg1){
     mrt->markUndoPoint();
     //2 means checked, 0 means unchecked.
     mrt->inverted=(arg1==2);
-}
+    postThresholds();
+    mrt->gatorom();
 
+}
 
 /* We update the colors a lot, but we only mark an undo point
  * when we press the slider, as that's when it has the *old*
@@ -238,4 +248,22 @@ void RomThresholdDialog::on_blueScrollBar_sliderPressed(){
 void RomThresholdDialog::on_samplesizeScrollBar_sliderPressed(){
     mrt->markUndoPoint();
 }
+
+/* Updating bits and decodings is expensive, so we only do it
+ * when the slider is released.
+ */
+void RomThresholdDialog::on_redScrollBar_sliderReleased(){
+    mrt->gatorom();
+}
+void RomThresholdDialog::on_greenScrollBar_sliderReleased(){
+    mrt->gatorom();
+}
+void RomThresholdDialog::on_blueScrollBar_sliderReleased(){
+    mrt->gatorom();
+}
+void RomThresholdDialog::on_samplesizeScrollBar_sliderReleased(){
+    mrt->gatorom();
+}
+
+
 

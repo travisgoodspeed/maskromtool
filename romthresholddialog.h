@@ -51,6 +51,10 @@ private slots:
     void on_greenScrollBar_sliderPressed();
     void on_blueScrollBar_sliderPressed();
     void on_samplesizeScrollBar_sliderPressed();
+    void on_redScrollBar_sliderReleased();
+    void on_greenScrollBar_sliderReleased();
+    void on_blueScrollBar_sliderReleased();
+    void on_samplesizeScrollBar_sliderReleased();
 };
 
 #endif // ROMTHRESHOLDDIALOG_H
