@@ -26,6 +26,9 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
+`master` -- Gatorom's solver-set option now uses descriptive
+fiilenames.
+
 2024-07-14 -- Fixes crash when deleting a double-selected item.  Delete
 and backspace now delete objects like `D`.  Multiple disassemblers.
 Decodings are now updated as decoding thresholds are changed.

@@ -93,6 +93,9 @@ public:
     QString description();
     //Loads from the same description.
     void configFromDescription(QString description);
+    //Returns an English description of the current ROM state as a filename.
+    QString descriptiveFilename();
+
 
     //Returns the first eight bytes as a preview.
     QString preview();

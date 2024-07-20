@@ -79,6 +79,34 @@ QString GatoROM::description(){
     return d;
 }
 
+//Returns an English description of the current ROM state as a filename.
+QString GatoROM::descriptiveFilename(){
+    QString d="";
+
+    if(wordsize!=8)
+        d.append("-word"+QString::number(wordsize));
+
+    if(zorrommode)
+        d.append("-z");
+    if(decoder)
+        d.append("-"+decoder->name);
+    if(inverted)
+        d.append("-i");
+    d.append("-r"+QString::number(angle));
+    if(flippedx)
+        d.append("-flipx");
+    if(flippedy)
+        d.append("-flipy");
+
+    //Cuts the image in half.  Needed for MC6801U4.
+    if(bank==1)
+        d.append("-leftbank");
+    if(bank==2)
+        d.append("-rightbank");
+
+    return d;
+}
+
 //Loads from the same description.
 void GatoROM::configFromDescription(QString d){
     //Forgive me for using a shotgun parser here.
