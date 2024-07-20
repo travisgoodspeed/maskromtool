@@ -84,7 +84,7 @@ set(MRT_SOURCES
         romdecoderascii.h romdecoderascii.cpp
         romdecoderjson.h romdecoderjson.cpp
         romdecodercsv.h romdecodercsv.cpp
-        romdecodermarc4.h romdecodermarc4.cpp
+#        romdecodermarc4.h romdecodermarc4.cpp   # Deprecated, needs to move to gatorom.
         romdecoderphotograph.h romdecoderphotograph.cpp
         romdecoderhistogram.h romdecoderhistogram.cpp
         romencoderdiff.h romencoderdiff.cpp

@@ -62,7 +62,6 @@
      <addaction name="exportHistogram"/>
      <addaction name="separator"/>
      <addaction name="exportROMBytes"/>
-     <addaction name="exportMARC4"/>
     </widget>
     <widget class="QMenu" name="menuImport">
      <property name="title">
@@ -292,14 +291,6 @@
    </property>
    <property name="text">
     <string>Crosshair</string>
-   </property>
-  </action>
-  <action name="exportMARC4">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>MARC4 ROM Bytes</string>
    </property>
   </action>
   <action name="actionRunDRC">
