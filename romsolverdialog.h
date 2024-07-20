@@ -5,6 +5,7 @@
 #include <QTemporaryFile>
 
 class MaskRomTool;
+class GatoGrader;
 
 
 namespace Ui {
@@ -21,10 +22,11 @@ public:
     void setMaskRomTool(MaskRomTool *mrt);
     void setYaraRule(QString rule);
     QString yararule;
+    GatoGrader* grader();
+    void solve(QString solveset="");
 
 private slots:
     void on_butSolve_clicked();
-
     void on_editYara_textChanged();
 
 private:

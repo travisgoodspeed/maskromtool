@@ -62,6 +62,7 @@
      <addaction name="exportHistogram"/>
      <addaction name="separator"/>
      <addaction name="exportROMBytes"/>
+     <addaction name="exportSolverSetBytes"/>
     </widget>
     <widget class="QMenu" name="menuImport">
      <property name="title">
@@ -508,6 +509,11 @@
   <action name="crosshaircolorButton">
    <property name="text">
     <string>Crosshair Color</string>
+   </property>
+  </action>
+  <action name="exportSolverSetBytes">
+   <property name="text">
+    <string>Solver Set Bytes</string>
    </property>
   </action>
  </widget>

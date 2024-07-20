@@ -425,8 +425,6 @@ int main(int argc, char *argv[]) {
 
             GatoSolver solver(gr, grader);
             for(solver.init(); !solver.finished(); solver.next()){
-                int state=solver.state;
-                //QString statestring=QString::asprintf("%04x", state);  //Older behavior, with hash.
                 QString statestring=gr->descriptiveFilename();
 
                 //We aren't interested in zero scores or empty results.
@@ -434,9 +432,8 @@ int main(int argc, char *argv[]) {
                     std::cout<<solver.grade()<<"   \t"
                               <<gr->preview().toStdString()<<"\t"
                               <<parser.value(solvesetOption).toStdString()<<statestring.toStdString()<<".bin\n";
-                    //All outputs go when we're dumping the set.
-                    if(parser.isSet(solvesetOption)){
 
+                    if(solver.grade()>90 && parser.isSet(solvesetOption)){
                         QFile outfile(parser.value(solvesetOption)+statestring+".bin");
                         outfile.open(QIODevice::WriteOnly);
                         outfile.write(gr->decoded);

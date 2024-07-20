@@ -1811,21 +1811,34 @@ void MaskRomTool::on_actionRedo_triggered(){
     redo();
 }
 
-
+//Shows the ASCII strings dialog.
 void MaskRomTool::on_stringsButton_triggered(){
     gatorom();
     stringsDialog.show();
 }
 
+//Shows the solver dialog.
 void MaskRomTool::on_actionSolver_triggered(){
     gatorom();
     solverDialog.show();
 }
 
 
+void MaskRomTool::on_exportSolverSetBytes_triggered(){
+    //QFileDialog::getSaveFileName(this,tr("Save JSON"), tr("bits.json"));
+    QString filename = QFileDialog::getExistingDirectory(this,tr("Export Directory"));
+    filename += "/solver";
+
+    if(!filename.isEmpty())
+        solverDialog.solve(filename);
+}
+
+
+
 void MaskRomTool::on_actionDisassembly_triggered(){
     gatorom();
     disDialog.show();
 }
+
 
 

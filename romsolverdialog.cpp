@@ -36,17 +36,10 @@ void RomSolverDialog::on_editYara_textChanged(){
     yararule=ui->editYara->toPlainText();
 }
 
-
-/* This runs through the potential solutions, using the GUI
- * settings.
+/* Returns a new GatoGrader based upon the GUI settings.
  */
-void RomSolverDialog::on_butSolve_clicked(){
+GatoGrader* RomSolverDialog::grader(){
     GatoGrader *grader=0;
-    GatoROM *gr=&(mrt->gr);
-    QString oldstate=gr->description();
-
-    mrt->solutionsDialog.clearSolutions();
-    mrt->solutionsDialog.show();
 
     int index=ui->tabWidget->currentIndex();
     switch(index){
@@ -71,16 +64,42 @@ void RomSolverDialog::on_butSolve_clicked(){
         break;
     default:
         qDebug()<<"Unknown solver tab"<<index;
-        return;
+        break;
     }
+
+    return grader;
+}
+
+/* This generates the GUI solutions and populates the solution set.
+ * If "solveset" is not empty, each solution will be exported as
+ * well.
+ */
+void RomSolverDialog::solve(QString solveset){
+    GatoGrader *grader=0;
+    GatoROM *gr=&(mrt->gr);
+    QString oldstate=gr->description();
+
+    mrt->solutionsDialog.clearSolutions();
+    mrt->solutionsDialog.show();
+
+    grader=this->grader();
+    if(!grader) return;
 
     GatoSolver solver(gr, grader);
     for(solver.init(); !solver.finished(); solver.next()){
         int grade=solver.grade();
-        QString statestring=gr->description();
+        QString statestring=gr->descriptiveFilename();
 
         if(grade>=90){
             mrt->solutionsDialog.registerSolution(grade, statestring);
+
+            //When called from File/Export/SolveSetBINs
+            if(solveset.length()>0){
+                QFile outfile(solveset+statestring+".bin");
+                outfile.open(QIODevice::WriteOnly);
+                outfile.write(gr->decoded);
+                outfile.close();
+            }
         }
     }
 
@@ -95,9 +114,15 @@ void RomSolverDialog::on_butSolve_clicked(){
     mrt->gr.configFromDescription(oldstate);
     mrt->decodeDialog.update();
 
-
     if(grader)
         delete grader;
+}
+
+/* This runs through the potential solutions, using the GUI
+ * settings.
+ */
+void RomSolverDialog::on_butSolve_clicked(){
+    solve();
 }
 
 

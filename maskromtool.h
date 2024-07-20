@@ -283,6 +283,8 @@ private slots:
 
     void on_crosshaircolorButton_triggered();
 
+    void on_exportSolverSetBytes_triggered();
+
 private:
     Ui::MaskRomTool *ui;
     qreal thresholdR, thresholdG, thresholdB;
