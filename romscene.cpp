@@ -70,6 +70,10 @@ void RomScene::updateCrosshairs(bool dragging){
     yline2.setPen(QPen(maskRomTool->crosshairColor));
 
     if(dragging){
+        /* When dragging, we use the lines to draw a green box around
+         * the selection.  The box fits within the view, as crosshair
+         * lines are not useful in this operation.
+         */
         xline.setPen(QPen(maskRomTool->selectionColor,2,Qt::DashDotLine));
         xline2.setPen(QPen(maskRomTool->selectionColor,2,Qt::DashDotLine));
         yline.setPen(QPen(maskRomTool->selectionColor,2,Qt::DashDotLine));
@@ -84,9 +88,11 @@ void RomScene::updateCrosshairs(bool dragging){
         xline2.setLine(0,0,scenepos.x()-presspos.x(),0);
         yline2.setPos(presspos.x(), presspos.y());
         yline2.setLine(0,0,0,scenepos.y()-presspos.y());
-
-
     }else{
+        /* When not dragging, the crosshairs are tilted to match the most
+         * recent row and column lines.
+         */
+
         //The horizontal line.
         xline.setPos(scenepos.x(), scenepos.y());
         xline.setLine(-linesizex,0,linesizex,0);
@@ -249,6 +255,8 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
         //Restore visibility of the crosshairs.
         setCrosshairVisible(crosshairVisible);
+        //Redraw the crosshairs without dragging.
+        updateCrosshairs(false);
 
         //Update the highlighting so the user knows what's going on.
         highlightSelection();
