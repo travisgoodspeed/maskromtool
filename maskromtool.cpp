@@ -511,6 +511,9 @@ bool MaskRomTool::insertLine(RomLineItem* rlitem){
     scene->addItem(rlitem);
     rlitem->setPos(scene->scenepos);
 
+    //Correct the mistake in case we mix rows and columns.
+    lastlinetype=rlitem->setType()-RomLineItem::UserType;
+
 
     /* Duplicate lines will appear when the space bar is hit twice.
      * We have to handle this situation, or users will get confused
@@ -527,7 +530,6 @@ bool MaskRomTool::insertLine(RomLineItem* rlitem){
                  */
                 qDebug()<<"Removing old line to avoid duplication.";
                 removeItem(oldline);
-                //return false;
             }
         }
     }
@@ -535,10 +537,9 @@ bool MaskRomTool::insertLine(RomLineItem* rlitem){
     //Focus on the new item, and also select it as the only item of a list.
     scene->setFocusItem(rlitem);
 
-
     if(rlitem->type()==QGraphicsItem::UserType) //row
         rows.insert(rlitem);
-    else //Column
+    else //Column, UserType+1
         cols.insert(rlitem);
     markLine(rlitem);
 

@@ -27,6 +27,8 @@ public:
 
     //Allows for fast lookups.
     virtual int type() const override;
+    //Self-checks the type to a row or column.
+    int setType();
 };
 
 #endif // ROMLINEITEM_H

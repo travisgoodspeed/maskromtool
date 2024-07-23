@@ -8,12 +8,29 @@ RomLineItem::RomLineItem(int linetype)
     setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 }
 
-
+//Returns the already defined type.
 int RomLineItem::type() const{
     /* UserType+0 -- Row
      * UserType+1 -- Col
      * UserType+2 -- Bit
      */
+    return linetype+UserType;
+}
+
+//Calculates the type from the angle, then returns it.
+int RomLineItem::setType(){
+    qreal angle=this->line().angle();
+    if(angle>180) angle-=180;
+
+    //qDebug()<<"Angle is "<<angle<<"of a "<<(linetype?"column":"row");
+
+    //Correct a vertical row into a column.
+    if(linetype==0 && angle>60 && angle<120)
+        linetype=1;
+    //Correct a horizontal column into a row.
+    if(linetype==1 && (angle<30 || angle>150))
+        linetype=0;
+
     return linetype+UserType;
 }
 
