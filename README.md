@@ -28,7 +28,7 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 `master` -- Gatorom's solver-set option now uses descriptive
 fiilenames.  GUI can now export a set of solved results with
-File/Export/SolverSetBytes.
+File/Export/SolverSetBytes.  Clearer selection rectangle.
 
 2024-07-14 -- Fixes crash when deleting a double-selected item.  Delete
 and backspace now delete objects like `D`.  Multiple disassemblers.

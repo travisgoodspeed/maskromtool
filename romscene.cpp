@@ -69,35 +69,52 @@ void RomScene::updateCrosshairs(bool dragging){
     xline2.setPen(QPen(maskRomTool->crosshairColor));
     yline2.setPen(QPen(maskRomTool->crosshairColor));
 
+    if(dragging){
+        xline.setPen(QPen(maskRomTool->selectionColor,2,Qt::DashDotLine));
+        xline2.setPen(QPen(maskRomTool->selectionColor,2,Qt::DashDotLine));
+        yline.setPen(QPen(maskRomTool->selectionColor,2,Qt::DashDotLine));
+        yline2.setPen(QPen(maskRomTool->selectionColor,2,Qt::DashDotLine));
 
-    //The horizontal line.
-    xline.setPos(scenepos.x(), scenepos.y());
-    xline.setLine(-linesizex,0,linesizex,0);
-    QLineF l=xline.line();
-    l.setAngle(rowAngle);
-    xline.setLine(l);
-    if(!dragging)
-        xline2.setLine(l);
-    //The line's angle is now right, but we still need to center it on the cursor.
-    QPointF c=l.center();
-    xline.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
-    if(!dragging)
-        xline2.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
+        xline.setPos(scenepos.x(), scenepos.y());
+        xline.setLine(0,0,presspos.x()-scenepos.x(),0);
+        yline.setPos(scenepos.x(), scenepos.y());
+        yline.setLine(0,0,0,presspos.y()-scenepos.y());
 
-    //The vertical line.
-    yline.setPos(scenepos.x(), scenepos.y());
-    yline.setLine(0,-linesizey,0,linesizey);
-    l=xline.line();
-    l.setAngle(colAngle);
-    yline.setLine(l);
-    if(!dragging)
-        yline2.setLine(l);
-    //The line's angle is now right, but we still need to center it on the cursor.
-    c=l.center();
-    yline.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
-    if(!dragging)
-        yline2.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
+        xline2.setPos(presspos.x(), presspos.y());
+        xline2.setLine(0,0,scenepos.x()-presspos.x(),0);
+        yline2.setPos(presspos.x(), presspos.y());
+        yline2.setLine(0,0,0,scenepos.y()-presspos.y());
 
+
+    }else{
+        //The horizontal line.
+        xline.setPos(scenepos.x(), scenepos.y());
+        xline.setLine(-linesizex,0,linesizex,0);
+        QLineF l=xline.line();
+        l.setAngle(rowAngle);
+        xline.setLine(l);
+        if(!dragging)
+            xline2.setLine(l);
+        //The line's angle is now right, but we still need to center it on the cursor.
+        QPointF c=l.center();
+        xline.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
+        if(!dragging)
+            xline2.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
+
+        //The vertical line.
+        yline.setPos(scenepos.x(), scenepos.y());
+        yline.setLine(0,-linesizey,0,linesizey);
+        l=xline.line();
+        l.setAngle(colAngle);
+        yline.setLine(l);
+        if(!dragging)
+            yline2.setLine(l);
+        //The line's angle is now right, but we still need to center it on the cursor.
+        c=l.center();
+        yline.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
+        if(!dragging)
+            yline2.setPos(scenepos.x()-c.rx(), scenepos.y()-c.ry());
+    }
 }
 
 //Updates the status bar to describe the position.
