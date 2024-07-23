@@ -1,6 +1,15 @@
 #include "romalignerreliable.h"
 #include "maskromtool.h"
-#include "romalignernew.h"
+
+/* These simple sorting functions were much more compliated
+ * in lesser algorithms.  It's nice to have them be simple again.
+ */
+static bool leftOf(RomBitItem * left, RomBitItem * right){
+    return (left->x() < right->x());
+}
+static bool above(RomBitItem * top, RomBitItem * bottom){
+    return (top->y() < bottom->y());
+}
 
 RomAlignerReliable::RomAlignerReliable() {
     name="RomAlignerReliable";
@@ -12,7 +21,7 @@ RomBitItem* RomAlignerReliable::markBitTable(MaskRomTool* mrt){
     //First we remove all the old bit marks and pointers.
     foreach (RomBitItem* bit, bits){
         //Clear the markup details.
-        bit->marked=false;  //No used by this aligner.
+        bit->marked=false;  //Not used by this aligner.
         bit->nextrow=0;
         bit->nexttoright=0;
         bit->lastinrow=0;   //Speeds up linked list usage.

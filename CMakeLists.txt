@@ -90,7 +90,6 @@ set(MRT_SOURCES
         romencoderdiff.h romencoderdiff.cpp
 # Alignment stategies
         romaligner.h romaligner.cpp
-        romalignernew.h romalignernew.cpp
         romalignerreliable.h romalignerreliable.cpp
         romaligndialog.h romaligndialog.cpp romaligndialog.ui
         romrule.h romrule.cpp
