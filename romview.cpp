@@ -1,4 +1,6 @@
 #include "romview.h"
+#include "maskromtool.h"
+#include "romscene.h"
 
 #include<QMouseEvent>
 #include<QScrollBar>
@@ -24,6 +26,63 @@ RomView::RomView(QWidget *parent){
     //setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
 
 
+}
+
+
+void RomView::setScene(RomScene* scene){
+    QGraphicsView::setScene(scene);
+    this->scene=scene;
+    this->mrt=scene->maskRomTool;
+}
+
+
+//Handles keypresses unique to the view.
+void RomView::keyPressEvent(QKeyEvent *event){
+    int key=event->key();
+
+    bool alt=event->modifiers()&Qt::AltModifier;
+    bool shift=event->modifiers()&Qt::ShiftModifier;
+    bool ctrl=event->modifiers()&Qt::CTRL;
+    bool none=!ctrl && !shift && !alt;
+
+    //Let the main class know which view is active,
+    //for things like centering on an object.
+    mrt->activeView=this;
+
+    switch(key){
+
+    case Qt::Key_Q: //Reset Zoom
+        if(none){
+            resetTransform();
+            totalScaleFactor=1;
+        }
+        break;
+    case Qt::Key_A:
+        if(none)
+            scale(1/1.2);
+        break;
+    case Qt::Key_Z: //Zoom Out
+        if(none)
+            scale(1.2);
+        break;
+    case Qt::Key_F:
+        if(none) //Focus
+            centerOn(scene->focusItem());
+        break;
+    case Qt::Key_H: //Home button.
+        if(none) //Jump to home when no modifiers are held.
+            centerOn(mrt->home);
+
+        break;
+    }
+
+    /* See that we forward the event even if we handle some
+     * forms of it, so that RomScene or MaskRomTool might handle
+     * the same key with different modifiers.
+     *
+     * If you don't want to forward it, do a return.
+     */
+    return QGraphicsView::keyPressEvent(event);
 }
 
 void RomView::centerOn(QGraphicsItem* item){

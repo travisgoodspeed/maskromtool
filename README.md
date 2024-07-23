@@ -30,6 +30,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 fiilenames.  GUI can now export a set of solved results with
 File/Export/SolverSetBytes.  Clearer selection rectangle.  `R` and `C`
 will now draw the correct line type when the user confuses them.
+`^H` now sets the home position.  Zooming and movement keys
+now work in the second view.
 
 2024-07-14 -- Fixes crash when deleting a double-selected item.  Delete
 and backspace now delete objects like `D`.  Multiple disassemblers.
@@ -179,7 +181,7 @@ Q           -- Zoom to zero.
 A           -- Zoom in.
 Z           -- Zoom out.
 H           -- Jump to home position.
-SHIFT H     -- Set the home position.
+^H          -- Set the home position.
 
 
 SHIFT F     -- Force a bit's value. (Again to flip.)

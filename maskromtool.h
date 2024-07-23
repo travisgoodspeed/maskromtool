@@ -211,8 +211,11 @@ public:
 
     //The scene.
     RomScene* scene;
-    //The view
+    //The main window view
     RomView* view;
+    //The active view, not necessarily main window.
+    RomView* activeView=0;
+
     //Last row and column.
     QLineF lastrow, lastcol;
     //Was the last line dropped a row or a column?

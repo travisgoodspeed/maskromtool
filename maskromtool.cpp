@@ -74,6 +74,7 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     scene->maskRomTool=this;
     ui->graphicsView->setScene(scene);
     view=ui->graphicsView;
+    activeView=view; //Default to active window.
 
     //Some child dialogs need pointers back to the main project.
     disDialog.setMaskRomTool(this);
@@ -500,7 +501,7 @@ void MaskRomTool::setViolationsVisible(bool b){
 
 //Highlights one item close to the center.
 void MaskRomTool::centerOn(QGraphicsItem* item){
-    view->centerOn(item);
+    activeView->centerOn(item);
 }
 
 //Inserts a new line, either row or column.
@@ -555,36 +556,30 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     bool alt=event->modifiers()&Qt::AltModifier;
     bool shift=event->modifiers()&Qt::ShiftModifier;
     bool ctrl=event->modifiers()&Qt::CTRL;
+    bool none=!ctrl && !shift && !alt;
 
 
     switch(key){
-    //Zoom/view keys.
+    /* These are keys which are handled for the global
+     * environment.  See RomView for those specific to a
+     * single window's view.
+     */
     case Qt::Key_H: //Home button.
-        if(shift){ //Set home.
+        if((ctrl || shift) & !alt) //Set home.
             home=scene->scenepos;
-        }else{ //Jump to home when no modifiers are held.
-            ui->graphicsView->centerOn(home);
-        }
         break;
-    case Qt::Key_Q: //Reset Zoom
-        ui->graphicsView->resetTransform();
-        ui->graphicsView->totalScaleFactor=1;
-        break;
+
     case Qt::Key_A:
-        if(shift){ //Damage/Ambiguate bit.
+        if(shift && !ctrl && !alt){ //Damage/Ambiguate bit.
             markUndoPoint();
             damageBit(scene->scenepos);
-        }else{ //Zoom in.
-            ui->graphicsView->scale(1/1.2);
         }
         break;
-    case Qt::Key_Z: //Undo, Redo, Zoom out.
-        if(ctrl && !shift)
+    case Qt::Key_Z: //Undo, Redo
+        if(ctrl && !shift && !alt)
             undo();
-        else if(ctrl && shift)
+        else if(ctrl && shift && !alt)
             redo();
-        else //zoom out
-            ui->graphicsView->scale(1.2);
         break;
     case Qt::Key_Tab: //Show/Hide BG
         /* I'd love to use tab with modifiers here to hide and show
@@ -607,13 +602,9 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
         break;
     case Qt::Key_F:
-        if(shift){ //Force a Bit
+        if(shift && !ctrl && !alt){ //Force a Bit
             markUndoPoint();
-            fixBit(scene->scenepos);
             statusBar()->showMessage(tr("Forced a bit."));
-        }else{//Focus
-            ui->graphicsView->centerOn(scene->focusItem());
-            statusBar()->showMessage(tr("Focusing on selected item."));
         }
         break;
     case Qt::Key_V: //DRC
@@ -661,9 +652,11 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //Save or set Position
     case Qt::Key_S:
-        if(ctrl){
+        if(ctrl && !shift && !alt){
             on_saveButton_triggered();
-        }else if(scene->focusItem()){
+        }else if(none && scene->focusItem()){
+            markUndoPoint();
+
             switch(scene->focusItem()->type()){
             case QGraphicsItem::UserType: //row
             case QGraphicsItem::UserType+1: //column
