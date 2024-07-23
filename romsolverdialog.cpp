@@ -88,14 +88,14 @@ void RomSolverDialog::solve(QString solveset){
     GatoSolver solver(gr, grader);
     for(solver.init(); !solver.finished(); solver.next()){
         int grade=solver.grade();
-        QString statestring=gr->descriptiveFilename();
+        QString statestring=gr->description();
 
         if(grade>=90){
             mrt->solutionsDialog.registerSolution(grade, statestring);
 
             //When called from File/Export/SolveSetBINs
             if(solveset.length()>0){
-                QFile outfile(solveset+statestring+".bin");
+                QFile outfile(solveset+gr->descriptiveFilename()+".bin");
                 outfile.open(QIODevice::WriteOnly);
                 outfile.write(gr->decoded);
                 outfile.close();
