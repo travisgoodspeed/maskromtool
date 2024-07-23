@@ -40,6 +40,12 @@ void RomView::setScene(RomScene* scene){
 void RomView::keyPressEvent(QKeyEvent *event){
     int key=event->key();
 
+    /* Key combos are handled in three places:
+     * 1. RomView
+     * 2. RomScene
+     * 3. MaskRomTool.
+     */
+
     bool alt=event->modifiers()&Qt::AltModifier;
     bool shift=event->modifiers()&Qt::ShiftModifier;
     bool ctrl=event->modifiers()&Qt::CTRL;

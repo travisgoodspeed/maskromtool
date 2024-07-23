@@ -548,10 +548,16 @@ bool MaskRomTool::insertLine(RomLineItem* rlitem){
 }
 
 
-//We might be a GUI, but keyboards are where it's add!
+//We might be a GUI, but keyboards are where it's at!
 void MaskRomTool::keyPressEvent(QKeyEvent *event){
     RomLineItem *rlitem;
     int key=event->key();
+
+    /* Key combos are handled in three places:
+     * 1. RomView
+     * 2. RomScene
+     * 3. MaskRomTool.
+     */
 
     bool alt=event->modifiers()&Qt::AltModifier;
     bool shift=event->modifiers()&Qt::ShiftModifier;

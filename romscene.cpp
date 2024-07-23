@@ -27,6 +27,12 @@ RomScene::RomScene(QObject *parent)
 }
 
 void RomScene::keyPressEvent(QKeyEvent *event){
+    /* Key combos are handled in three places:
+     * 1. RomView
+     * 2. RomScene
+     * 3. MaskRomTool.
+     */
+
     QPointF dpos=QPointF(0,0);
 
     switch(event->key()){
