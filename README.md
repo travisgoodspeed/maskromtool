@@ -29,9 +29,10 @@ is a Zilog Z8 ROM from a music synthesize module.
 `master` -- Gatorom's solver-set option now uses descriptive
 fiilenames.  GUI can now export a set of solved results with
 File/Export/SolverSetBytes.  Clearer selection rectangle.  `R` and `C`
-will now draw the correct line type when the user confuses them.
-`^H` now sets the home position.  Zooming and movement keys
-now work in the second view.
+will now draw the correct line type when the user confuses them.  `^H`
+now sets the home position.  Zooming and movement keys now work in the
+second view.  Perfectly duplicates lines are now culled during DRC by
+the `V` key.
 
 2024-07-14 -- Fixes crash when deleting a double-selected item.  Delete
 and backspace now delete objects like `D`.  Multiple disassemblers.
