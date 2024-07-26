@@ -316,6 +316,7 @@ void MaskRomTool::enableOpenGL(unsigned int antialiasing){
 
 //Defined as extern in maskromtool.h.
 unsigned int verbose=0;
+
 //Set the verbose value.
 void MaskRomTool::enableVerbose(unsigned int level){
     qDebug()<<"Enabling verbose mode level"<<level;
@@ -364,7 +365,7 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
 }
 
 //Duplicates an item, returning a pointer to the clone.
-QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item){
+QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item, bool move){
     RomLineItem* line=0;
 
     switch(item->type()){
@@ -380,6 +381,10 @@ QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item){
         else
             cols.insert(line);
         scene->addItem(line);
+
+        if(move)
+            item->setPos(item->pos()+QPointF(5,5));
+
         markLine(line);
         return line;
 
@@ -391,6 +396,57 @@ QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item){
     return 0;
 }
 
+
+//Removes all duplicates of a line.
+void MaskRomTool::removeDuplicates(RomLineItem* line){
+    //Set of lines to cull.
+    QSet<RomLineItem*> tocull;
+
+    /* Duplicate lines are impossible to separate in the GUI,
+     * so we kill them early.
+     */
+
+    foreach(QGraphicsItem* item, scene->collidingItems(line)){
+        if(item->type()==QGraphicsItem::UserType ||   //Row
+            item->type()==QGraphicsItem::UserType+1   //Column
+            ){
+            RomLineItem* oldline=(RomLineItem*) item;
+            if(oldline->line()==line->line()){
+                if(!tocull.contains(line) && !tocull.contains(oldline))
+                    tocull.insert(oldline);
+            }
+        }
+    }
+
+    //This removes the duplicates.
+    foreach(RomLineItem* line, tocull){
+        removeItem(line);
+    }
+
+}
+
+//Removes all duplicate rows and columns.
+void MaskRomTool::removeDuplicates(){
+    bool bitswerevisible=bitsVisible;
+    //FIXME: This could be a lot faster if rows and cols were sorted.
+
+    /* foreach will return lines that no longer exist,
+     * so it's important to check for their existence before
+     * culling their duplicates.
+     */
+    if(verbose)
+        qDebug()<<"Removing duplicate lines.";
+    setBitsVisible(false);
+    foreach(RomLineItem* line, rows)
+        if(rows.contains(line))
+            removeDuplicates(line);
+    foreach(RomLineItem* line, cols)
+        if(cols.contains(line))
+            removeDuplicates(line);
+    if(verbose)
+        qDebug()<<"Duplicates removed.";
+    setBitsVisible(bitswerevisible);
+}
 
 //Always call this to remove an item, to keep things clean.
 void MaskRomTool::removeItem(QGraphicsItem* item){
@@ -614,9 +670,10 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         }
         break;
     case Qt::Key_V: //DRC
-        if(shift)
+
+        if(shift && !ctrl && !alt)
             clearViolations(); //Clear out the violations for now.
-        else
+        else if(none)
             runDRC(false);  //Just run the normal DRC, no key combo for the long one.
 
         break;
@@ -633,7 +690,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     case Qt::Key_Delete:
         markUndoPoint();
 
-        if(shift){  //Duplicate
+        if(shift && !ctrl && !alt){  //Duplicate
             /* This works by duplicating each selected line.  The original
              * plan was to then select the duplicates, but it makes just as
              * much sense to hold a selection of the original lines.
@@ -641,17 +698,18 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
             foreach(QGraphicsItem* item, scene->selection){
                 if(item &&
                     (item->type()==QGraphicsItem::UserType
-                             || item->type()==QGraphicsItem::UserType+1))
+                             || item->type()==QGraphicsItem::UserType+1)){
+                    //The original remains selected, so that's the one we move a bit to the side.
                     duplicateItem(item);
+                }
             }
-            statusBar()->showMessage(tr("Duplicated items."));
-        }else{      //Delete
+            //Update bits when done.
+            markBits();
+        }else if(none){      //Delete
             foreach(QGraphicsItem* item, scene->selection){
                 removeItem(item);
                 scene->selection.removeAll(item);
             }
-
-            statusBar()->showMessage(tr("Deleted items."));
         }
 
         break;
@@ -727,27 +785,37 @@ bool MaskRomTool::runDRC(bool all){
     //Clear the field for new violations.
     clearViolations();
 
-    //We'll crash if the bits aren't aligned.
+    //We'll crash if the bits aren't aligned, and duplicate lines are always a pain.
+    removeDuplicates();
     markBits();
 
     statusBar()->showMessage(tr("Running the Design Rule Checks. (DRC)"));
 
     RomRuleCount count;
-    if(ui->drcCount->isChecked() || all)
+    if(ui->drcCount->isChecked() || all){
+        if(verbose) qDebug()<<"DRC Count";
         count.evaluate(this);
+    }
 
     RomRuleDuplicate dupes;
-    if(ui->drcDuplicates->isChecked() || all)
+    if(ui->drcDuplicates->isChecked() || all){
+        if(verbose) qDebug()<<"DRC Dupes";
         dupes.evaluate(this);
+    }
 
     RomRuleSanity sanity;
-    if(ui->drcSanity->isChecked() || all)
+    if(ui->drcSanity->isChecked() || all){
+        if(verbose) qDebug()<<"DRC Sanity";
         sanity.evaluate(this);
+    }
 
     RomRuleAmbiguous ambiguity;
-    if(ui->drcAmbiguous->isChecked() || all)
+    if(ui->drcAmbiguous->isChecked() || all){
+        if(verbose) qDebug()<<"DRC Ambiguity";
         ambiguity.evaluate(this);
+    }
 
+    if(verbose) qDebug()<<"DRC done.";
 
     statusBar()->showMessage(tr("Found %1 Design Rule Check (DRC) violations.").arg(violations.count()));
     if(violations.count()>0)

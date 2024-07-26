@@ -72,8 +72,12 @@ public:
     long bitcount=0;             //Total count of bits from the latest marking.
     long rowcount=0, colcount=0;
     void removeItem(QGraphicsItem* item);    //Removes an item of any type from the view and its QSet.
-    QGraphicsItem* duplicateItem(QGraphicsItem* item);    //Duplicates an item and returns a pointer to the new one.
-
+    //Duplicates an item and returns a pointer to the new one.
+    QGraphicsItem* duplicateItem(QGraphicsItem* item,
+                                 bool move=false        //Set true to stagger every duplicate, making them visible.
+                                 );
+    void removeDuplicates(RomLineItem* line);  //Removes duplicates of a line.
+    void removeDuplicates();                  //Removes all duplicate rows and columns.
 
 
     /* This giant function handles our keypresses, including ones that maybe
