@@ -212,8 +212,10 @@ int main(int argc, char *argv[]){
     //Stress test.
     if(parser.isSet(stressOption)){
         qDebug()<<"Stressing the loaded project.";
-        for(int i=0; i<10; i++)
+        for(int i=0; i<10; i++){
+            qDebug()<<"Round"<<i;
             mrt.markBits();
+        }
     }
 
     //We don't return a failure code yet, but will if it comes to that.

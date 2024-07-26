@@ -180,21 +180,21 @@ void MaskRomTool::clear(){
     bits.empty();
     foreach (RomBitFix* item, bitfixes){
         //removeItem(item);
-        bitfixes.remove(item);
+        bitfixes.removeAll(item);
         delete item;
     }
     assert(bitfixes.isEmpty());
     bitfixes.empty();
     foreach (RomLineItem* item, rows){
         //removeItem(item);  //Slow!
-        rows.remove(item);
+        rows.removeAll(item);
         delete item;
     }
     assert(rows.isEmpty());
     rows.empty();
     foreach (RomLineItem* item, cols){
         //removeItem(item);  //Slow!
-        cols.remove(item);
+        cols.removeAll(item);
         delete item;
     }
     assert(cols.isEmpty());
@@ -356,10 +356,10 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
     if(fromsets)
         switch(line->type()){
         case QGraphicsItem::UserType: //row
-            rows.remove((RomLineItem*) line);
+            rows.removeAll((RomLineItem*) line);
             break;
         case QGraphicsItem::UserType+1: //column
-            cols.remove((RomLineItem*) line);
+            cols.removeAll((RomLineItem*) line);
             break;
         }
 }
@@ -377,9 +377,9 @@ QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item, bool move){
         line->setPos(((RomLineItem*) item)->pos());
         line->setLine(((RomLineItem*) item)->line());
         if(line->type()==QGraphicsItem::UserType) //row
-            rows.insert(line);
+            rows.append(line);
         else
-            cols.insert(line);
+            cols.append(line);
         scene->addItem(line);
 
         if(move)
@@ -478,11 +478,11 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
         bitcount--;
         break;
     case QGraphicsItem::UserType+3: //bit fix
-        bitfixes.remove((RomBitFix*) item);
+        bitfixes.removeAll((RomBitFix*) item);
         alignmentdirty=true;
         break;
     case QGraphicsItem::UserType+4: //rule violation
-        violations.remove((RomRuleViolation*) item);
+        violations.removeAll((RomRuleViolation*) item);
         //Gotta remove the violation so that it isn't used after a free.
         violationDialog.removeViolation((RomRuleViolation*) item);
         //Violations do not dirty the alignment.
@@ -595,9 +595,9 @@ bool MaskRomTool::insertLine(RomLineItem* rlitem){
     scene->setFocusItem(rlitem);
 
     if(rlitem->type()==QGraphicsItem::UserType) //row
-        rows.insert(rlitem);
+        rows.append(rlitem);
     else //Column, UserType+1
-        cols.insert(rlitem);
+        cols.append(rlitem);
     markLine(rlitem);
 
     return true;
@@ -846,7 +846,7 @@ void MaskRomTool::addViolation(RomRuleViolation* violation){
     qDebug()<<message.arg((violation->error?"ERROR":"WARNING"),
                               violation->title);
 
-    violations.insert(violation);
+    violations.append(violation);
     scene->addItem(violation);
     violationDialog.addViolation(violation);
 }
@@ -1311,7 +1311,7 @@ RomBitFix* MaskRomTool::getBitFix(RomBitItem* bit, bool create){
     if(create && !fix){
         fix=new RomBitFix(bit);
         scene->addItem(fix);
-        bitfixes.insert(fix);
+        bitfixes.append(fix);
     }
     return fix;
 }
@@ -1352,8 +1352,8 @@ void MaskRomTool::clearBitFixes(){
     //Just removes all the fixes, handy when you're retrying
     //a bad project.
     markUndoPoint();
-    foreach (RomBitFix* item, bitfixes.values()){
-        bitfixes.remove(item);
+    foreach (RomBitFix* item, bitfixes){
+        bitfixes.removeAll(item);
         removeItem(item);
     }
 }
@@ -1770,7 +1770,7 @@ void MaskRomTool::importJSON(QJsonObject o){
         l->read(jrows[i]);
         l->setPen(QPen(lineColor, 2));
         scene->addItem(l);
-        rows.insert(l);
+        rows.append(l);
         lastrow=l->line();
 
         progress.setValue(count++);
@@ -1782,7 +1782,7 @@ void MaskRomTool::importJSON(QJsonObject o){
         c->read(jcols[i]);
         c->setPen(QPen(lineColor, 2));
         scene->addItem(c);
-        cols.insert(c);
+        cols.append(c);
         lastcol=c->line();
 
         progress.setValue(count++);
@@ -1793,7 +1793,7 @@ void MaskRomTool::importJSON(QJsonObject o){
         RomBitFix *fix=new RomBitFix(0);
         fix->read(jfixes[i]);
         scene->addItem(fix);
-        bitfixes.insert(fix);
+        bitfixes.append(fix);
 
         progress.setValue(count++);
     }

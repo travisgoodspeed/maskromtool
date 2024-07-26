@@ -64,11 +64,11 @@ public:
     QImage background;
     QGraphicsPixmapItem *backgroundpixmap;
 
-    QSet<RomLineItem*> rows;     //Rows produce bits where they intersect with columns.
-    QSet<RomLineItem*> cols;     //Columns produce bits on rows.
+    QList<RomLineItem*> rows;     //Rows produce bits where they intersect with columns.
+    QList<RomLineItem*> cols;     //Columns produce bits on rows.
     QSet<RomBitItem*> bits;      //All of the bits from crosses.
-    QSet<RomBitFix*> bitfixes;   //Forced bits, used to keep human agency above the thinking machine.
-    QSet<RomRuleViolation*> violations;  //DRC Errors and warnings.
+    QList<RomBitFix*> bitfixes;   //Forced bits, used to keep human agency above the thinking machine.
+    QList<RomRuleViolation*> violations;  //DRC Errors and warnings.
     long bitcount=0;             //Total count of bits from the latest marking.
     long rowcount=0, colcount=0;
     void removeItem(QGraphicsItem* item);    //Removes an item of any type from the view and its QSet.

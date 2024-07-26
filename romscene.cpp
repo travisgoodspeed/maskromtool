@@ -298,12 +298,12 @@ void RomScene::highlightSelection(){
         return;
 
     //reset line focus first, would be nice if we knew the last one that was in focus
-    for(QSet<RomLineItem*>::iterator i = maskRomTool->rows.begin(), end = maskRomTool->rows.end(); i != end; ++i){
+    for(QList<RomLineItem*>::iterator i = maskRomTool->rows.begin(), end = maskRomTool->rows.end(); i != end; ++i){
         ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
         ((QGraphicsLineItem*)*i)->hide();
         ((QGraphicsLineItem*)*i)->show();
     }
-    for(QSet<RomLineItem*>::iterator i = maskRomTool->cols.begin(), end = maskRomTool->cols.end(); i != end; ++i){
+    for(QList<RomLineItem*>::iterator i = maskRomTool->cols.begin(), end = maskRomTool->cols.end(); i != end; ++i){
         ((QGraphicsLineItem*)*i)->setPen(QPen(maskRomTool->lineColor, 2));
         ((QGraphicsLineItem*)*i)->hide();
         ((QGraphicsLineItem*)*i)->show();

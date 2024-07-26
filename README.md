@@ -32,7 +32,8 @@ File/Export/SolverSetBytes.  Clearer selection rectangle.  `R` and `C`
 will now draw the correct line type when the user confuses them.  `^H`
 now sets the home position.  Zooming and movement keys now work in the
 second view.  Perfectly duplicates lines are now culled during DRC by
-the `V` key.
+the `V` key.  Rows and columns are now stored as row and columns
+intead of sets.
 
 2024-07-14 -- Fixes crash when deleting a double-selected item.  Delete
 and backspace now delete objects like `D`.  Multiple disassemblers.
