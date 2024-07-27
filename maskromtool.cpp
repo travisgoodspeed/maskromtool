@@ -91,7 +91,6 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
 
     //Strategies should be initialized.
     addAligner(new RomAlignerReliable());   //First is default.
-    //addAligner(new RomAlignerNew());      //Deprecated.
     addSampler(new RomBitSampler());        //First is default.
     addSampler(new RomBitSamplerWide());
     addSampler(new RomBitSamplerTall());
@@ -113,6 +112,22 @@ void MaskRomTool::closeEvent(QCloseEvent *event){
 
     //Use this instead of exit(0) to avoid crashing OpenGL on Windows.
     QCoreApplication::quit();
+}
+
+/* Differences in angle are ignored here.  We might later
+ * adjust these to
+ */
+static bool leftOf(RomLineItem * left, RomLineItem * right){
+    return (left->x() < right->x());
+}
+static bool above(RomLineItem * top, RomLineItem * bottom){
+    return (top->y() < bottom->y());
+}
+
+//Sorts the row and column lines.
+void MaskRomTool::sortLines(){
+    std::sort(cols.begin(), cols.end(), leftOf);
+    std::sort(rows.begin(), rows.end(), above);
 }
 
 /* Undo works by saving the state during important actions
@@ -472,7 +487,7 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
         removeLine((RomLineItem*) item);
         break;
     case QGraphicsItem::UserType+2: //bit
-        //qDebug()<<"Removing bit "<<item;
+        qDebug()<<"Removing bit "<<item;
         bits.remove((RomBitItem*) item);
         alignmentdirty=true;
         bitcount--;
@@ -1637,6 +1652,7 @@ QJsonObject MaskRomTool::exportJSON(){
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
+     * 2024.07.27 -- Lines are sorted.
      * 2024.06.22 -- Adds 'selectioncolor' and 'crosshaircolor'.
      * 2024.06.05 -- Yara rule included in GUI.
      * 2024.05.19 -- Architecture is now recorded.  Unidasm only for now.
@@ -1670,6 +1686,8 @@ QJsonObject MaskRomTool::exportJSON(){
     settings["yararule"]=solverDialog.yararule;        //2024.06.05
     root["settings"]=settings;
 
+    //Sorting lines ensures that they will be in a consistent order.
+    sortLines();
 
     QJsonArray jrows;
     foreach (RomLineItem* item, rows){
@@ -1802,6 +1820,9 @@ void MaskRomTool::importJSON(QJsonObject o){
         qDebug()<<"Done loading, now marking bits.";
 
     progress.close();
+
+    //Sort the bits in case they aren't already sorted.
+    sortLines();
 
     //After loading all that, we should be able to decode the bits.
     markBits();

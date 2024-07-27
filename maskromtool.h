@@ -55,6 +55,7 @@ public:
     void redo();
     void markUndoPoint();
     void clear();
+    void sortLines();
 
     //Persistant user settings.
     QSettings settings();
