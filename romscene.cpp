@@ -153,7 +153,7 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
     //Now update the position.
     scenepos=mouseEvent->scenePos();
 
-    updateCrosshairs(mouseEvent->buttons()!=Qt::NoButton);
+    updateCrosshairs(mouseEvent->buttons()==Qt::LeftButton);
 
     /* Whenever the mouse moves, we also update the status bar
      * to show our position and size.
