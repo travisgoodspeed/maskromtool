@@ -1559,14 +1559,16 @@ void MaskRomTool::markBits(){
 
 //Mark up all of the bits where rows and columns collide.
 void MaskRomTool::clearBits(){
-    /* FIXME: The performance of this function absolutely
-     * sucks.  It takes a lot longer than the rest of the
-     * bit marking process.
+    /* FIXME: This leaves behind some unhandled events.  If calling
+     * this from the CLI, be sure to call QApplication.processEvents()
+     * to clear them or processing will become progressively slower
+     * as the count rises.
      */
     foreach (QGraphicsItem* item, bits){
         scene->removeItem(item);
         delete item;
     }
+
     bits.clear();
     assert(bits.isEmpty());
     bitcount=0;

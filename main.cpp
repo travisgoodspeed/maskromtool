@@ -7,6 +7,7 @@
 #include "romdecoderphotograph.h"
 #include "romdecoderhistogram.h"
 #include "romencoderdiff.h"
+#include "romscene.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -150,6 +151,7 @@ int main(int argc, char *argv[]){
     mrt.show();
     for(int i=0; i<args.count(); i++)
         mrt.fileOpen(args[i]);
+    a.processEvents();
 
     //Chooses the sampling algorithm.
     if(parser.isSet(samplerOption)){
@@ -174,14 +176,13 @@ int main(int argc, char *argv[]){
         qDebug()<<"Exporting ROM";
         RomDecoderGato exporter;
         exporter.writeFile(&mrt, parser.value(rombytesExportOption));
-
+        a.processEvents();
     }
     //Export histogram bytes.
     if(parser.isSet(histogramExportOption)){
         qDebug()<<"Exporting Histogram";
         RomDecoderHistogram exporter;
         exporter.writeFile(&mrt, parser.value(histogramExportOption));
-
     }
 
     //Export to CSV.
@@ -215,14 +216,18 @@ int main(int argc, char *argv[]){
         for(int i=0; i<10; i++){
             qDebug()<<"Round"<<i;
             mrt.markBits();
+            a.processEvents();
         }
     }
 
     //We don't return a failure code yet, but will if it comes to that.
-    if(parser.isSet(DRCOption))
+    if(parser.isSet(DRCOption)){
         mrt.runDRC(true);
-    else if(parser.isSet(drcOption))
+        a.processEvents();
+    }else if(parser.isSet(drcOption)){
         mrt.runDRC(false);
+        a.processEvents();
+    }
 
     //We let the GUI take hold unless asked to do otherwise.
     if(!parser.isSet(exitOption)){
