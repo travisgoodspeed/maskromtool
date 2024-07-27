@@ -7,7 +7,7 @@
 
 RomBitItem::RomBitItem(QPointF pos, qreal size, RomLineItem *rlrow, RomLineItem *rlcol){
     //Need to manually enable caching.
-    setCacheMode(QGraphicsItem::DeviceCoordinateCache);
+    //setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 
     setPos(pos);
     setBitSize(size);

@@ -67,7 +67,7 @@ public:
 
     QList<RomLineItem*> rows;     //Rows produce bits where they intersect with columns.
     QList<RomLineItem*> cols;     //Columns produce bits on rows.
-    QSet<RomBitItem*> bits;      //All of the bits from crosses.
+    QList<RomBitItem*> bits;      //All of the bits from crosses, left-sorted.
     QList<RomBitFix*> bitfixes;   //Forced bits, used to keep human agency above the thinking machine.
     QList<RomRuleViolation*> violations;  //DRC Errors and warnings.
     long bitcount=0;             //Total count of bits from the latest marking.
@@ -77,7 +77,6 @@ public:
     QGraphicsItem* duplicateItem(QGraphicsItem* item,
                                  bool move=false        //Set true to stagger every duplicate, making them visible.
                                  );
-    void removeDuplicates(RomLineItem* line);  //Removes duplicates of a line.
     void removeDuplicates();                  //Removes all duplicate rows and columns.
 
 
@@ -96,6 +95,8 @@ public:
 
     //Marks all of the bit positions, but not their connections.
     void markBits();
+    //Sorts the bits from the left.  Fast if already sorted.
+    void sortBits();
     //Clears all bits.  Useful when we want them out of the way for a bit.
     void clearBits();
     //Re-marks bits at all of the old positions, but new samples.

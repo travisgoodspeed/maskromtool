@@ -115,19 +115,28 @@ void MaskRomTool::closeEvent(QCloseEvent *event){
 }
 
 /* Differences in angle are ignored here.  We might later
- * adjust these to
+ * adjust these to respect that.
  */
-static bool leftOf(RomLineItem * left, RomLineItem * right){
+static bool leftline(RomLineItem * left, RomLineItem * right){
     return (left->x() < right->x());
 }
-static bool above(RomLineItem * top, RomLineItem * bottom){
+static bool aboveline(RomLineItem * top, RomLineItem * bottom){
     return (top->y() < bottom->y());
+}
+//Also handle it for bits.
+static bool leftbit(RomBitItem * left, RomBitItem * right){
+    return (left->x() < right->x());
 }
 
 //Sorts the row and column lines.
 void MaskRomTool::sortLines(){
-    std::sort(cols.begin(), cols.end(), leftOf);
-    std::sort(rows.begin(), rows.end(), above);
+    std::sort(cols.begin(), cols.end(), leftline);
+    std::sort(rows.begin(), rows.end(), aboveline);
+}
+
+//Sorts the bits from the left.  Fast if already sorted.
+void MaskRomTool::sortBits(){
+    std::sort(bits.begin(), bits.end(), leftbit);
 }
 
 /* Undo works by saving the state during important actions
@@ -186,32 +195,25 @@ void MaskRomTool::clear(){
     //Select nothing.
     scene->selection=QList<QGraphicsItem*>();
 
-    foreach (RomBitItem* item, bits){
-        //removeItem(item);
-        bits.remove(item);
+    foreach (RomBitItem* item, bits)
         delete item;
-    }
+    bits.clear();
     assert(bits.isEmpty());
     bits.empty();
-    foreach (RomBitFix* item, bitfixes){
-        //removeItem(item);
-        bitfixes.removeAll(item);
+    foreach (RomBitFix* item, bitfixes)
         delete item;
-    }
+    bitfixes.clear();
+
     assert(bitfixes.isEmpty());
     bitfixes.empty();
-    foreach (RomLineItem* item, rows){
-        //removeItem(item);  //Slow!
-        rows.removeAll(item);
+    foreach (RomLineItem* item, rows)
         delete item;
-    }
+    rows.clear();
     assert(rows.isEmpty());
     rows.empty();
-    foreach (RomLineItem* item, cols){
-        //removeItem(item);  //Slow!
-        cols.removeAll(item);
+    foreach (RomLineItem* item, cols)
         delete item;
-    }
+    cols.clear();
     assert(cols.isEmpty());
     cols.empty();
 
@@ -368,7 +370,7 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
     }
 
     //After removing the bits, we've gotta remove the line itself.
-    if(fromsets)
+    if(fromsets){
         switch(line->type()){
         case QGraphicsItem::UserType: //row
             rows.removeAll((RomLineItem*) line);
@@ -377,6 +379,9 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
             cols.removeAll((RomLineItem*) line);
             break;
         }
+        scene->selection.removeAll(line);
+        delete line;
+    }
 }
 
 //Duplicates an item, returning a pointer to the clone.
@@ -411,39 +416,10 @@ QGraphicsItem* MaskRomTool::duplicateItem(QGraphicsItem* item, bool move){
     return 0;
 }
 
-
-//Removes all duplicates of a line.
-void MaskRomTool::removeDuplicates(RomLineItem* line){
-    //Set of lines to cull.
-    QSet<RomLineItem*> tocull;
-
-    /* Duplicate lines are impossible to separate in the GUI,
-     * so we kill them early.
-     */
-
-    foreach(QGraphicsItem* item, scene->collidingItems(line)){
-        if(item->type()==QGraphicsItem::UserType ||   //Row
-            item->type()==QGraphicsItem::UserType+1   //Column
-            ){
-            RomLineItem* oldline=(RomLineItem*) item;
-            if(oldline->line()==line->line()){
-                if(!tocull.contains(line) && !tocull.contains(oldline))
-                    tocull.insert(oldline);
-            }
-        }
-    }
-
-    //This removes the duplicates.
-    foreach(RomLineItem* line, tocull){
-        removeItem(line);
-    }
-
-}
-
 //Removes all duplicate rows and columns.
 void MaskRomTool::removeDuplicates(){
     bool bitswerevisible=bitsVisible;
-    //FIXME: This could be a lot faster if rows and cols were sorted.
+    sortLines();
 
     /* foreach will return lines that no longer exist,
      * so it's important to check for their existence before
@@ -452,12 +428,21 @@ void MaskRomTool::removeDuplicates(){
     if(verbose)
         qDebug()<<"Removing duplicate lines.";
     setBitsVisible(false);
-    foreach(RomLineItem* line, rows)
-        if(rows.contains(line))
-            removeDuplicates(line);
-    foreach(RomLineItem* line, cols)
-        if(cols.contains(line))
-            removeDuplicates(line);
+    RomLineItem* lastline=0;
+    foreach(RomLineItem* r, rows){
+        if(lastline && lastline->globalline()==r->globalline()){
+            if(verbose) qDebug()<<"Removing duplicate row.";
+            removeLine(lastline, true);
+        }
+        lastline=r;
+    }
+    foreach(RomLineItem* c, cols){
+        if(lastline && lastline->globalline()==c->globalline()){
+            if(verbose) qDebug()<<"Removing duplicate column.";
+            removeLine(lastline, true);
+        }
+        lastline=c;
+    }
     if(verbose)
         qDebug()<<"Duplicates removed.";
     setBitsVisible(bitswerevisible);
@@ -485,10 +470,11 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
     case QGraphicsItem::UserType: //row
     case QGraphicsItem::UserType+1: //column
         removeLine((RomLineItem*) item);
+        return;  //We've already deleted this.
         break;
     case QGraphicsItem::UserType+2: //bit
-        qDebug()<<"Removing bit "<<item;
-        bits.remove((RomBitItem*) item);
+        qDebug()<<"THIS IS SLOW!  Removing bit "<<item;
+        bits.removeAll((RomBitItem*) item);
         alignmentdirty=true;
         bitcount--;
         break;
@@ -1414,7 +1400,7 @@ void MaskRomTool::markBit(RomLineItem* row, RomLineItem* col){
     RomBitItem *bit=new RomBitItem(point, bitSize, row, col);
     scene->addItem(bit);
     bit->setVisible(bitsVisible);
-    bits.insert(bit);
+    bits.append(bit);
 
     bit->bitvalue_raw(this, background);
     bit->bitvalue_sample(this, background, thresholdR, thresholdG, thresholdB);
@@ -1479,8 +1465,6 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
      * use moveList().
      */
     if(bitsVisible){
-
-
         removeLine(line,false);  //Remove the line's bits, but not the line itself.
         line->setPos(newpoint);
         markLine(line); //Remark the line.
@@ -1543,22 +1527,24 @@ void MaskRomTool::markBits(){
     alignmentdirty=true;
 
     //First we remove all the old bits.  This is very slow.
-    foreach (QGraphicsItem* item, bits){
-        //removeItem(item);
-        bits.remove((RomBitItem*) item);
-        delete item;
-    }
+    if(verbose) qDebug()<<"Clearing bits.";
+    clearBits();
 
     bitcount=0;
     setBitsVisible(false);
 
     //Mark every line collision.
+    if(verbose) qDebug()<<"Marking bits.";
     foreach (RomLineItem* line, cols)
         markLine(line);
+    if(verbose) qDebug()<<"Sorting bits.";
+    sortBits();
 
     //Mark all the fixes.
+    if(verbose) qDebug()<<"Marking fixes.";
     markFixes();
 
+    if(verbose) qDebug()<<"Restoring visibility.";
     //Show the bits if--and only if--we've set that style.
     setBitsVisible(bitswerevisible);
     //Same for the lines.
@@ -1569,14 +1555,20 @@ void MaskRomTool::markBits(){
     lastbitcount=bitcount;
 }
 
+
+
 //Mark up all of the bits where rows and columns collide.
 void MaskRomTool::clearBits(){
-    //First we remove all the old bits.  This is very slow.
+    /* FIXME: The performance of this function absolutely
+     * sucks.  It takes a lot longer than the rest of the
+     * bit marking process.
+     */
     foreach (QGraphicsItem* item, bits){
-        //removeItem(item);
-        bits.remove((RomBitItem*) item);
+        scene->removeItem(item);
         delete item;
     }
+    bits.clear();
+    assert(bits.isEmpty());
     bitcount=0;
 }
 
@@ -1652,7 +1644,7 @@ QJsonObject MaskRomTool::exportJSON(){
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
-     * 2024.07.27 -- Lines are sorted.
+     * 2024.07.27 -- Lines are sorted, no new types.
      * 2024.06.22 -- Adds 'selectioncolor' and 'crosshaircolor'.
      * 2024.06.05 -- Yara rule included in GUI.
      * 2024.05.19 -- Architecture is now recorded.  Unidasm only for now.
@@ -1665,7 +1657,7 @@ QJsonObject MaskRomTool::exportJSON(){
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2024.06.22";
+    root["00version"]="2024.07.27";
 
     //These threshold values will change in a later version.
     QJsonObject settings;
@@ -1723,7 +1715,7 @@ QJsonObject MaskRomTool::exportJSON(){
 
 //The imports the state from JSON.
 void MaskRomTool::importJSON(QJsonObject o){
-    //Recursive is bad here!
+    //Recursion is bad here!
     importLock++;
     if(importLock>1)
         qDebug()<<"Import lock is"<<importLock;

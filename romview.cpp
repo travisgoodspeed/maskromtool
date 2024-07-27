@@ -31,8 +31,10 @@ RomView::RomView(QWidget *parent){
 
 void RomView::setScene(RomScene* scene){
     QGraphicsView::setScene(scene);
-    this->scene=scene;
-    this->mrt=scene->maskRomTool;
+    if(scene){
+        this->scene=scene;
+        this->mrt=scene->maskRomTool;
+    }
 }
 
 

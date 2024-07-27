@@ -16,7 +16,7 @@ RomAlignerReliable::RomAlignerReliable() {
 }
 
 RomBitItem* RomAlignerReliable::markBitTable(MaskRomTool* mrt){
-    QSet<RomBitItem *> bits=mrt->bits;
+    QList<RomBitItem *> bits=mrt->bits;
 
     //First we remove all the old bit marks and pointers.
     foreach (RomBitItem* bit, bits){
