@@ -473,7 +473,7 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
         return;  //We've already deleted this.
         break;
     case QGraphicsItem::UserType+2: //bit
-        qDebug()<<"THIS IS SLOW!  Removing bit "<<item;
+        //qDebug()<<"THIS IS SLOW!  Removing bit "<<item;
         bits.removeAll((RomBitItem*) item);
         alignmentdirty=true;
         bitcount--;
