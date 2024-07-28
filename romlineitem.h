@@ -16,6 +16,7 @@ public:
     int linetype;
     static const int LINEROW=0;
     static const int LINECOL=1;
+    bool marked=false;
 
     //Dumps the state out to JSON.
     void write(QJsonObject &json);

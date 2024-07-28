@@ -359,6 +359,7 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
 
     //Removing a line always dirties the alignment.
     alignmentdirty=true;
+    markingdirty=true;
 
     //qDebug()<<"Removing all bits from a line.";
     foreach(QGraphicsItem* item, scene->collidingItems(line)){
@@ -568,6 +569,7 @@ bool MaskRomTool::insertLine(RomLineItem* rlitem){
      */
     scene->addItem(rlitem);
     rlitem->setPos(scene->scenepos);
+    markingdirty=true;
 
     //Correct the mistake in case we mix rows and columns.
     lastlinetype=rlitem->setType()-RomLineItem::UserType;
@@ -705,7 +707,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
                 }
             }
             //Update bits when done.
-            markBits();
+            markBits(false);
         }else if(none){      //Delete
             foreach(QGraphicsItem* item, scene->selection){
                 removeItem(item);
@@ -768,7 +770,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //These operate on the loaded data.
     case Qt::Key_M:  //Mark Bits.
-        markBits();
+        markBits(true);
         if(asciiDialog.isVisible())
             on_asciiButton_triggered();
         statusBar()->showMessage(tr("Marked bits."));
@@ -788,7 +790,7 @@ bool MaskRomTool::runDRC(bool all){
 
     //We'll crash if the bits aren't aligned, and duplicate lines are always a pain.
     removeDuplicates();
-    markBits();
+    markBits(true);
 
     statusBar()->showMessage(tr("Running the Design Rule Checks. (DRC)"));
 
@@ -1474,6 +1476,7 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
 
     //We sometimes lose bits when lines cross, so mark it dirty.
     alignmentdirty=true;
+    markingdirty=true;
 }
 
 //Moves a group of items by an offset, used while dragging.
@@ -1515,10 +1518,13 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
 }
 
 //Mark up all of the bits where rows and columns collide.
-void MaskRomTool::markBits(){
+void MaskRomTool::markBits(bool full){
     static long lastbitcount=50000;
     bool bitswerevisible=bitsVisible;
     bool lineswerevisible=linesVisible;
+
+    //Exit early if there's nothing to do.
+    if(!markingdirty) return;
 
     if(!lineswerevisible)
         setLinesVisible(true);
@@ -1553,6 +1559,8 @@ void MaskRomTool::markBits(){
     if(verbose)
         qDebug()<<"Marked"<<bitcount<<"bits.";
     lastbitcount=bitcount;
+
+    markingdirty=false;
 }
 
 
@@ -1572,6 +1580,8 @@ void MaskRomTool::clearBits(){
     bits.clear();
     assert(bits.isEmpty());
     bitcount=0;
+    markingdirty=true;
+    alignmentdirty=true;
 }
 
 //Marks the bit fixes.
@@ -1608,8 +1618,8 @@ RomBitItem* MaskRomTool::markBitTable(){
     static RomBitItem* firstbit=0;
 
     //Make sure all the bits are ready.
-    if(alignmentdirty){
-        markBits();
+    if(alignmentdirty || markingdirty){
+        markBits(true);
 
         alignmentdirty=false;
         firstbit=aligner->markBitTable(this);
@@ -1819,7 +1829,9 @@ void MaskRomTool::importJSON(QJsonObject o){
     sortLines();
 
     //After loading all that, we should be able to decode the bits.
-    markBits();
+    alignmentdirty=true;
+    markingdirty=true;
+    markBits(true);
     setBitSize(bitSize);
 
     //And correct missing stats.
@@ -1829,6 +1841,7 @@ void MaskRomTool::importJSON(QJsonObject o){
 
     //And update the decoding.
     decodeDialog.update();
+
 
     importLock--;
 }

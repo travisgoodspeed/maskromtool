@@ -94,7 +94,7 @@ public:
     void setViolationsVisible(bool b=true);  //Show or hide the DRC violations.
 
     //Marks all of the bit positions, but not their connections.
-    void markBits();
+    void markBits(bool full=true);
     //Sorts the bits from the left.  Fast if already sorted.
     void sortBits();
     //Clears all bits.  Useful when we want them out of the way for a bit.
@@ -298,7 +298,8 @@ private:
     Ui::MaskRomTool *ui;
     qreal thresholdR, thresholdG, thresholdB;
     qreal bitSize=10;
-    bool alignmentdirty=true;
+    bool alignmentdirty=true;   // Table marking is outdated.
+    bool markingdirty=true;     // Bit marking is outdated.
     uint32_t alignSkipThreshold=5;
 
     //Marks the bit fixes.
