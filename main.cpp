@@ -214,8 +214,14 @@ int main(int argc, char *argv[]){
     if(parser.isSet(stressOption)){
         qDebug()<<"Stressing the loaded project.";
         for(int i=0; i<10; i++){
-            qDebug()<<"Round"<<i;
+            qDebug()<<"Round"<<i<<"of bit clearing.";
+            mrt.clearBits();
+            a.processEvents();
+            qDebug()<<"Round"<<i<<"of bit marking.";
             mrt.markBits();
+            a.processEvents();
+            qDebug()<<"Round"<<i<<"of bit aligning.";
+            mrt.markBitTable();
             a.processEvents();
         }
     }
