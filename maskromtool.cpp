@@ -1519,7 +1519,6 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
 
 //Mark up all of the bits where rows and columns collide.
 void MaskRomTool::markBits(bool full){
-    static long lastbitcount=50000;
     bool bitswerevisible=bitsVisible;
     bool lineswerevisible=linesVisible;
 
@@ -1558,7 +1557,6 @@ void MaskRomTool::markBits(bool full){
 
     if(verbose)
         qDebug()<<"Marked"<<bitcount<<"bits.";
-    lastbitcount=bitcount;
 
     markingdirty=false;
 }
@@ -1576,9 +1574,15 @@ void MaskRomTool::clearBits(){
         scene->removeItem(item);
         delete item;
     }
-
     bits.clear();
     assert(bits.isEmpty());
+
+    //Reset the markers so we can start again.
+    foreach (RomLineItem* line, rows)
+        line->marked=false;
+    foreach (RomLineItem* line, cols)
+        line->marked=false;
+
     bitcount=0;
     markingdirty=true;
     alignmentdirty=true;
