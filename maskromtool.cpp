@@ -669,6 +669,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     case Qt::Key_F:
         if(shift && !ctrl && !alt){ //Force a Bit
             markUndoPoint();
+            fixBit(scene->scenepos);
             statusBar()->showMessage(tr("Forced a bit."));
         }
         break;
@@ -706,8 +707,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
                     duplicateItem(item);
                 }
             }
-            //Update bits when done.
-            markBits(false);
+            //Don't bother forcing an update.  That can come later.
         }else if(none){      //Delete
             foreach(QGraphicsItem* item, scene->selection){
                 removeItem(item);
@@ -770,13 +770,10 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
     //These operate on the loaded data.
     case Qt::Key_M:  //Mark Bits.
-        markBits(true);
-        if(asciiDialog.isVisible())
-            on_asciiButton_triggered();
-        statusBar()->showMessage(tr("Marked bits."));
+        //This kicks off the state machine to redraw all bits.
+        clearBits(false);
         if(shift){
             on_actionHexView_triggered();
-            statusBar()->showMessage(tr("Decoded bits."));
         }
         break;
     }
@@ -1422,7 +1419,7 @@ void MaskRomTool::markLine(RomLineItem* line){
      * rather than just one type.
      */
 
-    foreach(QGraphicsItem* item, scene->collidingItems(line)){
+    if(!line->marked) foreach(QGraphicsItem* item, scene->collidingItems(line)){
         //We are only looking for columns that collide with rows here.  All other collisions are irrelevant.
         if(line->linetype==RomLineItem::LINEROW
                 && item->type()==item->UserType+1  //Is the colliding item a column?
@@ -1436,6 +1433,8 @@ void MaskRomTool::markLine(RomLineItem* line){
             markBit(row, line);
         }
     }
+
+    line->marked=true;
 
     updateCrosshairAngle(line);
 }
@@ -1518,35 +1517,39 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
 }
 
 //Mark up all of the bits where rows and columns collide.
-void MaskRomTool::markBits(bool full){
+bool MaskRomTool::markBits(bool full){
     bool bitswerevisible=bitsVisible;
     bool lineswerevisible=linesVisible;
+    uint64_t count=0;
 
-    //Exit early if there's nothing to do.
-    if(!markingdirty) return;
+    state=STATE_MARKING;
+
+    //Exit quick and early if there's nothing to do.
+    //This is needed because partial updates are called in rendering loop.
+    if(!markingdirty) return true;
 
     if(!lineswerevisible)
         setLinesVisible(true);
 
-    //We're blowing away the alignment here, will need to rebuild it later.
-    alignmentdirty=true;
-
-    //First we remove all the old bits.  This is very slow.
-    if(verbose) qDebug()<<"Clearing bits.";
-    clearBits();
-
-    bitcount=0;
     setBitsVisible(false);
 
     //Mark every line collision.
-    if(verbose) qDebug()<<"Marking bits.";
-    foreach (RomLineItem* line, cols)
+    foreach (RomLineItem* line, cols){
+        if(!line->marked && count++>50 && !full){
+            //Show the bits if--and only if--we've set that style.
+            setBitsVisible(bitswerevisible);
+            //Same for the lines.
+            setLinesVisible(lineswerevisible);
+            return false;
+        }
+        if(!line->marked) alignmentdirty=true;
         markLine(line);
-    if(verbose) qDebug()<<"Sorting bits.";
-    sortBits();
+    }
 
+    //Now our marking is clean, if unsorted.
+    markingdirty=false;
+    sortBits();
     //Mark all the fixes.
-    if(verbose) qDebug()<<"Marking fixes.";
     markFixes();
 
     if(verbose) qDebug()<<"Restoring visibility.";
@@ -1555,27 +1558,42 @@ void MaskRomTool::markBits(bool full){
     //Same for the lines.
     setLinesVisible(lineswerevisible);
 
-    if(verbose)
-        qDebug()<<"Marked"<<bitcount<<"bits.";
-
-    markingdirty=false;
+    state=STATE_IDLE;
+    return true;
 }
 
 
 
 //Mark up all of the bits where rows and columns collide.
-void MaskRomTool::clearBits(){
+void MaskRomTool::clearBits(bool full){
+    uint64_t count=0;
+    state=STATE_CLEARING;
+
     /* FIXME: This leaves behind some unhandled events.  If calling
      * this from the CLI, be sure to call QApplication.processEvents()
      * to clear them or processing will become progressively slower
      * as the count rises.
+     *
+     * In the GUI, we'll call this with full=false to opportunistically
+     * wipe away bits without hogging the redraw thread.  Like markBits(),
+     * it might take a few frames to finish on large projects.
      */
     foreach (QGraphicsItem* item, bits){
         scene->removeItem(item);
         delete item;
+        bitcount--;
+        if(!full)
+            //For partial work, we need to remove the items.
+            bits.removeOne(item);
+        if(!full && count++>10000)
+            //We'll finish this off later.
+            return;
     }
+
+    //For a full erase, we eliminate items in bulk.
     bits.clear();
     assert(bits.isEmpty());
+
 
     //Reset the markers so we can start again.
     foreach (RomLineItem* line, rows)
@@ -1583,9 +1601,11 @@ void MaskRomTool::clearBits(){
     foreach (RomLineItem* line, cols)
         line->marked=false;
 
+    //Next step is to mark the bits.
     bitcount=0;
     markingdirty=true;
     alignmentdirty=true;
+    state=STATE_MARKING;
 }
 
 //Marks the bit fixes.
@@ -1595,13 +1615,16 @@ void MaskRomTool::markFixes(){
      * overlaps a fix than every fix that overlaps a bit.
      */
     bool bitswerevisible=bitsVisible;
+
     setBitsVisible(true);
     foreach (RomBitFix* fix, bitfixes){
         RomBitItem* bit=getBit(fix->pos());
         if(bit) // Apply the fix.
             bit->setFix(fix);
-        else    // Destroy fixes that don't match bits.
+        else if(!markingdirty)
+            // Destroy fixes that don't match bits.
             removeItem(fix);
+
     }
     setBitsVisible(bitswerevisible);
 }
@@ -1621,6 +1644,11 @@ void MaskRomTool::remarkBits(){
 RomBitItem* MaskRomTool::markBitTable(){
     static RomBitItem* firstbit=0;
 
+    //qDebug()<<"Aligning table of"<<bitcount<<"bits.";
+    foreach (RomLineItem* line, cols){
+        assert(line->marked);
+    }
+
     //Make sure all the bits are ready.
     if(alignmentdirty || markingdirty){
         markBits(true);
@@ -1633,6 +1661,7 @@ RomBitItem* MaskRomTool::markBitTable(){
     if(!firstbit)
         alignmentdirty=true;
 
+    //qDebug()<<"Updating counts.";
     //If we have a bit, update the counts.
     rowcount=colcount=0;
     RomBitItem* bit=firstbit;
@@ -1646,6 +1675,7 @@ RomBitItem* MaskRomTool::markBitTable(){
         bit=bit->nexttoright;
     }
 
+    state=STATE_IDLE;
     return firstbit;
 }
 

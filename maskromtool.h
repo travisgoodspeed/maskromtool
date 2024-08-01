@@ -93,12 +93,18 @@ public:
     void setBitsVisible(bool b=true);        //Show or hide the bits.
     void setViolationsVisible(bool b=true);  //Show or hide the DRC violations.
 
+    /* The state of GUI is whether it is marking bits, clearing them,
+     * or aligning them.  This lets us mark bits in the background without
+     * hogging the rendering thread.
+     */
+    enum {STATE_IDLE, STATE_CLEARING, STATE_MARKING} state=STATE_IDLE;
+
     //Marks all of the bit positions, but not their connections.
-    void markBits(bool full=true);
+    bool markBits(bool full=true);
     //Sorts the bits from the left.  Fast if already sorted.
     void sortBits();
     //Clears all bits.  Useful when we want them out of the way for a bit.
-    void clearBits();
+    void clearBits(bool full=true);
     //Re-marks bits at all of the old positions, but new samples.
     void remarkBits();
     //Marks one bit.

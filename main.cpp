@@ -147,6 +147,7 @@ int main(int argc, char *argv[]){
         //Don't print anything because the function takes care of it for us.
         mrt.enableVerbose();
     }
+    a.processEvents();
 
     mrt.show();
     for(int i=0; i<args.count(); i++)
@@ -215,12 +216,13 @@ int main(int argc, char *argv[]){
         qDebug()<<"Stressing the loaded project.";
         for(int i=0; i<10; i++){
             qDebug()<<"Round"<<i<<"of bit clearing.";
-            mrt.clearBits();
-            a.processEvents();
+            mrt.clearBits(true);
+            //a.processEvents();
+            assert(mrt.bitcount==0);
             qDebug()<<"Round"<<i<<"of bit marking.";
-            mrt.markBits();
-            a.processEvents();
-            qDebug()<<"Round"<<i<<"of bit aligning.";
+
+            while(!mrt.markBits(false))
+                a.processEvents();
             mrt.markBitTable();
             a.processEvents();
         }

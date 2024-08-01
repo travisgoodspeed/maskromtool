@@ -148,11 +148,6 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
     updateCrosshairs(mouseEvent->buttons()==Qt::LeftButton);
 
-    /* Whenever the mouse moves, we also update the status bar
-     * to show our position and size.
-     */
-    updateStatus();
-
     //here instead of on release so we can have preview
     if(mouseEvent->buttons()==Qt::RightButton){
         QPointF dpos = mouseEvent->scenePos() - presspos;
@@ -160,7 +155,25 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
         // update because we already moved it
         presspos = scenepos;
+    }else{
+        //Update some of the bits if they aren't finished.
+
+        switch(maskRomTool->state){
+        case MaskRomTool::STATE_MARKING:
+            maskRomTool->markBits(false);
+            break;
+        case MaskRomTool::STATE_CLEARING:
+            maskRomTool->clearBits(false);
+            break;
+        case MaskRomTool::STATE_IDLE:
+            break;
+        }
     }
+
+    /* Whenever the mouse moves, we also update the status bar
+     * to show our position and size.
+     */
+    updateStatus();
 }
 
 void RomScene::setRowAngle(qreal angle){
@@ -264,8 +277,11 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
          * arrangement.  As a workaround, we remark the bits after releasing the
          * button from a moving drag.
          */
-        if(maskRomTool->bitsVisible)
-            maskRomTool->markBits();
+        if(maskRomTool->bitsVisible){
+            //Clear the old bits in the background.
+            //This will continue until redrawing them.
+            maskRomTool->clearBits(false);
+        }
     }
 }
 
