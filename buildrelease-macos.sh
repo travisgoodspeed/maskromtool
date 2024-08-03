@@ -35,6 +35,8 @@ $DEPLOYQT release/maskromtool.app -sign-for-notarization="Developer ID Applicati
 codesign --verify --verbose  release/maskromtool.app
 
 # Zip up a release.
-(cd release && zip -r maskromtool-macos-`uname -m`.zip maskromtool.app gatorom)
+(cd release && zip -r maskromtool-macos-universal.zip maskromtool.app gatorom)
 
+
+echo "See release/ for the release files."
 

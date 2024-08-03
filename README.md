@@ -35,7 +35,7 @@ second view.  Perfectly duplicates lines are now culled during DRC by
 the `V` key.  Rows and columns are now stored as sorted lists intead
 of sets.  Rows and columns are now in a consistent order in the file
 export.  Performance boosts in bit marking, background bit marking
-and alignment.
+and alignment.  Universal binary for macOS.
 
 2024-07-14 -- Fixes crash when deleting a double-selected item.  Delete
 and backspace now delete objects like `D`.  Multiple disassemblers.
