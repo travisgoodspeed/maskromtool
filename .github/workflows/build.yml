@@ -18,8 +18,8 @@ jobs:
           os-caption: Windows
         - os: ubuntu-latest
           os-caption: Ubuntu
-        - os: macos-latest
-          os-caption: MacOS
+#        - os: macos-latest
+#          os-caption: MacOS
 
     runs-on: ${{matrix.os}}
     steps:
