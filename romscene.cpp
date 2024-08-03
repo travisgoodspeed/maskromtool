@@ -145,7 +145,6 @@ void RomScene::updateStatus(){
 void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
     //Now update the position.
     scenepos=mouseEvent->scenePos();
-
     updateCrosshairs(mouseEvent->buttons()==Qt::LeftButton);
 
     //here instead of on release so we can have preview
@@ -245,7 +244,7 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
             default: // All others.
             case QGraphicsItem::UserType+2: //bit
             case QGraphicsItem::UserType+4: //rule violation
-                newselection.removeAll(item);
+                newselection.removeOne(item);
                 break;
             }
         }
@@ -253,12 +252,12 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
         switch(mouseEvent->modifiers()){
         case Qt::CTRL: //Subtract from group.
             foreach(QGraphicsItem* item, newselection)
-                selection.removeAll(item);
+                selection.removeOne(item);
             break;
         case Qt::SHIFT: //Add to group.
             //Remove anything that's already there to prevent double-selection.
             foreach(QGraphicsItem* item, newselection)
-                selection.removeAll(item);
+                selection.removeOne(item);
             //Then add the rest.
             selection.append(newselection);
             break;

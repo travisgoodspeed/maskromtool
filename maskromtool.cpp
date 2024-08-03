@@ -66,7 +66,7 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
 
     //Setup caches
     QPixmapCache::setCacheLimit(0x100000); //1GB
-    qDebug()<<"Cache limit is "<<QPixmapCache::cacheLimit()<<"kb";
+    if(verbose) qDebug()<<"Cache limit is "<<QPixmapCache::cacheLimit()<<"kb";
 
     //Set up the main window.
     ui->setupUi(this);
@@ -374,13 +374,13 @@ void MaskRomTool::removeLine(RomLineItem* line, bool fromsets){
     if(fromsets){
         switch(line->type()){
         case QGraphicsItem::UserType: //row
-            rows.removeAll((RomLineItem*) line);
+            rows.removeOne((RomLineItem*) line);
             break;
         case QGraphicsItem::UserType+1: //column
-            cols.removeAll((RomLineItem*) line);
+            cols.removeOne((RomLineItem*) line);
             break;
         }
-        scene->selection.removeAll(line);
+        scene->selection.removeOne(line);
         delete line;
     }
 }
@@ -465,7 +465,7 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
      * might trigger a double-free in erasing the selection.
      */
     if(scene->selection.contains(item))
-        scene->selection.removeAll(item);
+        scene->selection.removeOne(item);
 
     switch(item->type()){
     case QGraphicsItem::UserType: //row
@@ -475,16 +475,16 @@ void MaskRomTool::removeItem(QGraphicsItem* item){
         break;
     case QGraphicsItem::UserType+2: //bit
         //qDebug()<<"THIS IS SLOW!  Removing bit "<<item;
-        bits.removeAll((RomBitItem*) item);
+        bits.removeOne((RomBitItem*) item);
         alignmentdirty=true;
         bitcount--;
         break;
     case QGraphicsItem::UserType+3: //bit fix
-        bitfixes.removeAll((RomBitFix*) item);
+        bitfixes.removeOne((RomBitFix*) item);
         alignmentdirty=true;
         break;
     case QGraphicsItem::UserType+4: //rule violation
-        violations.removeAll((RomRuleViolation*) item);
+        violations.removeOne((RomRuleViolation*) item);
         //Gotta remove the violation so that it isn't used after a free.
         violationDialog.removeViolation((RomRuleViolation*) item);
         //Violations do not dirty the alignment.
@@ -711,7 +711,7 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
         }else if(none){      //Delete
             foreach(QGraphicsItem* item, scene->selection){
                 removeItem(item);
-                scene->selection.removeAll(item);
+                scene->selection.removeOne(item);
             }
         }
 
@@ -1353,7 +1353,7 @@ void MaskRomTool::clearBitFixes(){
     //a bad project.
     markUndoPoint();
     foreach (RomBitFix* item, bitfixes){
-        bitfixes.removeAll(item);
+        bitfixes.removeOne(item);
         removeItem(item);
     }
 }
@@ -1462,12 +1462,13 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
      * invisible.  The new behavior is to ignore the bit positions when they
      * are not shown.
      *
-     * Group selections ar enot moved with this function, but instead
+     * Group selections are not moved with this function, but instead
      * use moveList().
      */
     if(bitsVisible){
         removeLine(line,false);  //Remove the line's bits, but not the line itself.
         line->setPos(newpoint);
+        line->marked=false;
         markLine(line); //Remark the line.
     }else{
         line->setPos(newpoint);
@@ -1494,9 +1495,8 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
      * to hide the bits for a while.
      */
 
-    if(bitsVisible)
-        //Get the old bits out of the way.
-        clearBits(false);
+
+    if(bitsVisible) clearBits(false);
 
     //We ditch the bits and move all of their lines.
     foreach(QGraphicsItem* selecteditem, list){
@@ -1505,11 +1505,12 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
         selecteditem->setPos(selecteditem->pos()+offset);
     }
 
-    //Then we redraw the bits, if they are still there and the seen is clear.
-    if(bitsVisible && state==STATE_MARKING){
+    //Then we redraw the bits, if they are visible.
+    if(bitsVisible){ // && state==STATE_MARKING){
         foreach(QGraphicsItem* item, list){
             if(item && (item->type()==QGraphicsItem::UserType || item->type()==QGraphicsItem::UserType+1)){
                 RomLineItem *rlitem=(RomLineItem*) item;
+                rlitem->marked=false;
                 markLine(rlitem); //Remark the line.
             }
         }
@@ -1578,6 +1579,23 @@ void MaskRomTool::clearBits(bool full){
      * wipe away bits without hogging the redraw thread.  Like markBits(),
      * it might take a few frames to finish on large projects.
      */
+
+    //Grab all those that are visible first.
+    auto rect=view->mapToScene(view->viewport()->rect()).boundingRect();
+    auto secondrect=second.view->mapToScene(second.view->viewport()->rect()).boundingRect();
+
+    if(!second.isVisible()) secondrect=rect;
+    foreach(QGraphicsItem* item,
+             //view->items(view->sceneRect().toRect())){
+             bits){
+        if(rect.contains(item->pos()) || secondrect.contains(item->pos())){
+            scene->removeItem(item);
+            delete item;
+            bits.removeOne(item);
+            bitcount--;
+        }
+    }
+    //Grab some more opportunistically.
     foreach (QGraphicsItem* item, bits){
         scene->removeItem(item);
         delete item;
@@ -1585,13 +1603,15 @@ void MaskRomTool::clearBits(bool full){
         if(!full)
             //For partial work, we need to remove the items.
             bits.removeOne(item);
-        if(!full && count++>10000)
+        if(!full && count++>10000){
             //We'll finish this off later.
             return;
+        }
     }
 
     //For a full erase, we eliminate items in bulk.
-    bits.clear();
+    if(full)
+        bits.clear();
     assert(bits.isEmpty());
 
 
@@ -1644,7 +1664,6 @@ void MaskRomTool::remarkBits(){
 RomBitItem* MaskRomTool::markBitTable(){
     static RomBitItem* firstbit=0;
 
-    //qDebug()<<"Aligning table of"<<bitcount<<"bits.";
     foreach (RomLineItem* line, cols){
         assert(line->marked);
     }

@@ -125,7 +125,6 @@ void RomView::mouseMoveEvent(QMouseEvent *mouseEvent){
     }
 
     //Other events are handed in RomScene, so we forward them.
-    mouseEvent->accept();
     QGraphicsView::mouseMoveEvent(mouseEvent);
 }
 void RomView::mousePressEvent(QMouseEvent *mouseEvent){
