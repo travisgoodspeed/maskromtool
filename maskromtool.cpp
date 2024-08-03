@@ -1593,6 +1593,7 @@ void MaskRomTool::clearBits(bool full){
             delete item;
             bits.removeOne(item);
             bitcount--;
+            count++;
         }
     }
     //Grab some more opportunistically.
