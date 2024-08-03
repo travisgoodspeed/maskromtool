@@ -1496,7 +1496,7 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
 
     if(bitsVisible)
         //Get the old bits out of the way.
-        clearBits(true);
+        clearBits(false);
 
     //We ditch the bits and move all of their lines.
     foreach(QGraphicsItem* selecteditem, list){
@@ -1506,7 +1506,7 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
     }
 
     //Then we redraw the bits, if they are still there and the seen is clear.
-    if(bitsVisible && state==STATE_IDLE){
+    if(bitsVisible && state==STATE_MARKING){
         foreach(QGraphicsItem* item, list){
             if(item && (item->type()==QGraphicsItem::UserType || item->type()==QGraphicsItem::UserType+1)){
                 RomLineItem *rlitem=(RomLineItem*) item;
