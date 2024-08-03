@@ -192,8 +192,10 @@ void RomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
         presspos=mouseEvent->scenePos();
 
     //Right mouse can drag a line, so we mark an undo point before moving.
-    if(mouseEvent->buttons()==Qt::RightButton)
+    if(mouseEvent->buttons()==Qt::RightButton){
         maskRomTool->markUndoPoint();
+        maskRomTool->clearBits(false);
+    }
 }
 
 //Store the last pressed mouse position.
