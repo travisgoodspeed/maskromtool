@@ -1419,18 +1419,20 @@ void MaskRomTool::markLine(RomLineItem* line){
      * rather than just one type.
      */
 
-    if(!line->marked) foreach(QGraphicsItem* item, scene->collidingItems(line)){
-        //We are only looking for columns that collide with rows here.  All other collisions are irrelevant.
-        if(line->linetype==RomLineItem::LINEROW
+    if(!line->marked){
+        foreach(QGraphicsItem* item, scene->collidingItems(line)){
+            //We are only looking for columns that collide with rows here.  All other collisions are irrelevant.
+            if(line->linetype==RomLineItem::LINEROW
                 && item->type()==item->UserType+1  //Is the colliding item a column?
-            ){
-            RomLineItem* col=(RomLineItem*) item;
-            markBit(line, col);
-        }else if(line->linetype==RomLineItem::LINECOL
-                   && item->type()==item->UserType  //Is the colliding item a row?
-                   ){
-            RomLineItem* row=(RomLineItem*) item;
-            markBit(row, line);
+                ){
+                RomLineItem* col=(RomLineItem*) item;
+                markBit(line, col);
+            }else if(line->linetype==RomLineItem::LINECOL
+                       && item->type()==item->UserType  //Is the colliding item a row?
+                       ){
+                RomLineItem* row=(RomLineItem*) item;
+                markBit(row, line);
+            }
         }
     }
 
