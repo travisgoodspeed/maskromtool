@@ -1535,6 +1535,13 @@ bool MaskRomTool::markBits(bool full){
     bool lineswerevisible=linesVisible;
     uint64_t count=0;
 
+    /* If we're currently clearing, that should take priority.
+     * Do that first if full or spend a frame on it if partial.
+     */
+    if(state==STATE_CLEARING){
+        clearBits(full);
+        if(!full) return false;
+    }
     state=STATE_MARKING;
 
     //Exit quick and early if there's nothing to do.
