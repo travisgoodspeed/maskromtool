@@ -511,8 +511,8 @@ void MaskRomTool::nextMode(){
     ui->actionBits->setChecked(bitsVisible);
     ui->actionViolations->setChecked(bitsVisible);
 
-    //Mark the bits when bringing them back.
-    if(bitsVisible) markBits();
+    //Redraw the bits when bringing them back.
+    if(bitsVisible) markBits(false);
 }
 
 void MaskRomTool::on_actionPhotograph_triggered(){
@@ -1437,8 +1437,7 @@ void MaskRomTool::markLine(RomLineItem* line){
     }
 
     line->marked=true;
-
-    updateCrosshairAngle(line);
+    alignmentdirty=true;
 }
 
 
@@ -1498,7 +1497,7 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
      */
 
 
-    if(bitsVisible) clearBits(false);
+    clearBits(false);
 
     //We ditch the bits and move all of their lines.
     foreach(QGraphicsItem* selecteditem, list){
@@ -1519,6 +1518,17 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
     }
 }
 
+static bool colthroughrect(QLineF line, QRectF rect){
+    //Column through visible rectangle.
+    if(    (line.x1() < rect.right() && line.x1() > rect.left())
+        || (line.x2() < rect.right() && line.x2() > rect.left())
+        ){
+
+        return true;
+    }
+    return false;
+}
+
 //Mark up all of the bits where rows and columns collide.
 bool MaskRomTool::markBits(bool full){
     bool bitswerevisible=bitsVisible;
@@ -1535,8 +1545,25 @@ bool MaskRomTool::markBits(bool full){
         setLinesVisible(true);
 
     setBitsVisible(false);
+    //Grab all those that are visible first.
+    auto rect=view->mapToScene(view->viewport()->rect()).boundingRect();
+    auto secondrect=second.view->mapToScene(second.view->viewport()->rect()).boundingRect();
+    if(!second.isVisible()) secondrect=rect;
 
-    //Mark every line collision.
+    //Mark the visible lines immediately.
+    if(!full){
+        foreach (RomLineItem* line, cols){
+
+            if(!line->marked
+                && ( colthroughrect(line->globalline(),rect) || colthroughrect(line->globalline(),secondrect) )
+                    ){
+                markLine(line);
+                count++;
+            }
+        }
+    }
+
+    //Mark every line collision, but if not full, just one per pass.
     foreach (RomLineItem* line, cols){
         if(!line->marked && count++>50 && !full){
             //Show the bits if--and only if--we've set that style.
@@ -1566,6 +1593,8 @@ bool MaskRomTool::markBits(bool full){
 }
 
 
+//Maximum number of bits that we might clear in one frame.
+#define BITCLEARINGLIMIT 5000
 
 //Mark up all of the bits where rows and columns collide.
 void MaskRomTool::clearBits(bool full){
@@ -1590,12 +1619,13 @@ void MaskRomTool::clearBits(bool full){
     foreach(QGraphicsItem* item,
              //view->items(view->sceneRect().toRect())){
              bits){
-        if(rect.contains(item->pos()) || secondrect.contains(item->pos())){
+        if( (rect.contains(item->pos()) || secondrect.contains(item->pos()))
+            && count++<BITCLEARINGLIMIT
+            ){
             scene->removeItem(item);
             delete item;
             bits.removeOne(item);
             bitcount--;
-            count++;
         }
     }
     //Grab some more opportunistically.
@@ -1606,7 +1636,7 @@ void MaskRomTool::clearBits(bool full){
         if(!full)
             //For partial work, we need to remove the items.
             bits.removeOne(item);
-        if(!full && count++>10000){
+        if(!full && count++>BITCLEARINGLIMIT){
             //We'll finish this off later.
             return;
         }

@@ -31,7 +31,7 @@ fiilenames.  GUI can now export a set of solved results with
 File/Export/SolverSetBytes.  Clearer selection rectangle.  `R` and `C`
 will now draw the correct line type when the user confuses them.  `^H`
 now sets the home position.  Zooming and movement keys now work in the
-second view.  Perfectly duplicates lines are now culled during DRC by
+second view.  Perfectly duplicate lines are now culled during DRC by
 the `V` key.  Rows and columns are now stored as sorted lists intead
 of sets.  Rows and columns are now in a consistent order in the file
 export.  Performance boosts in bit marking, background bit marking
