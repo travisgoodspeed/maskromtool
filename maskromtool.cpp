@@ -428,7 +428,7 @@ void MaskRomTool::removeDuplicates(){
      */
     if(verbose)
         qDebug()<<"Removing duplicate lines.";
-    setBitsVisible(false);
+    setBitsVisible(true);
     RomLineItem* lastline=0;
     foreach(RomLineItem* r, rows){
         if(lastline && lastline->globalline()==r->globalline()){
@@ -709,10 +709,13 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
             }
             //Don't bother forcing an update.  That can come later.
         }else if(none){      //Delete
+            bool bitswerevisible=bitsVisible;
+            if(!bitsVisible) setBitsVisible(true);
             foreach(QGraphicsItem* item, scene->selection){
                 removeItem(item);
                 scene->selection.removeOne(item);
             }
+            setBitsVisible(bitswerevisible);
         }
 
         break;
