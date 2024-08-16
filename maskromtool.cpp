@@ -15,6 +15,7 @@
 
 //#include "romalignernew.h" //Deprecated May 2024.
 #include "romalignerreliable.h"
+#include "romalignertilting.h"
 #include "rombitsamplerwide.h"
 #include "rombitsamplertall.h"
 
@@ -91,6 +92,7 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
 
     //Strategies should be initialized.
     addAligner(new RomAlignerReliable());   //First is default.
+    addAligner(new RomAlignerTilting());
     addSampler(new RomBitSampler());        //First is default.
     addSampler(new RomBitSamplerWide());
     addSampler(new RomBitSamplerTall());

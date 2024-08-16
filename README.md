@@ -34,8 +34,9 @@ now sets the home position.  Zooming and movement keys now work in the
 second view.  Perfectly duplicate lines are now culled during DRC by
 the `V` key.  Rows and columns are now stored as sorted lists intead
 of sets.  Rows and columns are now in a consistent order in the file
-export.  Performance boosts in bit marking, background bit marking
-and alignment.  Universal binary for macOS.
+export.  Performance boosts in bit marking, background bit marking and
+alignment.  Universal binary for macOS.  RomAlignerTilting works
+better for designs with a gap between banks.
 
 2024-07-14 -- Fixes crash when deleting a double-selected item.  Delete
 and backspace now delete objects like `D`.  Multiple disassemblers.

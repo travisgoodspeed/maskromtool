@@ -93,6 +93,7 @@ set(MRT_SOURCES
 # Alignment stategies
         romaligner.h romaligner.cpp
         romalignerreliable.h romalignerreliable.cpp
+        romalignertilting.h romalignertilting.cpp
         romaligndialog.h romaligndialog.cpp romaligndialog.ui
         romrule.h romrule.cpp
         romrulecount.h romrulecount.cpp
