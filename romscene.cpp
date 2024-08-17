@@ -192,6 +192,7 @@ void RomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
     //Right mouse can drag a line, so we mark an undo point before moving.
     if(mouseEvent->buttons()==Qt::RightButton){
+        maskRomTool->dragging=true;
         maskRomTool->markUndoPoint();
         maskRomTool->clearBits(false);
     }
@@ -222,7 +223,6 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
         //qDebug()<<"Selection: "<<x<<y<<w<<h;
 
         auto newselection=items(x, y, w, h,
-
                           //Qt::ItemSelectionMode::ContainsItemBoundingRect,  //Useful for bits.
                           //Qt::ItemSelectionMode::ContainsItemShape, // Only when fully covered.
                           //Qt::ItemSelectionMode::IntersectsItemBoundingRect,  //Useful for a near miss, sometimes too wide.
@@ -278,6 +278,7 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
          * arrangement.  As a workaround, we remark the bits after releasing the
          * button from a moving drag.
          */
+        maskRomTool->dragging=false;
         if(maskRomTool->bitsVisible){
             //Clear the old bits in the background.
             //This will continue until redrawing them.

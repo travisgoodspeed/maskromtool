@@ -1401,6 +1401,11 @@ void MaskRomTool::markBit(RomLineItem* row, RomLineItem* col){
 
     //This rectangle will be a small box around the pixel.
     QPointF point=bitLocation(row, col);
+    //When dragging, skip anything that's not immediately visible.
+    if(dragging && !isPointVisible(point))
+        return;
+
+
     RomBitItem *bit=new RomBitItem(point, bitSize, row, col);
     scene->addItem(bit);
     bit->setVisible(bitsVisible);
@@ -1531,6 +1536,24 @@ static bool colthroughrect(QLineF line, QRectF rect){
 
         return true;
     }
+    return false;
+}
+
+//Is a point visible?  Handy when dragging.
+bool MaskRomTool::isPointVisible(QPointF p){
+    //Primary view.
+    QRectF rect=view->mapToScene(view->viewport()->rect()).boundingRect();
+    if(p.x()<rect.right() && p.x()>rect.left()
+        && p.y()>rect.top() && p.y()<rect.bottom())
+        return true;
+
+    //Secondary view, only if visible.
+    if(!second.isVisible()) return false;
+    rect=second.view->mapToScene(second.view->viewport()->rect()).boundingRect();
+    if(p.x()<rect.right() && p.x()>rect.left()
+        && p.y()>rect.top() && p.y()<rect.bottom())
+        return true;
+
     return false;
 }
 

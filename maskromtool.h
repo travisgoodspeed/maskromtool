@@ -98,6 +98,7 @@ public:
      * hogging the rendering thread.
      */
     enum {STATE_IDLE, STATE_CLEARING, STATE_MARKING} state=STATE_IDLE;
+    bool dragging=false; //Only mark visible bits when true.
 
     //Marks all of the bit positions, but not their connections.
     bool markBits(bool full=true);
@@ -121,6 +122,8 @@ public:
     void moveList(QList<QGraphicsItem*> list, QPointF offset);
     //Inserts a new line, either row or column.
     bool insertLine(RomLineItem* line);
+    //Is a point visible?  Handy when dragging.
+    bool isPointVisible(QPointF p);
 
     //Get a bit at a point.
     RomBitItem* getBit(QPointF point);
