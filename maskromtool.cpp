@@ -1629,7 +1629,7 @@ bool MaskRomTool::markBits(bool full){
 
 
 //Maximum number of bits that we might clear in one frame.
-#define BITCLEARINGLIMIT 5000
+#define BITCLEARINGLIMIT 25000
 
 //Mark up all of the bits where rows and columns collide.
 void MaskRomTool::clearBits(bool full){
@@ -1645,22 +1645,13 @@ void MaskRomTool::clearBits(bool full){
      * wipe away bits without hogging the redraw thread.  Like markBits(),
      * it might take a few frames to finish on large projects.
      */
-
-    //Grab all those that are visible first.
-    auto rect=view->mapToScene(view->viewport()->rect()).boundingRect();
-    auto secondrect=second.view->mapToScene(second.view->viewport()->rect()).boundingRect();
-
-    if(!second.isVisible()) secondrect=rect;
-    foreach(QGraphicsItem* item,
-             //view->items(view->sceneRect().toRect())){
-             bits){
-        if( (rect.contains(item->pos()) || secondrect.contains(item->pos()))
-            && count++<BITCLEARINGLIMIT
-            ){
+    foreach(QGraphicsItem* item, bits){
+        if(isPointVisible(item->pos())){
             scene->removeItem(item);
             delete item;
             bits.removeOne(item);
             bitcount--;
+            count++;
         }
     }
     //Grab some more opportunistically.
