@@ -1517,7 +1517,7 @@ void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
     }
 
     //Then we redraw the bits, if they are visible.
-    if(bitsVisible){ // && state==STATE_MARKING){
+    if(bitsVisible && state==STATE_MARKING){
         foreach(QGraphicsItem* item, list){
             if(item && (item->type()==QGraphicsItem::UserType || item->type()==QGraphicsItem::UserType+1)){
                 RomLineItem *rlitem=(RomLineItem*) item;
