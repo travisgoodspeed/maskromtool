@@ -197,24 +197,23 @@ void MaskRomTool::clear(){
     //Select nothing.
     scene->selection=QList<QGraphicsItem*>();
 
-    foreach (RomBitItem* item, bits)
-        delete item;
+    for(auto i=bits.constBegin(); i!=bits.constEnd(); i++)
+        delete *i;
     bits.clear();
     assert(bits.isEmpty());
     bits.empty();
-    foreach (RomBitFix* item, bitfixes)
-        delete item;
+    for(auto i=bitfixes.constBegin(); i!=bitfixes.constEnd(); i++)
+        delete *i;
     bitfixes.clear();
-
     assert(bitfixes.isEmpty());
     bitfixes.empty();
-    foreach (RomLineItem* item, rows)
-        delete item;
+    for(auto i = rows.constBegin(); i != rows.constEnd(); i++)
+        delete *i;
     rows.clear();
     assert(rows.isEmpty());
     rows.empty();
-    foreach (RomLineItem* item, cols)
-        delete item;
+    for(auto i = cols.constBegin(); i != cols.constEnd(); i++)
+        delete *i;
     cols.clear();
     assert(cols.isEmpty());
     cols.empty();
@@ -549,14 +548,14 @@ void MaskRomTool::setLinesVisible(bool b){
 }
 void MaskRomTool::setBitsVisible(bool b){
     bitsVisible=b; //Default for new bits.
-    foreach (QGraphicsItem* item, bits)
-        item->setVisible(b);
-    foreach (QGraphicsItem* item, bitfixes)
-        item->setVisible(b);
+    for(auto i=bits.constBegin(); i!=bits.constEnd(); i++)
+        (*i)->setVisible(b);
+    for(auto i=bitfixes.constBegin(); i!=bitfixes.constEnd(); i++)
+        (*i)->setVisible(b);
 }
 void MaskRomTool::setViolationsVisible(bool b){
-    foreach (QGraphicsItem* item, violations)
-        item->setVisible(b);
+    for(auto i=violations.constBegin(); i!=violations.constEnd(); i++)
+        (*i)->setVisible(b);
 }
 
 //Highlights one item close to the center.
@@ -1047,8 +1046,8 @@ void MaskRomTool::updateThresholdHistogram(bool force){
         reds[i]=greens[i]=blues[i]=0;
 
     //Count the bits of each color.
-    foreach(RomBitItem* bit, bits){
-        long pixel=bit->bitvalue_raw(this, background);
+    for(auto i=bits.constBegin(); i!=bits.constEnd(); i++){
+        long pixel=(*i)->bitvalue_raw(this, background);
         int r=((pixel>>16)&0xFF);
         int g=((pixel>>8)&0xFF);
         int b=((pixel)&0xFF);
@@ -1137,10 +1136,10 @@ void MaskRomTool::setBitSize(qreal size){
     bitSize=size;
 
     //We do not remark the bits here, but we do resize them.
-    foreach (RomBitItem* bit, bits)
-        bit->setBitSize(bitSize);
-    foreach (RomBitFix* fix, bitfixes)
-        fix->setBitSize(bitSize);
+    for(auto i=bits.constBegin(); i!=bits.constEnd(); i++)
+        (*i)->setBitSize(bitSize);
+    for(auto i=bitfixes.constBegin(); i!=bitfixes.constEnd(); i++)
+        (*i)->setBitSize(bitSize);
 
     //Violations are not dynamically resized.
     RomRuleViolation::bitSize=bitSize;
@@ -1645,6 +1644,7 @@ void MaskRomTool::clearBits(bool full){
      * wipe away bits without hogging the redraw thread.  Like markBits(),
      * it might take a few frames to finish on large projects.
      */
+    /*  Older method, supported partial erase but performed deep copies.
     foreach(QGraphicsItem* item, bits){
         if(isPointVisible(item->pos())){
             scene->removeItem(item);
@@ -1667,18 +1667,28 @@ void MaskRomTool::clearBits(bool full){
             return;
         }
     }
-
     //For a full erase, we eliminate items in bulk.
     if(full)
         bits.clear();
+    */
+
+    //This avoids a deep copy, but cannot be partial.
+    for(auto i=bits.constBegin(); i!=bits.constEnd(); i++){
+        scene->removeItem(*i);
+        delete *i;
+        bitcount--;
+    }
+    bits.clear();
+
+
     assert(bits.isEmpty());
 
 
     //Reset the markers so we can start again.
-    foreach (RomLineItem* line, rows)
-        line->marked=false;
-    foreach (RomLineItem* line, cols)
-        line->marked=false;
+    for(auto i = rows.constBegin(); i != rows.constEnd(); i++)
+        (*i)->marked=false;
+    for(auto i = cols.constBegin(); i != cols.constEnd(); i++)
+        (*i)->marked=false;
 
     //Next step is to mark the bits.
     bitcount=0;
@@ -1710,9 +1720,9 @@ void MaskRomTool::markFixes(){
 
 //Marks up all of the known bits with new samples.
 void MaskRomTool::remarkBits(){
-    foreach (RomBitItem* bit, bits){
-        bit->bitvalue_raw(this, background);
-        bit->bitvalue_sample(this, background, thresholdR, thresholdG, thresholdB);
+    for(auto i=bits.constBegin(); i!=bits.constEnd(); i++){
+        (*i)->bitvalue_raw(this, background);
+        (*i)->bitvalue_sample(this, background, thresholdR, thresholdG, thresholdB);
     }
     //We remark all fixes here, because it's fast.
     markFixes();
@@ -1983,15 +1993,15 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
     //Update the decoding and mark the bits.
     gatorom();
 
-    foreach (RomBitItem* b, bits){
-        uint32_t a=b->adr;
+    for(auto i=bits.constBegin(); i!=bits.constEnd(); i++){
+        uint32_t a=(*i)->adr;
 
         if(start<=a && a<=end){
-            RomRuleViolation* violation=new RomRuleViolation(b->pos(),
+            RomRuleViolation* violation=new RomRuleViolation((*i)->pos(),
                                                                QString::asprintf("bit&0x%02x at 0x%04x",
-                                                                                 (unsigned int) b->mask,a),
+                                                                                 (unsigned int) (*i)->mask,a),
                                                                QString::asprintf("bit&0x%02x at 0x%04x",
-                                                                                 (unsigned int) b->mask,a));
+                                                                                 (unsigned int) (*i)->mask,a));
             violation->error=false;
             addViolation(violation);
         }
