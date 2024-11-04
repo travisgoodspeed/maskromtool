@@ -105,7 +105,7 @@ RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
         ui->listArchitecture->addItem("r2/"+r2list[i]);
 
     QString gaarchs=
-        " tlcs47 ucom4 s2000 emz1001 pic16c5x marc4 6502 8051";
+        "gb tlcs47 ucom4 s2000 emz1001 pic16c5x marc4 6502 8051";
     QStringList galist=gaarchs.split(" ", Qt::SkipEmptyParts);
     galist.sort();
     for(int i=0; i<galist.length(); i++)
