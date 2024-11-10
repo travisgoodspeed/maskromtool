@@ -1,5 +1,13 @@
-/* This only constructs the GUI.  See main.cpp
- * if you are looking for the CLI argument parsing.
+/* The MaskRomTool class represents the main window of the GUI,
+ * but also a model of the current project and references to the other
+ * dialog windows.
+ *
+ * While I did not take time to properly abstract all of the GUI elements,
+ * the decoding of bits to bytes is properly isolated in the GatoROM class.
+ * It shares the same GUI but has its own CLI.
+ *
+ * The CLI and main() method are found in main.cpp and the GatoROM
+ * CLI can be found in gatomain.cpp.
  */
 
 #include "maskromtool.h"
@@ -13,7 +21,7 @@
 #include "romthresholddialog.h"
 #include "aboutdialog.h"
 
-//#include "romalignernew.h" //Deprecated May 2024.
+//Aligners and samplers are pluggable.
 #include "romalignerreliable.h"
 #include "romalignertilting.h"
 #include "rombitsamplerwide.h"
@@ -25,7 +33,7 @@
 #include "romdecoderpython.h"
 #include "romdecoderjson.h"
 #include "romdecoderphotograph.h"
-#include "romdecodergato.h"
+#include "romdecodergato.h"          //GatoROM implements most binary decoders.
 #include "romdecoderhistogram.h"
 //Importers too, weird as they are.
 #include "romencoderdiff.h"
@@ -36,7 +44,7 @@
 #include "romrulesanity.h"
 #include "romruleambiguous.h"
 
-//Qt libraries.  Faster to include in .cpp than .h.
+//Qt libraries.
 #include <QFileDialog>
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -53,7 +61,7 @@
 #include <QProgressDialog>
 #include <QGraphicsPixmapItem>
 
-//Printing
+//Printing.  See https://github.com/travisgoodspeed/maskromtool/issues/75
 #include <QPrinter>
 #include <QPrintDialog>
 
@@ -76,6 +84,11 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     ui->graphicsView->setScene(scene);
     view=ui->graphicsView;
     activeView=view; //Default to active window.
+
+    //Important to have a monospace font when updating the status.
+    QFont font("Andale Mono"); // macOS
+    font.setStyleHint(QFont::Monospace);
+    ui->statusbar->setFont(font);
 
     //Some child dialogs need pointers back to the main project.
     disDialog.setMaskRomTool(this);
@@ -202,6 +215,8 @@ void MaskRomTool::clear(){
     bits.clear();
     assert(bits.isEmpty());
     bits.empty();
+    bitcount=0;
+
     for(auto i=bitfixes.constBegin(); i!=bitfixes.constEnd(); i++)
         delete *i;
     bitfixes.clear();
@@ -218,7 +233,8 @@ void MaskRomTool::clear(){
     assert(cols.isEmpty());
     cols.empty();
 
-    //markBits();
+    //There are no bits, so this mostly serves to zero counters.
+    markBits();
 }
 
 
@@ -1570,6 +1586,7 @@ bool MaskRomTool::markBits(bool full){
         if(!full) return false;
     }
     state=STATE_MARKING;
+    bitcount=bits.count();
 
     //Exit quick and early if there's nothing to do.
     //This is needed because partial updates are called in rendering loop.
@@ -1965,7 +1982,6 @@ void MaskRomTool::importJSON(QJsonObject o){
 
     //And update the decoding.
     decodeDialog.update();
-
 
     importLock--;
 }

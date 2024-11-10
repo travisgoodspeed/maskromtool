@@ -27,6 +27,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 ## Release Changelog
 
 `master` -- Performance improvements by avoiding deep copies in lists.
+Proper bit count in status bar and the status bar now uses a
+fixed-width font.
 
 2024-08-18 -- Gatorom's solver-set option now uses descriptive
 fiilenames.  GUI can now export a set of solved results with
