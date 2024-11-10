@@ -218,7 +218,7 @@ void MaskRomTool::clear(){
     assert(cols.isEmpty());
     cols.empty();
 
-    markBits();
+    //markBits();
 }
 
 
@@ -1587,7 +1587,6 @@ bool MaskRomTool::markBits(bool full){
     //Mark the visible lines immediately.
     if(!full){
         foreach (RomLineItem* line, cols){
-
             if(!line->marked
                 && ( colthroughrect(line->globalline(),rect) || colthroughrect(line->globalline(),secondrect) )
                     ){
@@ -1604,10 +1603,13 @@ bool MaskRomTool::markBits(bool full){
             setBitsVisible(bitswerevisible);
             //Same for the lines.
             setLinesVisible(lineswerevisible);
+            //Exit without clearing markingdirty.  We'll draw more lines next time.
             return false;
         }
-        if(!line->marked) alignmentdirty=true;
-        markLine(line);
+        if(!line->marked){
+            alignmentdirty=true;
+            markLine(line);
+        }
     }
 
     //Now our marking is clean, if unsorted.
@@ -1947,7 +1949,7 @@ void MaskRomTool::importJSON(QJsonObject o){
 
     progress.close();
 
-    //Sort the bits in case they aren't already sorted.
+    //Sort the lines in case they aren't already sorted.
     sortLines();
 
     //After loading all that, we should be able to decode the bits.
