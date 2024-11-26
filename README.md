@@ -6,6 +6,11 @@ extracting the bits, so that the contents of the ROM can be recovered.
 The keyboard shortcuts in this tool are *not* optional.  Please read
 the GUI documentation below before starting to explore.
 
+If you find this tool to be useful, please buy a copy of my book on
+[Microcontroller
+Exploits](https://www.amazon.com/Microcontroller-Exploits-Travis-Goodspeed/dp/1718503881)
+for yourself or a clever student.
+
 --Travis Goodspeed
 
 ![Screenshot of the tool.](screenshots/screenshot.png)
