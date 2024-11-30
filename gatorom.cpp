@@ -339,7 +339,7 @@ QString GatoROM::dis(){
         return QString("ERROR: Architecture not set in Edit/Decoding.");
 
     if(assembler=="goodasm")
-        process.start("goodasm", QStringList() << "-dba" << "--"+a << "-");
+        process.start("goodasm", QStringList() << "-dbaA" << "--"+a << "-");
     else if(assembler=="r2" || assembler=="rasm2")
         process.start("rasm2", QStringList() << "-BD" <<"-a" << a << "-f" << "-");
     else // unidasm default.
