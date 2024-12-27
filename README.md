@@ -1,6 +1,6 @@
 Howdy y'all,
 
-This is my CAD tool for taking photographs of a mask ROMs and
+This is my CAD tool for taking photographs of a mask ROM and
 extracting the bits, so that the contents of the ROM can be recovered.
 
 The keyboard shortcuts in this tool are *not* optional.  Please read
