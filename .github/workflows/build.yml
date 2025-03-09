@@ -35,7 +35,7 @@ jobs:
       if: contains(matrix.os, 'ubuntu')
       run: |
         sudo apt-get update
-        sudo apt-get install make gcc g++ cmake git
+        sudo apt-get install make gcc g++ cmake git libreadline-dev
         
     - name: Install Qt (Others)
       uses: jurplel/install-qt-action@v3
