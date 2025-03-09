@@ -27,6 +27,7 @@
 class QPrinter;
 
 class GatoDecoder;
+class GoodASM;
 
 
 //Represents just a bit.  CLI uses the value, GUIs might use ptr.
@@ -84,7 +85,8 @@ public:
     //Decodes the ROM using the configured decoder.
     QByteArray decode();
     QByteArray decoded; //Output bytes, produced by decode().
-    QString dis(); // Disassembly, produced by Unidasm.
+    QString dis(); // Disassembly, produced by Unidasm or GoodASM.
+    GoodASM *goodasm=0; //GoodASM disassembler, might be null.
 
     //Performs a sanity check.  Call this after decode(), error if false.
     bool checkSanity();

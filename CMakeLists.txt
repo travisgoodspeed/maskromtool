@@ -16,6 +16,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core)
 
+# GoodASM as a disassembler and library.
+if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/goodasm/CMakeLists.txt")
+    message(FATAL_ERROR "The submodules were not downloaded!  Please update submodules and try again.")
+endif()
+add_subdirectory(extern/goodasm)
+install(TARGETS goodasm DESTINATION bin)
+
 # We currently only support English, so we define this file but we do
 # not link it.  That can, of course, be changed if/when we get around
 # to translating the tool.
@@ -107,6 +114,8 @@ set(MRT_SOURCES
         rombitsampler.h rombitsampler.cpp
         rombitsamplerwide.h rombitsamplerwide.cpp
         rombitsamplertall.h rombitsamplertall.cpp
+# GoodASM Library
+        ${GOODASM_SOURCES}
 # Additional libraries.
         ${GATOROM_SOURCES}
 #        ${TS_FILES}
@@ -115,13 +124,17 @@ set(MRT_SOURCES
 )
 
 
+if(NOT WIN32)
+    set(READLINE readline)
+endif()
+
 
 qt_add_executable(maskromtool
     MANUAL_FINALIZATION
     ${MRT_SOURCES}
 )
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport)
+target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport libgoodasm ${READLINE})
 
 
 set_target_properties(maskromtool PROPERTIES
@@ -139,7 +152,7 @@ if(WIN32)
         MANUAL_FINALIZATION
         ${MRT_SOURCES}
     )
-    target_link_libraries(maskromtoolcli PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport)
+    target_link_libraries(maskromtoolcli PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport libgoodasm ${READLINE})
     qt_finalize_executable(maskromtoolcli)
     install(TARGETS maskromtoolcli DESTINATION bin)
 endif()
@@ -156,7 +169,7 @@ add_executable(gatorom
   # CLI
   gatomain.cpp
 )
-target_link_libraries(gatorom Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::PrintSupport)
+target_link_libraries(gatorom Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::PrintSupport libgoodasm ${READLINE})
 
 install(TARGETS gatorom
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

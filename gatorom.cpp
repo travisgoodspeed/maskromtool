@@ -17,6 +17,9 @@
 #include "gatodecodercolsright.h"
 #include "gatodecodersqueezelr.h"
 
+//GoodASM library.
+#include "extern/goodasm/goodasm.h"
+
 GatoBit::GatoBit(bool v){
     this->val=v;
 }
@@ -206,6 +209,7 @@ QString GatoROM::preview(){
 //Initiates an empty ROM.
 GatoROM::GatoROM(){
     loadFromString("1");
+    goodasm=new GoodASM();
 }
 // Frees the buffers.
 GatoROM::~GatoROM(){
