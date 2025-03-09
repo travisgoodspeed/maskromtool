@@ -11,9 +11,9 @@ set -e
 ## These paths are hardcoded to prevent Homebrew for gunking things
 ## up.  Be sure to install *everything* in that version of Qt, or
 ## you'll be missing important libraries like QtCharts.
-export QTDIR=~/Qt/6.7.2/macos/bin
-export CMAKE=~/Qt/6.7.2/macos/bin/qt-cmake
-export DEPLOYQT=~/Qt/6.7.2/macos/bin/macdeployqt
+export QTDIR=~/Qt/6.8.2/macos/bin
+export CMAKE=~/Qt/6.8.2/macos/bin/qt-cmake
+export DEPLOYQT=~/Qt/6.8.2/macos/bin/macdeployqt
 
 
 
@@ -28,14 +28,14 @@ mkdir build
 (cd build && $CMAKE .. && make -j 8)
 
 mkdir release
-cp -rf build/maskromtool.app build/gatorom release/
+cp -rf build/maskromtool.app build/gatorom build/extern/goodasm/goodasm release/
 # Hardcoding the executable is bad, but the Homebrew version will break the build.
 $DEPLOYQT release/maskromtool.app -sign-for-notarization="Developer ID Application: Travis Goodspeed"
 # Verify the signature
 codesign --verify --verbose  release/maskromtool.app
 
 # Zip up a release.
-(cd release && zip -r maskromtool-macos-universal.zip maskromtool.app gatorom)
+(cd release && zip -r maskromtool-macos-universal.zip maskromtool.app gatorom goodasm)
 
 
 echo "See release/ for the release files."
