@@ -29,7 +29,7 @@ jobs:
     - name: Update Submodules
       run: |
         git submodule init
-	git submodule update
+        git submodule update
 
     - name: Update packages (Ubuntu)
       if: contains(matrix.os, 'ubuntu')
