@@ -112,6 +112,10 @@ qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats
 % git clone https://github.com/travisgoodspeed/maskromtool/
 ...
 % cd maskromtool
+% git submodule init
+...
+% git submodule update
+...
 % mkdir build; cd build
 % cmake ..
 % make -j 8 && sudo make install
