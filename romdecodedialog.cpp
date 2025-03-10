@@ -2,6 +2,7 @@
 #include "ui_romdecodedialog.h"
 
 #include "maskromtool.h"
+#include "extern/goodasm/goodasm.h"
 
 RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
     QDialog(parent),
@@ -104,12 +105,12 @@ RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
     for(int i=0; i<r2list.length(); i++)
         ui->listArchitecture->addItem("r2/"+r2list[i]);
 
-    QString gaarchs=
-        "gb tlcs47 ucom4 s2000 emz1001 pic16c5x marc4 6502 8051";
-    QStringList galist=gaarchs.split(" ", Qt::SkipEmptyParts);
-    galist.sort();
-    for(int i=0; i<galist.length(); i++)
-        ui->listArchitecture->addItem("goodasm/"+galist[i]);
+    GoodASM ga;
+    auto l=ga.languageNames();
+    qDebug()<<"Languages: "<<l.length();
+    foreach(QString n, l){
+        ui->listArchitecture->addItem("goodasm/"+n);
+    }
 }
 
 void RomDecodeDialog::setMaskRomTool(MaskRomTool* maskRomTool){

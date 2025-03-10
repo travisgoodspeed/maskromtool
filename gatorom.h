@@ -56,7 +56,6 @@ public:
     //Initiates around a raw binary in Sean Riddle's style.
     GatoROM(QByteArray input, uint32_t width);
 
-
     //Before any processing at all.
     uint32_t inputrows=0, inputcols=0;
 
@@ -86,7 +85,6 @@ public:
     QByteArray decode();
     QByteArray decoded; //Output bytes, produced by decode().
     QString dis(); // Disassembly, produced by Unidasm or GoodASM.
-    GoodASM *goodasm=0; //GoodASM disassembler, might be null.
 
     //Performs a sanity check.  Call this after decode(), error if false.
     bool checkSanity();
@@ -137,7 +135,6 @@ class GatoDecoder{
 public:
     QString name;
     virtual QByteArray decode(GatoROM *gr)=0;
-    //int wordsize=8;  //Now defined in the GatoROM class.
 };
 
 #endif // GATOROM_H

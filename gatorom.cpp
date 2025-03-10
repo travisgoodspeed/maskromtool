@@ -209,21 +209,44 @@ QString GatoROM::preview(){
 //Initiates an empty ROM.
 GatoROM::GatoROM(){
     loadFromString("1");
-    goodasm=new GoodASM();
 }
+//Initiates around a standard ASCII art of the bits.
+GatoROM::GatoROM(QString input){
+    loadFromString(input);
+}
+//Initiates around a raw binary in Sean Riddle's style.
+GatoROM::GatoROM(QByteArray input, uint32_t width){
+    /* Sean Riddle shares his dumps in binary, with the most
+     * significant bit first.  They don't describe their own width,
+     * so it's necessary to supply that as an extra parameter.
+     */
+
+    QString result="";
+
+    int bitcount=0;
+    for(int i=0; i<input.length(); i++){
+        for(int bitmask=0x80; bitmask>0; bitmask>>=1){
+            //Append the bit.
+            result.append(input[i]&bitmask?"1":"0");
+            //Is it the end of a row?
+            if(++bitcount%width==0)
+                result.append("\n");
+        }
+    }
+
+    loadFromString(result);
+}
+
+
 // Frees the buffers.
 GatoROM::~GatoROM(){
     /* We don't free buffers because they might be shared
      * between multiple copies of the class.
      */
-
     //freeBuffers();
 }
 
-//Initiates around a standard ASCII art of the bits.
-GatoROM::GatoROM(QString input){
-    loadFromString(input);
-}
+
 void GatoROM::loadFromString(QString input){
     uint32_t rows=0, cols=0;
     uint32_t thisrowlen=0;
@@ -280,28 +303,6 @@ void GatoROM::loadFromString(QString input){
     reset();
 }
 
-//Initiates around a raw binary in Sean Riddle's style.
-GatoROM::GatoROM(QByteArray input, uint32_t width){
-    /* Sean Riddle shares his dumps in binary, with the most
-     * significant bit first.  They don't describe their own width,
-     * so it's necessary to supply that as an extra parameter.
-     */
-
-    QString result="";
-
-    int bitcount=0;
-    for(int i=0; i<input.length(); i++){
-        for(int bitmask=0x80; bitmask>0; bitmask>>=1){
-            //Append the bit.
-            result.append(input[i]&bitmask?"1":"0");
-            //Is it the end of a row?
-            if(++bitcount%width==0)
-                result.append("\n");
-        }
-    }
-
-    loadFromString(result);
-}
 
 //Decodes the ROM using the configured decoder.
 QByteArray GatoROM::decode(){
@@ -321,8 +322,6 @@ QByteArray GatoROM::decode(){
 
 // Disassembly, produced by Unidasm.
 QString GatoROM::dis(){
-    QProcess process;
-
     QByteArray bytes=decode();
     if(bytes.length()==0)
         return QString("ERROR: No bytes to disassemble.");
@@ -342,9 +341,19 @@ QString GatoROM::dis(){
     if(a=="")
         return QString("ERROR: Architecture not set in Edit/Decoding.");
 
-    if(assembler=="goodasm")
-        process.start("goodasm", QStringList() << "-dbaA" << "--"+a << "-");
-    else if(assembler=="r2" || assembler=="rasm2")
+    if(assembler=="goodasm"){
+        //process.start("goodasm", QStringList() << "-dbaA" << "--"+a << "-");
+        GoodASM ga;
+        ga.setLanguage(a);
+        ga.load(decode());
+        QString s=ga.source();
+        return s;
+    }
+
+
+
+    QProcess process;
+    if(assembler=="r2" || assembler=="rasm2")
         process.start("rasm2", QStringList() << "-BD" <<"-a" << a << "-f" << "-");
     else // unidasm default.
         process.start("unidasm", QStringList() << "-arch" << a << "-");
