@@ -107,7 +107,6 @@ RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
 
     GoodASM ga;
     auto l=ga.languageNames();
-    qDebug()<<"Languages: "<<l.length();
     foreach(QString n, l){
         ui->listArchitecture->addItem("goodasm/"+n);
     }
