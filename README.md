@@ -34,6 +34,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 `master` -- Performance improvements by avoiding deep copies in lists.
 Proper bit count in status bar and the status bar now uses a
 fixed-width font.
+[GoodASM](https://github.com/travisgoodspeed/goodasm) now included as
+an assembler, through a git submodule.
 
 2024-08-18 -- Gatorom's solver-set option now uses descriptive
 fiilenames.  GUI can now export a set of solved results with
@@ -437,8 +439,9 @@ From the decoder, you can highlight hex bytes and use View/Highlight
 Hex Selection to visualize the selected bytes.  Here we see the first
 three words of the [MYK82
 ROM](https://github.com/travisgoodspeed/myk82rom), which pack 32 bits
-into each position.  Disassembly is also available when `unidasm` from
-MAME is in the path.
+into each position.  Most disassemblers operate through the CLI path,
+but [GoodASM](https://github.com/travisgoodspeed/goodasm) is
+statically linked.
 
 ![Screenshot of selected first three MYK82 words.](screenshots/selection.png)
 
