@@ -35,7 +35,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 Proper bit count in status bar and the status bar now uses a
 fixed-width font.
 [GoodASM](https://github.com/travisgoodspeed/goodasm) now included as
-an assembler, through a git submodule.
+an assembler, through a git submodule.  Cut copy and paste key
+bindings now work as expected from other GUIs.
 
 2024-08-18 -- Gatorom's solver-set option now uses descriptive
 fiilenames.  GUI can now export a set of solved results with
@@ -189,7 +190,7 @@ C           -- Draw a column from the last left-click position.
 SHIFT C     -- Repeat the last column.
 SPACE       -- Repeat the last row or column.
 
-
+^X ^C ^V    -- Cut, Copy and Paste.
 D           -- Delete the selected objects.
 SHIFT D     -- Duplicate the selected lines.
 S           -- Set the selected object to the mouse position.

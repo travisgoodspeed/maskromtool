@@ -57,6 +57,11 @@ public:
     void clear();
     void sortLines();
 
+    //Cut, Copy, Paste
+    void cut();
+    void copy();
+    void paste();
+
     //Persistant user settings.
     QSettings settings();
     QColor lineColor, selectionColor, crosshairColor;
@@ -176,8 +181,9 @@ public:
 
     //These are for load/save of the project state.  See RomDecoderJson for the bit position exporter.
     int importLock=0;
-    QJsonObject exportJSON();
-    void importJSON(QJsonObject);
+    QJsonObject exportJSON(bool justselection=false);
+    void importJSON(QJsonObject o);             //Whole File.
+    void importJSONSelection(QJsonObject o);    //Just a selection.
 
 
     //Dialog windows.
@@ -281,7 +287,6 @@ private slots:
     void on_actionCrosshair_triggered();
     void on_actionOpenGL_triggered();
     void on_actionSecond_triggered();
-
     void on_actionClearViolations_triggered();
     void on_actionRunAllDRC_triggered();
     void on_actionHighlightHexSelection_triggered();
@@ -289,18 +294,12 @@ private slots:
     void on_actionSelectNextViolation_triggered();
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
-
     void on_stringsButton_triggered();
-
     void on_exportHistogram_triggered();
-
     void on_actionSolver_triggered();
     void on_actionDisassembly_triggered();
-
     void on_selectioncolorButton_triggered();
-
     void on_crosshaircolorButton_triggered();
-
     void on_exportSolverSetBytes_triggered();
 
 private:

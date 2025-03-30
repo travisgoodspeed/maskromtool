@@ -129,6 +129,47 @@ void MaskRomTool::closeEvent(QCloseEvent *event){
     QCoreApplication::quit();
 }
 
+//Cut is a copy followed by a delete.
+void MaskRomTool::cut(){
+    copy();
+
+    markUndoPoint();
+    bool bitswerevisible=bitsVisible;
+    if(!bitsVisible) setBitsVisible(true);
+    foreach(QGraphicsItem* item, scene->selection){
+        removeItem(item);
+        scene->selection.removeOne(item);
+    }
+    setBitsVisible(bitswerevisible);
+}
+//Copy the selection to JSON in the paste buffer.
+void MaskRomTool::copy(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QJsonObject obj=exportJSON(true);
+    QByteArray ba = QJsonDocument(obj).toJson();
+    clipboard->setText(ba);
+}
+//Paste the buffer if it is valid JSON.
+void MaskRomTool::paste(){
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    markUndoPoint();
+
+
+    //Check the file format.
+    QJsonParseError parseError;
+    QJsonDocument jsonDoc;
+    QByteArray byteArray=clipboard->text().toUtf8();
+    jsonDoc = QJsonDocument::fromJson(byteArray, &parseError);
+    if(parseError.error != QJsonParseError::NoError){
+        qWarning() << "Parse error at " << parseError.offset
+                   << ":" << parseError.errorString();
+        return;
+    }
+
+    //Load the object.
+    importJSONSelection(jsonDoc.object());
+}
+
 /* Differences in angle are ignored here.  We might later
  * adjust these to respect that.
  */
@@ -694,6 +735,8 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
 
         if(shift && !ctrl && !alt)
             clearViolations(); //Clear out the violations for now.
+        else if(!shift && ctrl && !alt)
+            paste();
         else if(none)
             runDRC(false);  //Just run the normal DRC, no key combo for the long one.
 
@@ -774,19 +817,24 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
                             );
         insertLine(rlitem);
         break;
-    case Qt::Key_C: //Column line.
+    case Qt::Key_X: //Cut
+        if(ctrl && !shift && !alt)
+            cut();
+        break;
+    case Qt::Key_C: //Column line or copy.
         markUndoPoint();
         rlitem=new RomLineItem(lastlinetype=RomLineItem::LINECOL);
-        if(shift)
+        if(shift && !ctrl && !alt)
             rlitem->setLine(lastcol);
-        else
+        else if(!shift && ctrl && !alt)
+            copy();
+        else if(none)
             rlitem->setLine(0, 0,
                             scene->presspos.x()-scene->scenepos.x(),
                             scene->presspos.y()-scene->scenepos.y()
                             );
         insertLine(rlitem);
         break;
-
 
     //These operate on the loaded data.
     case Qt::Key_M:  //Mark Bits.
@@ -1787,16 +1835,20 @@ RomBitItem* MaskRomTool::markBitTable(){
 }
 
 //This exports the state to JSON.
-QJsonObject MaskRomTool::exportJSON(){
+QJsonObject MaskRomTool::exportJSON(bool justselection){
     QJsonObject root;
-    //Could be handy if anyone needs to reverse engineer this.
-    root["00about"]="Export from MaskROMTool by Travis Goodspeed";
-    root["00github"]="http://github.com/travisgoodspeed/mcuexploits/";
-    root["00imagefilename"]=imagefilename;
+
+
+    if(!justselection){
+        //Could be handy if anyone needs to reverse engineer this.
+        root["00about"]="Export from MaskROMTool by Travis Goodspeed";
+        root["00github"]="http://github.com/travisgoodspeed/mcuexploits/";
+        root["00imagefilename"]=imagefilename;
 
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
+     * 2025.03.30 -- Export of partial selection.
      * 2024.07.27 -- Lines are sorted, no new types.
      * 2024.06.22 -- Adds 'selectioncolor' and 'crosshaircolor'.
      * 2024.06.05 -- Yara rule included in GUI.
@@ -1810,53 +1862,86 @@ QJsonObject MaskRomTool::exportJSON(){
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-    root["00version"]="2024.07.27";
+        root["00version"]="2025.03.30";
 
-    //These threshold values will change in a later version.
-    QJsonObject settings;
-    settings["red"]=thresholdR;
-    settings["green"]=thresholdG;
-    settings["blue"]=thresholdB;
-    settings["bitsize"]=bitSize;
-    settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold); //2023.05.05
-    settings["sampler"]=sampler->name;                 //2023.05.08
-    settings["samplersize"]=getSamplerSize();          //2023.05.08
-    settings["aligner"]=aligner->name;                 //2024.01.27
-    settings["inverted"]=inverted;                     //2023.05.14
-    settings["gatorom"]=gr.description();              //2023.09.04
-    settings["linecolor"]=lineColor.name();            //2023.09.15
-    settings["selectioncolor"]=selectionColor.name();  //2024.06.22
-    settings["crosshaircolor"]=crosshairColor.name();  //2024.06.22
-    settings["arch"]=gr.arch;                          //2024.05.19
-    settings["yararule"]=solverDialog.yararule;        //2024.06.05
-    root["settings"]=settings;
+        //These threshold values will change in a later version.
+        QJsonObject settings;
+        settings["red"]=thresholdR;
+        settings["green"]=thresholdG;
+        settings["blue"]=thresholdB;
+        settings["bitsize"]=bitSize;
+        settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold); //2023.05.05
+        settings["sampler"]=sampler->name;                 //2023.05.08
+        settings["samplersize"]=getSamplerSize();          //2023.05.08
+        settings["aligner"]=aligner->name;                 //2024.01.27
+        settings["inverted"]=inverted;                     //2023.05.14
+        settings["gatorom"]=gr.description();              //2023.09.04
+        settings["linecolor"]=lineColor.name();            //2023.09.15
+        settings["selectioncolor"]=selectionColor.name();  //2024.06.22
+        settings["crosshaircolor"]=crosshairColor.name();  //2024.06.22
+        settings["arch"]=gr.arch;                          //2024.05.19
+        settings["yararule"]=solverDialog.yararule;        //2024.06.05
+        root["settings"]=settings;
 
-    //Sorting lines ensures that they will be in a consistent order.
-    sortLines();
+        //Sorting lines ensures that they will be in a consistent order.
+        sortLines();
 
-    QJsonArray jrows;
-    foreach (RomLineItem* item, rows){
-        QJsonObject o;
-        item->write(o);
-        jrows.push_back(o);
+        QJsonArray jrows;
+        foreach (RomLineItem* item, rows){
+            QJsonObject o;
+            item->write(o);
+            jrows.push_back(o);
+        }
+        root["rows"] = jrows;
+
+        QJsonArray jcols;
+        foreach (RomLineItem* item, cols){
+            QJsonObject o;
+            item->write(o);
+            jcols.push_back(o);
+        }
+        root["cols"] = jcols;
+
+        QJsonArray jfixes;
+        foreach (RomBitFix* item, bitfixes){
+            QJsonObject o;
+            item->write(o);
+            jfixes.push_back(o);
+        }
+        root["bitfixes"] = jfixes;
+    }else{
+        /* Here we are only marking a selection.  Used for
+         * copy and paste.
+         *
+         * This is basically just a subset of the global file format.
+         */
+        QJsonArray jrows;
+        QJsonArray jcols;
+        foreach(QGraphicsItem* item, scene->selection){
+            QJsonObject o;
+            RomLineItem *l;
+
+            switch(item->type()){
+            case QGraphicsItem::UserType: //row
+                l=(RomLineItem*) item;
+                l->write(o);
+                jrows.push_back(o);
+                break;
+            case QGraphicsItem::UserType+1: //column
+                l=(RomLineItem*) item;
+                l->write(o);
+                jcols.push_back(o);
+                break;
+            case QGraphicsItem::UserType+3: //bit fix
+                qDebug()<<"FIXME: We can't copy/paste bit fixes yet.";
+                break;
+            }
+        }
+        if(!jrows.empty())
+            root["rows"] = jrows;
+        if(!jcols.empty())
+            root["cols"] = jcols;
     }
-    root["rows"] = jrows;
-
-    QJsonArray jcols;
-    foreach (RomLineItem* item, cols){
-        QJsonObject o;
-        item->write(o);
-        jcols.push_back(o);
-    }
-    root["cols"] = jcols;
-
-    QJsonArray jfixes;
-    foreach (RomBitFix* item, bitfixes){
-        QJsonObject o;
-        item->write(o);
-        jfixes.push_back(o);
-    }
-    root["bitfixes"] = jfixes;
 
     /* For now, we don't save the bits but instead regenerate
        them from the rows, cols, and thresholds.  This might cause
@@ -1864,6 +1949,52 @@ QJsonObject MaskRomTool::exportJSON(){
        will take care of that.
      */
     return root;
+}
+
+
+//Imports a partial state, like some copied lines.
+void MaskRomTool::importJSONSelection(QJsonObject o){
+    //Line items.
+    QJsonArray jrows=o["rows"].toArray();
+    QJsonArray jcols=o["cols"].toArray();
+    //Fixes
+    QJsonArray jfixes=o["bitfixes"].toArray();
+
+    scene->selection.clear();
+
+    //Rows.
+    for(int i = 0; i < jrows.size(); i++){
+        RomLineItem *l=new RomLineItem(RomLineItem::LINEROW);
+        l->read(jrows[i]);
+        l->setPen(QPen(lineColor, 2));
+        scene->addItem(l);
+        rows.append(l);
+        lastrow=l->line();
+        scene->selection.append(l);
+    }
+
+    //Columns.
+    for(int i = 0; i < jcols.size(); i++){
+        RomLineItem *c=new RomLineItem(RomLineItem::LINECOL);
+        c->read(jcols[i]);
+        c->setPen(QPen(lineColor, 2));
+        scene->addItem(c);
+        cols.append(c);
+        lastcol=c->line();
+        scene->selection.append(c);
+    }
+
+    //Bit Fixes
+    for(int i = 0; i < jfixes.size(); i++){
+        RomBitFix *fix=new RomBitFix(0);
+        fix->read(jfixes[i]);
+        scene->addItem(fix);
+        bitfixes.append(fix);
+        scene->selection.append(fix);
+    }
+
+    //Mark the selection.
+    scene->highlightSelection();
 }
 
 //The imports the state from JSON.
@@ -2015,11 +2146,12 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
         uint32_t a=(*i)->adr;
 
         if(start<=a && a<=end){
-            RomRuleViolation* violation=new RomRuleViolation((*i)->pos(),
-                                                               QString::asprintf("bit&0x%02x at 0x%04x",
-                                                                                 (unsigned int) (*i)->mask,a),
-                                                               QString::asprintf("bit&0x%02x at 0x%04x",
-                                                                                 (unsigned int) (*i)->mask,a));
+            RomRuleViolation* violation=
+                new RomRuleViolation((*i)->pos(),
+                                     QString::asprintf("bit&0x%02x at 0x%04x",
+                                                       (unsigned int) (*i)->mask,a),
+                                     QString::asprintf("bit&0x%02x at 0x%04x",
+                                                       (unsigned int) (*i)->mask,a));
             violation->error=false;
             addViolation(violation);
         }
