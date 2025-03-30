@@ -10,6 +10,32 @@ RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //GoodASM is now statically linked, so it comes first.
+    GoodASM ga;
+    auto l=ga.languageNames();
+    foreach(QString n, l){
+        ui->listArchitecture->addItem("goodasm/"+n);
+    }
+
+    /* FIXME: Somehow I built this without the Gameboy plug.  Perhaps we need to
+     * generate the list at startup, to include whatever the user has installed?
+     * --Travis
+     */
+    QString r2archs=
+        "6502 6502.cs 8051 alpha amd29k any.as any.vasm arc arm.nz arm arm.gnu "
+        "arm.v35 avr bf bpf.mr bpf chip8 cr16 cris dalvik dis ebc evm fslsp gb "
+        "h8300 hppa i4004 i8080 java jdh8 kvx lanai lh5801 lm32 loongarch lua  "
+        "m680x m68k m68k.gnu mcore mcs96 mips mips.gnu msp430 nds32 nios2 null "
+        "or1k pdp11 pic pickle ppc ppc.gnu propeller pyc riscv riscv.cs rsp    "
+        "s390 s390.gnu sh sh.cs sm5xx snes sparc sparc.gnu stm8 tms320 tricore "
+        "tricore.cs v810 v850 vax wasm ws x86 x86.nasm x86.nz xap xcore xtensa "
+        "z80";
+    QStringList r2list=r2archs.split(" ", Qt::SkipEmptyParts);
+    r2list.sort();
+    for(int i=0; i<r2list.length(); i++)
+        ui->listArchitecture->addItem("r2/"+r2list[i]);
+
+
     //Architectures supported by Unidasm.
     QString unidasmlist=
 "  8x300          h8             m6803          sab80c515      upd177x        "
@@ -87,29 +113,7 @@ RomDecodeDialog::RomDecodeDialog(QWidget *parent) :
         ui->listArchitecture->addItem("unidasm/"+alist[i]);
 
 
-    /* FIXME: Somehow I built this without the Gameboy plug.  Perhaps we need to
-     * generate the list at startup, to include whatever the user has installed?
-     * --Travis
-     */
-    QString r2archs=
-      "6502 6502.cs 8051 alpha amd29k any.as any.vasm arc arm.nz arm arm.gnu "
-      "arm.v35 avr bf bpf.mr bpf chip8 cr16 cris dalvik dis ebc evm fslsp gb "
-      "h8300 hppa i4004 i8080 java jdh8 kvx lanai lh5801 lm32 loongarch lua  "
-      "m680x m68k m68k.gnu mcore mcs96 mips mips.gnu msp430 nds32 nios2 null "
-      "or1k pdp11 pic pickle ppc ppc.gnu propeller pyc riscv riscv.cs rsp    "
-      "s390 s390.gnu sh sh.cs sm5xx snes sparc sparc.gnu stm8 tms320 tricore "
-      "tricore.cs v810 v850 vax wasm ws x86 x86.nasm x86.nz xap xcore xtensa "
-      "z80";
-    QStringList r2list=r2archs.split(" ", Qt::SkipEmptyParts);
-    r2list.sort();
-    for(int i=0; i<r2list.length(); i++)
-        ui->listArchitecture->addItem("r2/"+r2list[i]);
 
-    GoodASM ga;
-    auto l=ga.languageNames();
-    foreach(QString n, l){
-        ui->listArchitecture->addItem("goodasm/"+n);
-    }
 }
 
 void RomDecodeDialog::setMaskRomTool(MaskRomTool* maskRomTool){
