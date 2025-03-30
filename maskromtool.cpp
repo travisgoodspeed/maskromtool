@@ -1995,6 +1995,11 @@ void MaskRomTool::importJSONSelection(QJsonObject o){
 
     //Mark the selection.
     scene->highlightSelection();
+
+    //After loading all that, we should be able to decode the bits.
+    alignmentdirty=true;
+    markingdirty=true;
+    markBits(true);
 }
 
 //The imports the state from JSON.
