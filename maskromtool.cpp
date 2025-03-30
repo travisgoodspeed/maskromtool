@@ -1842,7 +1842,7 @@ QJsonObject MaskRomTool::exportJSON(bool justselection){
     if(!justselection){
         //Could be handy if anyone needs to reverse engineer this.
         root["00about"]="Export from MaskROMTool by Travis Goodspeed";
-        root["00github"]="http://github.com/travisgoodspeed/mcuexploits/";
+        root["00github"]="http://github.com/travisgoodspeed/maskromtool/";
         root["00imagefilename"]=imagefilename;
 
     /* We try not to break compatibility, but as features are added,
