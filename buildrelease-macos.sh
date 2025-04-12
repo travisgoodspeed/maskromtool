@@ -11,9 +11,9 @@ set -e
 ## These paths are hardcoded to prevent Homebrew for gunking things
 ## up.  Be sure to install *everything* in that version of Qt, or
 ## you'll be missing important libraries like QtCharts.
-export QTDIR=~/Qt/6.8.2/macos/bin
-export CMAKE=~/Qt/6.8.2/macos/bin/qt-cmake
-export DEPLOYQT=~/Qt/6.8.2/macos/bin/macdeployqt
+export QTDIR=~/Qt/6.8.3/macos/bin
+export CMAKE=~/Qt/6.8.3/macos/bin/qt-cmake
+export DEPLOYQT=~/Qt/6.8.3/macos/bin/macdeployqt
 
 
 
@@ -21,6 +21,7 @@ export DEPLOYQT=~/Qt/6.8.2/macos/bin/macdeployqt
 rm -rf build release
 
 ## We screwed up the 2024-06-23 release on macOS/x86_64 by forgetting to pull, so always do that.
+git submodule update --remote
 git pull
 
 
