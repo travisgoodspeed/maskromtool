@@ -31,7 +31,7 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
-`master` -- Performance improvements by avoiding deep copies in lists.
+2025-04-12 -- Performance improvements by avoiding deep copies in lists.
 Proper bit count in status bar and the status bar now uses a
 fixed-width font.
 [GoodASM](https://github.com/travisgoodspeed/goodasm) now included as
