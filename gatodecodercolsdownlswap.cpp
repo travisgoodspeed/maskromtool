@@ -17,22 +17,23 @@ GatoDecoderColsDownLSwap::GatoDecoderColsDownLSwap(){
 }
 
 
-QByteArray GatoDecoderColsDownLSwap::decode(GatoROM *gr){
+void GatoDecoderColsDownLSwap::decode(GatoROM *gr){
     uint32_t adr=0, vadr=0;  //Physical and virtual address.
     QByteArray ba, vba, empty;      //Physical and virtual bytes.
+    QByteArray bad, vbad; //Damage mask.
     int wordsize=gr->wordsize;
 
     gr->eval();
 
     //We might be dynamic, but we still don't want to crash.
-    if(wordsize!=8 || gr->outputcols%wordsize!=0) return ba;
+    if(wordsize!=8 || gr->outputcols%wordsize!=0) return;
     int skip=gr->outputcols/wordsize;
 
     //Each row contains sixteen 8-bit words.
     //We calculate that dynamically to be more generic.
     for(unsigned int word=0; word<(gr->outputcols/wordsize); word++){
         for(unsigned int row=0; row<gr->outputrows; row++){
-            uint32_t w=0;
+            uint32_t w=0, wd=0; //Data and damage.
 
             for(int bit=wordsize-1; bit>=0; bit--){
                 GatoBit *B=gr->outputbit(row,bit*skip+word);
@@ -43,8 +44,11 @@ QByteArray GatoDecoderColsDownLSwap::decode(GatoROM *gr){
                 B->mask=1<<bit;
                 if(B->getVal())
                     w|=B->mask;
+                if(B->ambiguous)
+                    wd|=B->mask;
             }
             ba.append(w&0xFF);
+            bad.append(w&0xFF);
 
             /* The virtual address is the same as the physical,
              * except when we are swapping.
@@ -59,11 +63,13 @@ QByteArray GatoDecoderColsDownLSwap::decode(GatoROM *gr){
         vadr=adr;
         if(adr&0x100) vadr=adr^0x80;
 
-        if(ba.length()>vadr)
+        if(ba.length()>vadr){
             vba.append(ba[vadr]);
-        else
-            return empty;
+            vbad.append(bad[vadr]);
+        } else return; //Empty return on error.
     }
 
-    return vba;
+    //Return swapped bytes and damage.
+    gr->decoded=vba;
+    gr->decodedDamage=vbad;
 }

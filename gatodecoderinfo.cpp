@@ -8,11 +8,10 @@ GatoDecoderInfo::GatoDecoderInfo()
 }
 
 
-QByteArray GatoDecoderInfo::decode(GatoROM *gr){
-    QByteArray ba;  //No byte, just a dummy to keep the API happy.
-
+void GatoDecoderInfo::decode(GatoROM *gr){
+    /* All other decoders apply a result.  This one doesn't,
+     * and I'm not sure whether or not that means this class
+     * should be scrapped.
+     */
     qDebug()<<"Input is"<<gr->inputrows<<"rows and"<<gr->inputcols<<"columns.";
-
-
-    return ba;
 }

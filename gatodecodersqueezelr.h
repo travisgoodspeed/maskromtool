@@ -7,7 +7,7 @@ class GatoDecoderSqueezeLR : public GatoDecoder
 {
 public:
     GatoDecoderSqueezeLR();
-    QByteArray decode(GatoROM *gr);
+    void decode(GatoROM *gr);
 };
 
 #endif // GATODECODERSQUEEZELR_H

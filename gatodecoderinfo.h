@@ -9,7 +9,7 @@ class GatoDecoderInfo : public GatoDecoder
 public:
     GatoDecoderInfo();
     QString name="INFO";
-    QByteArray decode(GatoROM *gr);
+    void decode(GatoROM *gr);
 };
 
 #endif // GATODECODERINFO_H

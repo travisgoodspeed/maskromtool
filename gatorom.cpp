@@ -309,13 +309,20 @@ QByteArray GatoROM::decode(){
     //Update any unapplied settings.
     eval();
 
+    //Zero bytes on failure.  decoder->decode() should overwrite these.
+    decoded=QByteArray();
+    decodedDamage=QByteArray();
+
     //If there's a decoder, return the results.
     if(decoder){
         if(verbose)
             qDebug()<<"Decoding with settings:"<<description();
-        decoded=decoder->decode(this);
-    }else
-        decoded=QByteArray();  //Zero bytes on failure.
+        /* decoded=*/
+        decoder->decode(this);
+    }
+
+    //Hard error for the damage and data not to be the same length.
+    assert(decoded.length()==decodedDamage.length());
 
     return decoded;
 }

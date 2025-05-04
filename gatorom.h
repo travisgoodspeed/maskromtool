@@ -36,6 +36,8 @@ public:
     GatoBit(bool v);         //Init with just a value.
     bool val=false;          //Raw value of the bit.
     bool inverted=false;     //True if bits are inverted.
+    bool ambiguous=false;    //True if bit is damaged.
+    bool fixed=false;        //True if bit is forced or damaged.
     void* ptr=0;             //Pointer to the bit's object.
     uint32_t adr=0xFFFFFFFF, //Address and mask of the bit.
         mask=0;
@@ -83,7 +85,8 @@ public:
     void print(QPrinter &printer);
     //Decodes the ROM using the configured decoder.
     QByteArray decode();
-    QByteArray decoded; //Output bytes, produced by decode().
+    QByteArray decoded;       //Output bytes, produced by decode().
+    QByteArray decodedDamage; //Output byte of damage, produced by decode().
     QString dis(); // Disassembly, produced by Unidasm or GoodASM.
 
     //Performs a sanity check.  Call this after decode(), error if false.
@@ -134,7 +137,13 @@ private:
 class GatoDecoder{
 public:
     QString name;
-    virtual QByteArray decode(GatoROM *gr)=0;
+
+    /* This used to return a QByteArray, but now it sets
+     * the following values:
+     * gr->decoded
+     * gr->decodedDamage
+     */
+    virtual void decode(GatoROM *gr)=0;
 };
 
 #endif // GATOROM_H

@@ -11,16 +11,17 @@ GatoDecoderSqueezeLR::GatoDecoderSqueezeLR(){
     name="squeeze-lr";
 }
 
-QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
+void GatoDecoderSqueezeLR::decode(GatoROM *gr){
     uint32_t leftadr=0, rightadr=0;
-    QByteArray left, right;
-    QByteArray ba;
+    QByteArray left, right;   //data
+    QByteArray leftd, rightd; //damage
+    QByteArray ba, bad; //data and damage
     int wordsize=gr->wordsize;
 
     gr->eval();
 
     //We might be dynamic, but we still don't want to crash.
-    if(wordsize!=8 || gr->outputcols%wordsize!=0) return ba;
+    if(wordsize!=8 || gr->outputcols%wordsize!=0) return;
     int skip=gr->outputcols/wordsize;
 
     //Each row contains many 8-bit words.
@@ -36,7 +37,7 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
 
         //cols-left
         for(int word=(gr->outputcols/wordsize)-1; word>=0; word--){
-            uint32_t w=0;
+            uint32_t w=0, wd=0; //Word and Word Damage
 
             for(int bit=wordsize-1; bit>=0; bit--){
                 GatoBit *B=gr->outputbit(row, bit*skip+word);
@@ -48,15 +49,18 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
                     B->mask=1<<bit;
                     if(B->getVal())
                         w|=B->mask;
+                    if(B->ambiguous)
+                        wd|=B->mask;
                 }
             }
             left.append(w&0xFF);
+            leftd.append(wd&0xff);
             leftadr++;
         }
 
         //cols-right
         for(unsigned int word=0; word<(gr->outputcols/wordsize); word++){
-            uint32_t w=0;
+            uint32_t w=0, wd=0; //data and damage
 
             for(int bit=wordsize-1; bit>=0; bit--){
                 GatoBit *B=gr->outputbit(row,bit*skip+word);
@@ -68,16 +72,23 @@ QByteArray GatoDecoderSqueezeLR::decode(GatoROM *gr){
                     B->mask=1<<bit;
                     if(B->getVal())
                         w|=B->mask;
+                    if(B->ambiguous)
+                        wd|=B->mask;
                 }
             }
             right.append(w&0xFF);
+            rightd.append(wd&0xff);
             rightadr++;
         }
     }
 
-    for(int i=0; i<left.length(); i++)
+    for(int i=0; i<left.length(); i++){
         ba.append(left[i]|right[i]);
+        bad.append(leftd[i]|rightd[i]);
+    }
 
 
-    return ba;
+    //Apply result.
+    gr->decoded=ba;
+    gr->decodedDamage=bad;
 }

@@ -7,7 +7,7 @@ class GatoDecoderTLCSFont : public GatoDecoder
 {
 public:
     GatoDecoderTLCSFont();
-    QByteArray decode(GatoROM *gr);
+    void decode(GatoROM *gr);
 };
 
 #endif // GATODECODERTLCSFONT_H

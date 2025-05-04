@@ -7,7 +7,7 @@ class GatoDecoderColsRight : public GatoDecoder
 {
 public:
     GatoDecoderColsRight();
-    QByteArray decode(GatoROM *gr);
+    void decode(GatoROM *gr);
 };
 
 #endif // GATODECODERCOLSLEFT_H

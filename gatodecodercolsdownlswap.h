@@ -7,7 +7,7 @@ class GatoDecoderColsDownLSwap : public GatoDecoder
 {
 public:
     GatoDecoderColsDownLSwap();
-    QByteArray decode(GatoROM *gr);
+    void decode(GatoROM *gr);
 };
 
 #endif // GATODECODERCOLSDOWNLSWAP_H

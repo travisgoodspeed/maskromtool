@@ -14,8 +14,10 @@ GatoDecoderTLCSFont::GatoDecoderTLCSFont(){
     name="tlcs47font";
 }
 
-QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
-    QByteArray ba;
+void GatoDecoderTLCSFont::decode(GatoROM *gr){
+    QByteArray ba;  //Data
+    QByteArray bad; //Damage
+
 
     /* In this function, an *i* after the variable
      * indicates the locally transformed version.
@@ -25,7 +27,7 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
     //const int wordorder[]={0,2,4,6,1,3,5,7};
     int wordorder[1024];
     int colcount=(gr->outputcols/8);
-    if(gr->wordsize!=8 || colcount>=sizeof(wordorder)) return ba;  //Fail when poor match.
+    if(gr->wordsize!=8 || colcount>=sizeof(wordorder)) return;  //Fail when poor match.
 
     //Quickly produce an interleave table of words within the row.
     for(int i=0; i<colcount; i++){
@@ -36,8 +38,8 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
     }
 
     //We might be dynamic, but we still don't want to crash.
-    if(gr->outputcols%8!=0) return ba;
-    if(gr->outputrows%8!=0) return ba;
+    if(gr->outputcols%8!=0) return;
+    if(gr->outputrows%8!=0) return;
 
     //Strictly check the size.  FIXME: Make this more generic.
     //if(gr->outputrows!=48 || gr->outputcols!=64) return ba;
@@ -57,7 +59,7 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
             rowi=row;
 
         for(int word=colcount-1; word>=0; word--){
-            uint8_t w=0;
+            uint8_t w=0, wd=0; //Data and Damage
             Q_ASSERT(word<sizeof(wordorder));
             int wordi=wordorder[word];  //Interleave the bytes.
             for (int bit = 0; bit < 8; bit++) {
@@ -65,22 +67,23 @@ QByteArray GatoDecoderTLCSFont::decode(GatoROM *gr){
                 GatoBit *gatobit=gr->outputbit(rowi,coli);
 
                 if(!gatobit){   //Sizes don't line up.
-                    return QByteArray();
+                    return;
                 }
                 gatobit->adr=adr;     //Mark the address.
                 gatobit->mask=1<<bit; //Mark the bit.
 
                 if(gatobit->getVal())
                     w|=gatobit->mask;
+                if(gatobit->ambiguous)
+                    wd|=gatobit->mask;
             }
             ba.append(w&0xFF);
+            bad.append(wd&0xFF);
             adr++;
-
-
-
         }
     }
 
-    return ba;
+    gr->decoded=ba;
+    gr->decodedDamage=bad;
 }
 

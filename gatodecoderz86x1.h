@@ -7,7 +7,7 @@ class GatoDecoderZ86x1 : public GatoDecoder
 {
 public:
     GatoDecoderZ86x1();
-    QByteArray decode(GatoROM *gr);
+    void decode(GatoROM *gr);
 };
 
 #endif // GATODECODERZ86X1_H

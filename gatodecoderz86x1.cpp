@@ -33,8 +33,9 @@ GatoDecoderZ86x1::GatoDecoderZ86x1(){
          (BIT(val, B1) <<  1) | \
          (BIT(val, B0) <<  0))
 
-QByteArray GatoDecoderZ86x1::decode(GatoROM *gr){
-    QByteArray ba;
+void GatoDecoderZ86x1::decode(GatoROM *gr){
+    QByteArray ba, bad;  //Data and Damage
+
     /* In this function, an *i* after the variable
      * indicates the locally transformed version.
      */
@@ -43,11 +44,11 @@ QByteArray GatoDecoderZ86x1::decode(GatoROM *gr){
     //
     int wordorder[32];
     int colcount=(gr->outputcols/8);
-    if(gr->wordsize!=8 || colcount>=sizeof(wordorder)) return ba;  //Fail when poor match.
+    if(gr->wordsize!=8 || colcount>=sizeof(wordorder)) return;  //Fail when poor match.
 
     //Strictly check the size.  FIXME: Make this more generic.
     if((gr->outputrows!=2+64 && gr->outputrows!=2+128) || gr->outputcols!=32*8)
-        return ba;
+        return;
 
     //Quickly produce an interleave table of words within the row.
     for(int i=0; i<colcount; i++){
@@ -66,7 +67,7 @@ QByteArray GatoDecoderZ86x1::decode(GatoROM *gr){
             rowi^=1;
 
         for(int word=0; word<=(gr->outputcols/8)-1; word++){
-            uint8_t w=0;
+            uint8_t w=0, wd=0;  //Data and Damage
             Q_ASSERT(word<sizeof(wordorder));
             for (int bit = 0; bit < 4; bit++) {
                 int wordi=wordorder[word];  //Interleave the bytes.
@@ -74,11 +75,13 @@ QByteArray GatoDecoderZ86x1::decode(GatoROM *gr){
                 GatoBit *gatobit=gr->outputbit(rowi,coli);
 
                 if(!gatobit)   //Sizes don't line up.
-                    return QByteArray();
+                    return;
                 gatobit->adr=adr;     //Mark the address.
                 gatobit->mask=1<<bit; //Mark the bit.
 
                 if(gatobit->getVal())
+                    w|=gatobit->mask;
+                if(gatobit->ambiguous)
                     w|=gatobit->mask;
             }
             for (int bit = 4; bit < 8; bit++) {
@@ -87,18 +90,23 @@ QByteArray GatoDecoderZ86x1::decode(GatoROM *gr){
                 GatoBit *gatobit=gr->outputbit(rowi,coli);
 
                 if(!gatobit)   //Sizes don't line up.
-                    return QByteArray();
+                    return;
                 gatobit->adr=adr;     //Mark the address.
                 gatobit->mask=1<<bit; //Mark the bit.
 
                 if(gatobit->getVal())
                     w|=gatobit->mask;
+                if(gatobit->ambiguous)
+                    w|=gatobit->mask;
             }
             ba.append(w&0xFF);
+            bad.append(wd&0xff);
             adr++;
         }
     }
 
-    return ba;
+    //Update the decoded values.
+    gr->decoded=ba;
+    gr->decodedDamage=bad;
 }
 
