@@ -145,8 +145,10 @@ public:
     //Clears all bit fixes.
     void clearBitFixes();
 
-    //Highlight stuff for easy visibility.
+    //Highlight bytes stuff for easy visibility.
     void highlightAdrRange(uint32_t start, uint32_t end);
+    //Same, but only bits that are damaged.
+    void highlightAdrRangeDamage(uint32_t start, uint32_t end);
 
     //Updates the histogram dialog.
     void updateThresholdHistogram(bool force=false);
@@ -194,7 +196,7 @@ public:
     RomRuleDialog violationDialog;
     RomSecond second;
     RomDecodeDialog decodeDialog;
-    RomHexDialog hexDialog;
+    RomHexDialog hexDialog, hexDamageDialog;
     RomStringsDialog stringsDialog;
     RomSolverDialog solverDialog;
     RomSolutionsDialog solutionsDialog;
@@ -301,6 +303,8 @@ private slots:
     void on_selectioncolorButton_triggered();
     void on_crosshaircolorButton_triggered();
     void on_exportSolverSetBytes_triggered();
+
+    void on_actionHexDamage_triggered();
 
 private:
     Ui::MaskRomTool *ui;

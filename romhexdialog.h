@@ -6,6 +6,11 @@
  * project.  It has no need for editing, but it's
  * very important that the current working address
  * be fed back to the main application.
+ *
+ * When showingDamage is set to true, this represents
+ * a hex view of the damage mask, showing a 1 for each
+ * ambiguous bit.  MaskRomTool maintains a hex view of
+ * both the data bytes and the damage bytes.
  */
 
 #include <QDialog>
@@ -34,9 +39,11 @@ public:
     void select(uint32_t adr, uint32_t len);
     uint32_t start=0, end=0;
 
+    //Set to true when showing ambiguous bits in hex.
+    bool showingDamage=false;
+
 private slots:
     void on_plaintextHex_selectionChanged();
-
     void on_buttonShow_clicked();
 
 private:

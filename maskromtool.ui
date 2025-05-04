@@ -30,7 +30,7 @@
        </size>
       </property>
       <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
       </property>
      </widget>
     </item>
@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>20</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -89,6 +89,7 @@
     <addaction name="actionDisassembly"/>
     <addaction name="actionHexView"/>
     <addaction name="actionHighlightHexSelection"/>
+    <addaction name="actionHexDamage"/>
     <addaction name="separator"/>
     <addaction name="actionOpenGL"/>
     <addaction name="actionSecond"/>
@@ -514,6 +515,11 @@
   <action name="exportSolverSetBytes">
    <property name="text">
     <string>Solver Set Bytes</string>
+   </property>
+  </action>
+  <action name="actionHexDamage">
+   <property name="text">
+    <string>Hex Damage</string>
    </property>
   </action>
  </widget>

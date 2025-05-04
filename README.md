@@ -31,6 +31,9 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
+`master` -- CLI and GUI features to work with ambiguous/damaged bits,
+useful when part of an implant ROM is poorly exposed.
+
 2025-04-12 -- Performance improvements by avoiding deep copies in lists.
 Proper bit count in status bar and the status bar now uses a
 fixed-width font.

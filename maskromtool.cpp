@@ -95,6 +95,9 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     violationDialog.setMaskRomTool(this);
     decodeDialog.setMaskRomTool(this);
     hexDialog.setMaskRomTool(this);
+    hexDamageDialog.setMaskRomTool(this);
+    hexDamageDialog.setWindowTitle("Hex Damage");
+    hexDamageDialog.showingDamage=true;
     stringsDialog.setMaskRomTool(this);
     solverDialog.setMaskRomTool(this);
     solutionsDialog.setMaskRomTool(this);
@@ -286,6 +289,7 @@ GatoROM MaskRomTool::gatorom(){
 
     QByteArray ga=gr.decode();
     hexDialog.updatebinary(ga);
+    hexDamageDialog.updatebinary(gr.decodedDamage);
     stringsDialog.updatebinary(ga);
     disDialog.update();
     return this->gr;
@@ -1045,6 +1049,14 @@ void MaskRomTool::on_actionHexView_triggered(){
     gatorom();
     hexDialog.show();
 }
+
+
+//Display the Hex preview of damage.
+void MaskRomTool::on_actionHexDamage_triggered(){
+    gatorom();
+    hexDamageDialog.show();
+}
+
 
 //Pop a dialog to apply the threshold.
 void MaskRomTool::on_thresholdButton_triggered(){
@@ -2138,9 +2150,6 @@ void MaskRomTool::on_actionHighlightHexSelection_triggered(){
 
 // Marks a warning for bits in range.
 void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
-    if(verbose)
-        qDebug()<<"Marking address range from"<<start<<"to"<<end;
-
     //Just another type of violation, so we have to clear the real ones.
     clearViolations();
 
@@ -2151,6 +2160,33 @@ void MaskRomTool::highlightAdrRange(uint32_t start, uint32_t end){
         uint32_t a=(*i)->adr;
 
         if(start<=a && a<=end){
+            RomRuleViolation* violation=
+                new RomRuleViolation((*i)->pos(),
+                                     QString::asprintf("bit&0x%02x at 0x%04x",
+                                                       (unsigned int) (*i)->mask,a),
+                                     QString::asprintf("bit&0x%02x at 0x%04x",
+                                                       (unsigned int) (*i)->mask,a));
+            violation->error=false;
+            addViolation(violation);
+        }
+    }
+
+    this->violationDialog.show();
+}
+
+
+//Same, but only bits that are damaged.
+void MaskRomTool::highlightAdrRangeDamage(uint32_t start, uint32_t end){
+    //Just another type of violation, so we have to clear the real ones.
+    clearViolations();
+
+    //Update the decoding and mark the bits.
+    gatorom();
+
+    for(auto i=bits.constBegin(); i!=bits.constEnd(); i++){
+        uint32_t a=(*i)->adr;
+
+        if(start<=a && a<=end && (*i)->bitAmbiguous()){
             RomRuleViolation* violation=
                 new RomRuleViolation((*i)->pos(),
                                      QString::asprintf("bit&0x%02x at 0x%04x",
@@ -2212,6 +2248,5 @@ void MaskRomTool::on_actionDisassembly_triggered(){
     gatorom();
     disDialog.show();
 }
-
 
 

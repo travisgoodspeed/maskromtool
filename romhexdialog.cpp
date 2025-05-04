@@ -139,7 +139,16 @@ int RomHexDialog::adrToEndPosition(uint32_t adr){
 }
 
 
+//Highlights the selection as DRC warnings.
 void RomHexDialog::on_buttonShow_clicked(){
-    mrt->highlightAdrRange(start,end);
+    /* For data, we show all the bits of the selected bytes,
+     * but for damage, users are only interested in those
+     * that are damaged.
+     */
+
+    if(!showingDamage)
+        mrt->highlightAdrRange(start, end);
+    else
+        mrt->highlightAdrRangeDamage(start, end);
 }
 
