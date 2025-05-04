@@ -81,6 +81,9 @@ public:
 
     //Exports the output as ASCII art.
     QString exportString(bool pretty=true);
+    //Exports the output as ASCII art.
+    QString exportStringDamage(bool pretty=true);
+
     //Prints the bits.  Can be handy for manual decoding.
     void print(QPrinter &printer);
     //Decodes the ROM using the configured decoder.

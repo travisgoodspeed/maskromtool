@@ -41,6 +41,7 @@ GatoROM RomDecoderGato::gatorom(MaskRomTool *mrt){
                 return mrt->gr;
             }
             gb->ptr=bit;
+            gb->ambiguous=bit->bitAmbiguous();
 
             bit=bit->nexttoright;  //Skip down the row.
             col++;
@@ -84,11 +85,22 @@ QString RomDecoderGato::preview(MaskRomTool *m){
     return "";
 }
 
-//Exports the preview to a file.
+//Exports the binary to a file.
 void RomDecoderGato::writeFile(MaskRomTool *m, QString filename){
     GatoROM gr=gatorom(m);
     QByteArray bytes=gr.decode();
     QFile fout(filename);
     fout.open(QIODevice::WriteOnly);
     fout.write(bytes);
+}
+
+
+//Export the error bitmask to a file.
+void RomDecoderGato::writeDamageFile(MaskRomTool *m, QString filename){
+    GatoROM gr=gatorom(m);
+    QFile fout(filename);
+
+    gr.decode();
+    fout.open(QIODevice::WriteOnly);
+    fout.write(gr.decodedDamage);
 }

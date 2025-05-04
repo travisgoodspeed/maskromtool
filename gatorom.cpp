@@ -547,6 +547,24 @@ QString GatoROM::exportString(bool pretty){
     return ascii;
 }
 
+//Exports the project as bits.
+QString GatoROM::exportStringDamage(bool pretty){
+    //Note that this works only on vals, not on pointers.
+    QString ascii="";
+    int i=0, lines=0;
+    for(unsigned int row=0; row<outputrows; row++){
+        for(unsigned int col=0; col<outputcols; col++){
+            ascii.append(outputbits[row][col]->ambiguous?"1":"0");
+            if(pretty && ++i%8==0)
+                ascii.append(" ");
+        }
+        ascii.append("\n");
+        if(++lines%8==0)
+            ascii.append("\n");
+    }
+    return ascii;
+}
+
 //Allocates the input buffer, given known dimensions.
 void GatoROM::setInputSize(const uint32_t rows, const uint32_t cols){
     if(inputbits)

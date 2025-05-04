@@ -24,6 +24,8 @@ public:
     //Virtual functions we don't yet implement.
     virtual QString preview(MaskRomTool *m) override;
     virtual void writeFile(MaskRomTool *m, QString filename) override;
+    void writeDamageFile(MaskRomTool *m, QString filename);
+
 private:
     MaskRomTool *mrt=0;
 };

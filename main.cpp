@@ -1,5 +1,6 @@
 #include "maskromtool.h"
 #include "romdecoderascii.h"
+#include "romdecoderasciidamage.h"
 #include "romdecodergato.h"
 #include "romdecodercsv.h"
 #include "romdecoderjson.h"
@@ -95,11 +96,23 @@ int main(int argc, char *argv[]){
                                          QCoreApplication::translate("main", "Export ASCII bits."),
                                          QCoreApplication::translate("main", "file"));
     parser.addOption(asciiExportOption);
+    //Same but for damage
+    QCommandLineOption asciiErrorExportOption(QStringList() << "A" << "export-ascii-damage",
+                                         QCoreApplication::translate("main", "Export ASCII bits of damage."),
+                                         QCoreApplication::translate("main", "file"));
+    parser.addOption(asciiErrorExportOption);
+
     // Exporting to ROM bytes.
     QCommandLineOption rombytesExportOption(QStringList() << "o" << "export",
                                          QCoreApplication::translate("main", "Export ROM bytes."),
                                          QCoreApplication::translate("main", "file"));
     parser.addOption(rombytesExportOption);
+    // Same, but bitmask of damage.
+    QCommandLineOption rombytesExportDamageOption(QStringList() << "O" << "export-damage",
+                                            QCoreApplication::translate("main", "Export ROM bytes."),
+                                            QCoreApplication::translate("main", "file"));
+    parser.addOption(rombytesExportDamageOption);
+
     // Export histogram.
     QCommandLineOption histogramExportOption(QStringList() << "export-histogram",
                                             QCoreApplication::translate("main", "Export histogram."),
@@ -172,6 +185,13 @@ int main(int argc, char *argv[]){
 
         exporter.writeFile(&mrt, parser.value(asciiExportOption));
     }
+    //Same, but error bits.
+    if(parser.isSet(asciiErrorExportOption)){
+        qDebug()<<"Exporting error bits to ASCII.";
+        RomDecoderAsciiDamage exporter;
+        exporter.writeFile(&mrt, parser.value(asciiErrorExportOption));
+    }
+
     //Export ROM bytes.
     if(parser.isSet(rombytesExportOption)){
         qDebug()<<"Exporting ROM";
@@ -179,6 +199,15 @@ int main(int argc, char *argv[]){
         exporter.writeFile(&mrt, parser.value(rombytesExportOption));
         a.processEvents();
     }
+    //Same, but damage
+    if(parser.isSet(rombytesExportDamageOption)){
+        qDebug()<<"Exporting ROM Damage";
+        RomDecoderGato exporter;
+        exporter.writeDamageFile(&mrt, parser.value(rombytesExportDamageOption));
+        a.processEvents();
+    }
+
+
     //Export histogram bytes.
     if(parser.isSet(histogramExportOption)){
         qDebug()<<"Exporting Histogram";
