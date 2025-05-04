@@ -35,15 +35,16 @@ copy extern\goodasm\Release\goodasm.exe ..\Release\
 cd ..
 
 REM Adding files that windeployqt forgets.
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Charts.dll Release\
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6OpenGL.dll Release\
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6OpenGLWidgets.dll Release\
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Widgets.dll Release\
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Gui.dll Release\
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6PrintSupport.dll Release\
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Pdf.dll Release\
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Svg.dll Release\
-copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Core.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Charts.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6OpenGL.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6OpenGLWidgets.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Widgets.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Gui.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6PrintSupport.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Pdf.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Svg.dll Release\
+rem copy C:\Qt\6.8.3\msvc2022_64\bin\Qt6Core.dll Release\
+copy C:\Qt\6.8.3\msvc2022_64\bin\*.dll Release\
 
 echo Finishing packing Release.  Now making installer.
 
