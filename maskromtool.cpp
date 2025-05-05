@@ -699,7 +699,19 @@ void MaskRomTool::keyPressEvent(QKeyEvent *event){
     case Qt::Key_A:
         if(shift && !ctrl && !alt){ //Damage/Ambiguate bit.
             markUndoPoint();
-            damageBit(scene->scenepos);
+
+            int bitcount=0;
+            foreach(QGraphicsItem* item, scene->selection){
+                if(item &&
+                    (item->type()==QGraphicsItem::UserType+2)){
+                    bitcount++;
+                    damageBit((RomBitItem*) item);
+                }
+            }
+
+            //If no bits are selected, use the position instead.
+            if(!bitcount)
+                damageBit(scene->scenepos);
         }
         break;
     case Qt::Key_Z: //Undo, Redo
@@ -1944,8 +1956,9 @@ QJsonObject MaskRomTool::exportJSON(bool justselection){
                 l->write(o);
                 jcols.push_back(o);
                 break;
+            case QGraphicsItem::UserType+2: //bits
             case QGraphicsItem::UserType+3: //bit fix
-                qDebug()<<"FIXME: We can't copy/paste bit fixes yet.";
+                //We don't copy/paste bits or bit fixes.
                 break;
             }
         }

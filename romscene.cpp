@@ -234,15 +234,18 @@ void RomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
         /* We can select static items like lines but never
          * ephemeral items like bits.
+         *
+         * Formerly, we did not select bits, but now we do
+         * for things like group marking of damage.
          */
         foreach(QGraphicsItem* item, newselection){
             switch(item->type()){
             case QGraphicsItem::UserType:   //row
             case QGraphicsItem::UserType+1: //col
+            case QGraphicsItem::UserType+2: //bit
             case QGraphicsItem::UserType+3: //bitfix
                 break;
             default: // All others.
-            case QGraphicsItem::UserType+2: //bit
             case QGraphicsItem::UserType+4: //rule violation
                 newselection.removeOne(item);
                 break;
