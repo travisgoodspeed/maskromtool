@@ -1031,11 +1031,33 @@ void MaskRomTool::on_exportROMBytes_triggered(){
         return;
     }
 
-    QString filename = QFileDialog::getSaveFileName(this,tr("Save ROM"), tr("rom.bin"));
+    QString filename = QFileDialog::getSaveFileName(this,tr("Export ROM"), tr("rom.bin"));
     if(!filename.isEmpty()){
         QFile fout(filename);
         fout.open(QIODevice::WriteOnly);
         fout.write(gato.decode());
+    }
+}
+
+
+//Same, but for damage.
+void MaskRomTool::on_exportDamageBytes_triggered(){
+    GatoROM gato=gatorom();
+
+    if(gato.decoder==0){
+        QMessageBox::warning(this, "Mask ROM Tool",
+                             "Use Edit/Decoding to set a decoder.",
+                             QMessageBox::Ok,
+                             QMessageBox::Ok);
+        return;
+    }
+
+    QString filename = QFileDialog::getSaveFileName(this,tr("Export ROM Damage"), tr("damage.bin"));
+    if(!filename.isEmpty()){
+        QFile fout(filename);
+        fout.open(QIODevice::WriteOnly);
+        gato.decode();
+        fout.write(gato.decodedDamage);
     }
 }
 
@@ -2284,6 +2306,7 @@ void MaskRomTool::on_actionDisassembly_triggered(){
     gatorom();
     disDialog.show();
 }
+
 
 
 

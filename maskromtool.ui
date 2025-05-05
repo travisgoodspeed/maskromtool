@@ -63,6 +63,7 @@
      <addaction name="exportHistogram"/>
      <addaction name="separator"/>
      <addaction name="exportROMBytes"/>
+     <addaction name="exportDamageBytes"/>
      <addaction name="exportSolverSetBytes"/>
     </widget>
     <widget class="QMenu" name="menuImport">
@@ -532,6 +533,11 @@
   <action name="exportAsciiDamage">
    <property name="text">
     <string>ASCII Damage</string>
+   </property>
+  </action>
+  <action name="exportDamageBytes">
+   <property name="text">
+    <string>Damage Bytes</string>
    </property>
   </action>
  </widget>

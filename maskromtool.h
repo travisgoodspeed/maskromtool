@@ -310,6 +310,8 @@ private slots:
 
     void on_exportAsciiDamage_triggered();
 
+    void on_exportDamageBytes_triggered();
+
 private:
     Ui::MaskRomTool *ui;
     qreal thresholdR, thresholdG, thresholdB;
