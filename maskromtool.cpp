@@ -29,6 +29,7 @@
 
 //Decoders should be abstracted more, and menus auto-generated.
 #include "romdecoderascii.h"
+#include "romdecoderasciidamage.h"
 #include "romdecodercsv.h"
 #include "romdecoderpython.h"
 #include "romdecoderjson.h"
@@ -950,7 +951,9 @@ void MaskRomTool::on_importDiff_triggered(){
     if(verbose)
         qDebug()<<"Importing a diff.";
     RomEncoderDiff differ;
-    QString filename = QFileDialog::getOpenFileName(this, tr("Diff Bits as ASCII"),"",tr("Textfiles (*.txt)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Diff Bits as ASCII"),
+                                                    "",
+                                                    tr("Textfiles (*.txt)"));
 
     if(!filename.isEmpty()){
         //Remove the old violations.
@@ -968,12 +971,24 @@ void MaskRomTool::on_importDiff_triggered(){
 //Exports ASCII for ZORROM/Bitviewer.
 void MaskRomTool::on_exportASCII_triggered(){
     RomDecoderAscii exporter;
-    QString filename = QFileDialog::getSaveFileName(this,tr("Export Bits as ASCII"),
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export Bits as ASCII"),
                                                     "bits.txt",
                                                     tr("Textfiles (*.txt)"));
     if(!filename.isEmpty())
         exporter.writeFile(this,filename);
 }
+
+
+//Same, but for damage.
+void MaskRomTool::on_exportAsciiDamage_triggered(){
+    RomDecoderAsciiDamage exporter;
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export Bit Damage as ASCII"),
+                                                    "bits.txt",
+                                                    tr("Textfiles (*.txt)"));
+    if(!filename.isEmpty())
+        exporter.writeFile(this,filename);
+}
+
 
 //Exports CSV for Matlab or Excel.
 void MaskRomTool::on_exportCSV_triggered(){
@@ -1054,6 +1069,14 @@ void MaskRomTool::on_asciiButton_triggered(){
     RomDecoderAscii exporter;
     asciiDialog.setText(exporter.preview(this));
     asciiDialog.show();
+}
+
+
+//Same, but for bit damage.
+void MaskRomTool::on_actionAsciiDamage_triggered(){
+    RomDecoderAsciiDamage exporter;
+    asciiDamageDialog.setText(exporter.preview(this));
+    asciiDamageDialog.show();
 }
 
 //Display the Hex preview window.
@@ -2261,5 +2284,6 @@ void MaskRomTool::on_actionDisassembly_triggered(){
     gatorom();
     disDialog.show();
 }
+
 
 

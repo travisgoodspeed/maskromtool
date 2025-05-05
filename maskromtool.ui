@@ -55,6 +55,7 @@
       <string>Export</string>
      </property>
      <addaction name="exportASCII"/>
+     <addaction name="exportAsciiDamage"/>
      <addaction name="exportCSV"/>
      <addaction name="exportJSONBits"/>
      <addaction name="exportPython"/>
@@ -86,6 +87,7 @@
     <addaction name="actionViolationsDialog"/>
     <addaction name="separator"/>
     <addaction name="asciiButton"/>
+    <addaction name="actionAsciiDamage"/>
     <addaction name="actionDisassembly"/>
     <addaction name="actionHexView"/>
     <addaction name="actionHighlightHexSelection"/>
@@ -238,7 +240,7 @@
   </action>
   <action name="asciiButton">
    <property name="text">
-    <string>ASCII Bits</string>
+    <string>Bits</string>
    </property>
   </action>
   <action name="actionPhoto">
@@ -520,6 +522,16 @@
   <action name="actionHexDamage">
    <property name="text">
     <string>Hex Damage</string>
+   </property>
+  </action>
+  <action name="actionAsciiDamage">
+   <property name="text">
+    <string>Bits of Damage</string>
+   </property>
+  </action>
+  <action name="exportAsciiDamage">
+   <property name="text">
+    <string>ASCII Damage</string>
    </property>
   </action>
  </widget>

@@ -189,7 +189,7 @@ public:
 
 
     //Dialog windows.
-    ASCIIDialog asciiDialog;
+    ASCIIDialog asciiDialog, asciiDamageDialog;
     QChart histogramchart;
     RomThresholdDialog thresholdDialog;
     RomAlignDialog alignDialog;
@@ -305,6 +305,10 @@ private slots:
     void on_exportSolverSetBytes_triggered();
 
     void on_actionHexDamage_triggered();
+
+    void on_actionAsciiDamage_triggered();
+
+    void on_exportAsciiDamage_triggered();
 
 private:
     Ui::MaskRomTool *ui;
