@@ -328,7 +328,8 @@ QByteArray GatoROM::decode(){
 }
 
 // Disassembly, produced by Unidasm.
-QString GatoROM::dis(){
+QString GatoROM::dis(bool autocomment, bool asbits,
+                     bool asbytes, bool asdamage){
     QByteArray bytes=decode();
     if(bytes.length()==0)
         return QString("ERROR: No bytes to disassemble.");
@@ -349,10 +350,22 @@ QString GatoROM::dis(){
         return QString("ERROR: Architecture not set in Edit/Decoding.");
 
     if(assembler=="goodasm"){
-        //process.start("goodasm", QStringList() << "-dbaA" << "--"+a << "-");
+        decode();
+
         GoodASM ga;
         ga.setLanguage(a);
-        ga.load(decode());
+
+        //Show the data listing in the right way.
+        ga.listbits=asbits;
+        ga.listdbits=asdamage;
+        ga.listbytes=asbytes || asbits || asdamage;
+        ga.autocomment=autocomment;
+
+        //Set both data and damage mask.
+        ga.loadDamage(decodedDamage);
+        ga.load(decoded);
+
+
         QString s=ga.source();
         return s;
     }

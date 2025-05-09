@@ -1917,6 +1917,7 @@ QJsonObject MaskRomTool::exportJSON(bool justselection){
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
+     * 2025.05.07 -- Disassembly settings, such as damage bits.
      * 2025.03.30 -- Export of partial selection.
      * 2024.07.27 -- Lines are sorted, no new types.
      * 2024.06.22 -- Adds 'selectioncolor' and 'crosshaircolor'.
@@ -1949,6 +1950,9 @@ QJsonObject MaskRomTool::exportJSON(bool justselection){
         settings["selectioncolor"]=selectionColor.name();  //2024.06.22
         settings["crosshaircolor"]=crosshairColor.name();  //2024.06.22
         settings["arch"]=gr.arch;                          //2024.05.19
+        settings["autocomment"]=disDialog.autocomment;     //2025.05.07
+        settings["showbits"]=disDialog.showbits;           //2025.05.07
+        settings["showdamage"]=disDialog.showdamage;       //2025.05.07
         settings["yararule"]=solverDialog.yararule;        //2024.06.05
         root["settings"]=settings;
 
@@ -2100,11 +2104,22 @@ void MaskRomTool::importJSON(QJsonObject o){
 
 
     //Decoder settings.
-    QJsonValue grarch=settings.value("arch");
-    this->gr.arch=grarch.toString("");
     QJsonValue grsetting=settings.value("gatorom");
     this->gr.configFromDescription(grsetting.toString(""));
     decodeDialog.setMaskRomTool(this);
+
+    //Disassembler settings.
+    QJsonValue grarch=settings.value("arch");
+    this->gr.arch=grarch.toString("");
+    QJsonValue showbits=settings.value("showbits");
+    QJsonValue showdamage=settings.value("showdamage");
+    QJsonValue autocomment=settings.value("autocomment");
+    disDialog.autocomment=autocomment.toBool(false);
+    disDialog.showdamage=showdamage.toBool(false);
+    disDialog.showbits=showbits.toBool(false);
+    disDialog.updateGUISettings();
+
+
 
     //Solver rules.
     QJsonValue yararule=settings.value("yararule");

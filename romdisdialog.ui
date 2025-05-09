@@ -15,6 +15,44 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QCheckBox" name="checkComments">
+       <property name="text">
+        <string>Autocomment</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioHex">
+       <property name="text">
+        <string>Hex</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioBits">
+       <property name="text">
+        <string>Bits</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioDamage">
+       <property name="text">
+        <string>Damage</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QPlainTextEdit" name="plainTextEdit">
      <property name="acceptDrops">
       <bool>false</bool>

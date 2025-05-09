@@ -26,10 +26,49 @@ void RomDisDialog::setMaskRomTool(MaskRomTool *mrt){
     this->mrt=mrt;
 }
 
+//Updates GUI from class settings.
+void RomDisDialog::updateGUISettings(){
+    ui->checkComments->setCheckState(autocomment?Qt::Checked:Qt::Unchecked);
+    ui->radioBits->setChecked(showbits);
+    ui->radioDamage->setChecked(showdamage);
+    if(!showbits && !showdamage)
+        ui->radioHex->setChecked(true);
+}
+
 //Updates the disassembly view.  GatoROM is responsible for any error messages.
 void RomDisDialog::update(){
     Q_ASSERT(mrt);
 
-    ui->plainTextEdit->setPlainText(mrt->gr.dis());
+    //Redraw the view.
+    ui->plainTextEdit->setPlainText(
+        mrt->gr.dis(
+            autocomment,
+            showbits,
+            ui->radioHex->isChecked(),
+            showdamage
+            ));
     setWindowTitle(mrt->gr.arch+" Disassembly");
 }
+
+// In any update of the settings, we just rerender the disassmbly.
+
+void RomDisDialog::on_checkComments_checkStateChanged(const Qt::CheckState &arg1){
+    autocomment=ui->checkComments->isChecked();
+    update();
+}
+void RomDisDialog::on_radioHex_clicked(){
+    showbits=false;
+    showdamage=false;
+    update();
+}
+void RomDisDialog::on_radioBits_clicked(){
+    showdamage=false;
+    showbits=ui->radioBits->isChecked();
+    update();
+}
+void RomDisDialog::on_radioDamage_clicked(){
+    showbits=false;
+    showdamage=ui->radioDamage->isChecked();
+    update();
+}
+

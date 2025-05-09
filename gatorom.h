@@ -40,7 +40,7 @@ public:
     bool fixed=false;        //True if bit is forced or damaged.
     void* ptr=0;             //Pointer to the bit's object.
     uint32_t adr=0xFFFFFFFF, //Address and mask of the bit.
-        mask=0;
+             mask=0;
     bool getVal();           //Returns not the raw value, but the value after inversion.
 };
 
@@ -90,7 +90,8 @@ public:
     QByteArray decode();
     QByteArray decoded;       //Output bytes, produced by decode().
     QByteArray decodedDamage; //Output byte of damage, produced by decode().
-    QString dis(); // Disassembly, produced by Unidasm or GoodASM.
+    // Disassembly, produced by Unidasm or GoodASM.
+    QString dis(bool autocomment=false, bool asbits=false, bool asbytes=true, bool asdamage=false);
 
     //Performs a sanity check.  Call this after decode(), error if false.
     bool checkSanity();
