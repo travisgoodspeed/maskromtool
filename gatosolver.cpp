@@ -76,13 +76,13 @@ bool GatoSolver::next(){
 
 //This is a little lazy, might cause bugs on big endian machines.
 PACK(struct statefield {
-    unsigned char rotation : 2;
-    unsigned char flipx : 1;
-    //unsigned char flipy : 1;
-    unsigned char invert : 1;
-    unsigned char bank : 2;     //No banking, left or right banking.
-    unsigned char decoder : 4;  //Always the last thing we iterate.
-    unsigned char toohigh : 1;  //Zero until the others have overflowed.
+    uint16_t rotation : 2;
+    uint16_t flipx : 1;
+    //uint16_t flipy : 1;
+    uint16_t invert : 1;
+    uint16_t bank : 2;     //No banking, left or right banking.
+    uint16_t decoder : 4;  //Always the last thing we iterate.
+    uint16_t toohigh : 1;  //Zero until the others have overflowed.
 });
 
 //Are we there yet?
