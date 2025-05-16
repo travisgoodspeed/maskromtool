@@ -26,10 +26,10 @@ public:
     bool showdamage=false;
 
 private slots:
-    void on_checkComments_checkStateChanged(const Qt::CheckState &arg1);
-    void on_radioHex_clicked();
-    void on_radioBits_clicked();
-    void on_radioDamage_clicked();
+    void on_checkComments_toggled(bool checked);
+    void on_radioHex_toggled(bool checked);
+    void on_radioBits_toggled(bool checked);
+    void on_radioDamage_toggled(bool checked);
 
 private:
     Ui::RomDisDialog *ui;

@@ -327,6 +327,20 @@ QByteArray GatoROM::decode(){
     return decoded;
 }
 
+GoodASM *GatoROM::goodasm(){
+    GoodASM *ga=new GoodASM();
+    QString lang=arch;
+    if(lang.startsWith("goodasm/"))
+        lang=lang.right(lang.length()-QString("goodasm/").length());
+    ga->setLanguage(lang);
+
+    //Set both data and damage mask.
+    ga->loadDamage(decodedDamage);
+    ga->load(decoded);
+
+    return ga;
+}
+
 // Disassembly, produced by Unidasm.
 QString GatoROM::dis(bool autocomment, bool asbits,
                      bool asbytes, bool asdamage){
@@ -369,8 +383,6 @@ QString GatoROM::dis(bool autocomment, bool asbits,
         QString s=ga.source();
         return s;
     }
-
-
 
     QProcess process;
     if(assembler=="r2" || assembler=="rasm2")

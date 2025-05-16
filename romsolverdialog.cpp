@@ -5,10 +5,12 @@
 #include "gatograderbytes.h"
 #include "gatograderstring.h"
 #include "gatograderyara.h"
+#include "gatogradergoodasm.h"
 
 #include "maskromtool.h"
 #include "gatosolver.h"
 #include "gatorom.h"
+#include "extern/goodasm/goodasm.h"
 
 
 RomSolverDialog::RomSolverDialog(QWidget *parent) :
@@ -61,6 +63,9 @@ GatoGrader* RomSolverDialog::grader(){
         tmpfile->flush();
         tmpfile->close();
         grader=new GatoGraderYara(tmpfile->fileName());
+        break;
+    case 4: // GoodASM
+        grader=new GatoGraderGoodAsm(mrt->gatorom().goodasm());
         break;
     default:
         qDebug()<<"Unknown solver tab"<<index;

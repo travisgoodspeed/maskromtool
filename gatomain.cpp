@@ -32,6 +32,8 @@
 #include "gatograderstring.h"
 #include "gatograderascii.h"
 #include "gatograderyara.h"
+#include "gatogradergoodasm.h"
+#include "extern/goodasm/goodasm.h"
 
 
 /* This is a quick CLI wrapper for GatoROM, which you might run on textfiles
@@ -234,6 +236,12 @@ int main(int argc, char *argv[]) {
                                     ""
                                     );
     parser.addOption(solveyaraOption);
+    QCommandLineOption solvegoodasmOption(QStringList()<<"solve-goodasm",
+                                       "GoodASM Language Solver",
+                                       "lang",
+                                       ""
+                                       );
+    parser.addOption(solvegoodasmOption);
     QCommandLineOption solvesetOption(QStringList()<<"solve-set",
                                     "Exports all potential solutions.",
                                     "prefix",
@@ -403,6 +411,9 @@ int main(int argc, char *argv[]) {
             QString bytes=parser.value(bytesOption);
             QString string=parser.value(stringOption);
             QString yararule=parser.value(solveyaraOption);
+            QString goodasmsolver=parser.value(solvegoodasmOption);
+            if(goodasmsolver.startsWith("goodasm/"))
+                goodasmsolver=goodasmsolver.right(goodasmsolver.length()-QString("goodasm/").length());
 
             if(gr->inputrows==0 || gr->inputcols==0){
                 qDebug()<<"Cannot solve an empty ROM.";
@@ -418,6 +429,9 @@ int main(int argc, char *argv[]) {
                 grader=new GatoGraderASCII();
             }else if(parser.isSet(solveyaraOption)){
                 grader=new GatoGraderYara(yararule);
+            }else if(parser.isSet(solvegoodasmOption)){
+                gr->arch=goodasmsolver;
+                grader=new GatoGraderGoodAsm(gr->goodasm());
             }else{
                 //qDebug()<<"No solver criteria has been specified.  Try --solve-bytes or --solve-string.";
                 grader=new GatoGraderAll();

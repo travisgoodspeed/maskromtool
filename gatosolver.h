@@ -5,6 +5,7 @@
 #include <QString>
 class GatoROM;
 class GatoDecoder;
+class MaskRomTool;
 
 /* The concept of a solver is shamelessly stolen from Zorrom,
  * but our implementation details are quite different.

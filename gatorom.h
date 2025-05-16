@@ -90,8 +90,10 @@ public:
     QByteArray decode();
     QByteArray decoded;       //Output bytes, produced by decode().
     QByteArray decodedDamage; //Output byte of damage, produced by decode().
+
     // Disassembly, produced by Unidasm or GoodASM.
     QString dis(bool autocomment=false, bool asbits=false, bool asbytes=true, bool asdamage=false);
+    GoodASM *goodasm();
 
     //Performs a sanity check.  Call this after decode(), error if false.
     bool checkSanity();
@@ -109,8 +111,6 @@ public:
 
     //Loads ASCII art text into the structure.
     void loadFromString(QString str);
-
-
 
     //These are set directly, but probably shouldn't be.
     int zorrommode=0;   //Compatibility with Zorrom's bugs.

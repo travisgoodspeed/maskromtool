@@ -53,6 +53,7 @@ set(GATOROM_SOURCES
     gatograderstring.h gatograderstring.cpp
     gatograderascii.h gatograderascii.cpp
     gatograderyara.h gatograderyara.cpp
+    gatogradergoodasm.h gatogradergoodasm.cpp
     # Decoders that are new to GatoRom.
     gatodecoderinfo.h gatodecoderinfo.cpp  # Just info, no details.
     # gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder.  Use cols-left instead.

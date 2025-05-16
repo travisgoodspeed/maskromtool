@@ -39,6 +39,11 @@ void RomDisDialog::updateGUISettings(){
 void RomDisDialog::update(){
     Q_ASSERT(mrt);
 
+    //Update the settings.
+    autocomment=ui->checkComments->isChecked();
+    showbits=ui->radioBits->isChecked();
+    showdamage=ui->radioDamage->isChecked();
+
     //Redraw the view.
     ui->plainTextEdit->setPlainText(
         mrt->gr.dis(
@@ -50,25 +55,24 @@ void RomDisDialog::update(){
     setWindowTitle(mrt->gr.arch+" Disassembly");
 }
 
-// In any update of the settings, we just rerender the disassmbly.
+/* In any update of the settings, we just rerender the disassmbly.
+ * Somewhat complicating matters, the event of the checkComments changing
+ * state is inconsistent between Qt versions.
+ */
 
-void RomDisDialog::on_checkComments_checkStateChanged(const Qt::CheckState &arg1){
-    autocomment=ui->checkComments->isChecked();
+void RomDisDialog::on_checkComments_toggled(bool checked){
     update();
 }
-void RomDisDialog::on_radioHex_clicked(){
-    showbits=false;
-    showdamage=false;
+
+void RomDisDialog::on_radioHex_toggled(bool checked){
     update();
 }
-void RomDisDialog::on_radioBits_clicked(){
-    showdamage=false;
-    showbits=ui->radioBits->isChecked();
+
+void RomDisDialog::on_radioBits_toggled(bool checked){
     update();
 }
-void RomDisDialog::on_radioDamage_clicked(){
-    showbits=false;
-    showdamage=ui->radioDamage->isChecked();
+
+void RomDisDialog::on_radioDamage_toggled(bool checked){
     update();
 }
 
