@@ -142,6 +142,8 @@ reopen the project to try again.
 For the convenience of Windows and macOS users, we have also made some
 [Prebuilt
 Releases](https://github.com/travisgoodspeed/maskromtool/releases).
+On macOS, you might need to run 'xattr -dr com.apple.quarantine *` if
+you get warnings about the signature not being recognized.
 
 
 ## GUI Usage
