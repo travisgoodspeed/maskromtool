@@ -35,7 +35,7 @@ is a Zilog Z8 ROM from a music synthesize module.
 bits, useful when part of an implant ROM is poorly exposed.  Solver
 now supports using
 [GoodASM](https://github.com/travisgoodspeed/goodasm)'s grader
-classes.
+classes.  `goodasm` and `gatorom` have proper RPATHs in macOS.
 
 2025-04-12 -- Performance improvements by avoiding deep copies in lists.
 Proper bit count in status bar and the status bar now uses a

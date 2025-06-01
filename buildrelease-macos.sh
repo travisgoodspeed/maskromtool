@@ -30,8 +30,11 @@ mkdir build
 
 mkdir release
 cp -rf build/maskromtool.app build/gatorom build/extern/goodasm/goodasm release/
+# Set the rpath so that the CLI tools run.
+(cd release && install_name_tool -add_rpath @executable_path/maskromtool.app/Contents/Frameworks goodasm )
+(cd release && install_name_tool -add_rpath @executable_path/maskromtool.app/Contents/Frameworks gatorom )
 # Hardcoding the executable is bad, but the Homebrew version will break the build.
-$DEPLOYQT release/maskromtool.app -sign-for-notarization="Developer ID Application: Travis Goodspeed"
+$DEPLOYQT release/maskromtool.app -dmg -sign-for-notarization="Developer ID Application: Travis Goodspeed"
 # Verify the signature
 codesign --verify --verbose  release/maskromtool.app
 
