@@ -5,6 +5,7 @@ rmdir /s /q Release
 
 REM Don't forget to pull the new release.
 git pull
+git submodule update
 
 
 REM Import the Qt and VS2022 paths.
@@ -62,6 +63,7 @@ move MaskRomToolInstaller.exe maskromtool-win-x86_64.exe
 copy C:\Qt\vcredist\vcredist_msvc2022_x64.exe vcredist_msvc2022_x64.exe
 
 REM Zip the redist with the installer.
+erase maskromtool-win-x86_64.zip
 tar -a -c -f maskromtool-win-x86_64.zip maskromtool-win-x86_64.exe vcredist_msvc2022_x64.exe
 
 cd ..
