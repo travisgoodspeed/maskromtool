@@ -31,6 +31,8 @@ is a Zilog Z8 ROM from a music synthesize module.
 
 ## Release Changelog
 
+`master` -- GoodASM REPL now has working autocompletion on Windows.
+
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver
 now supports using
