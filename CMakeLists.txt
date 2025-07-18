@@ -67,6 +67,7 @@ set(GATOROM_SOURCES
     gatodecodercolsleft.h gatodecodercolsleft.cpp     # Left to right, then top to bottom, 8-bits.
     gatodecodercolsright.h gatodecodercolsright.cpp
     gatodecodersqueezelr.h gatodecodersqueezelr.cpp   # Even bits from left, odd bits from right.
+    gatodecodertms320c28x.h gatodecodertms320c28x.cpp # TMS320C28x ROM
 )
 
 set(MRT_SOURCES
