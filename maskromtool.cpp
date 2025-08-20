@@ -401,6 +401,7 @@ unsigned int verbose=0;
 void MaskRomTool::enableVerbose(unsigned int level){
     qDebug()<<"Enabling verbose mode level"<<level;
     verbose=level;
+    gr.verbose=level;
 }
 
 MaskRomTool::~MaskRomTool() {

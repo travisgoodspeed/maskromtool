@@ -29,6 +29,10 @@ not just all ROM bits but also reshoots for error correction.
 [wersi-slm2-51173](https://github.com/travisgoodspeed/wersi-slm2-51173/)
 is a Zilog Z8 ROM from a music synthesize module.
 
+[mk51fx2500](https://github.com/travisgoodspeed/mk51fx2500) is the
+ASIC from a Casio FX-2500 calculator and its soviet clone, the
+Электроника МК51.
+
 ## Release Changelog
 
 `master` -- GoodASM REPL now has working autocompletion on Windows.
