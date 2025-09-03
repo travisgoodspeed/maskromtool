@@ -19,6 +19,7 @@
 #include "gatodecodertlcsfont.h"
 #include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
+#include "gatodecodertms320c28x.h"    // TI TMS320C28x
 
 //Zorrom compatibility.
 #include "gatodecodercolsdownr.h"
@@ -159,6 +160,10 @@ int main(int argc, char *argv[]) {
                                       "Decodes as a uCOM4 ROM."
                                       );
     parser.addOption(colsdownlswapOption);
+    QCommandLineOption tms320c28xOption(QStringList()<<"decode-tms320c28x",
+                                      "Decodes as a TMS320C28x ROM."
+                                      );
+    parser.addOption(tms320c28xOption);
 
     //Decoders for Zorrom compatibility.
     QCommandLineOption colsdownrOption(QStringList()<<"decode-cols-downr",
@@ -371,6 +376,8 @@ int main(int argc, char *argv[]) {
             gr->decoder=new GatoDecoderTLCSFont();
         else if(parser.isSet(z86x1Option))
             gr->decoder=new GatoDecoderZ86x1();
+        else if(parser.isSet(tms320c28xOption))
+            gr->decoder=new GatoDecoderTMS320C28x();
         else if(parser.isSet(colsdownlswapOption))
             gr->decoder=new GatoDecoderColsDownLSwap();
         else if(parser.isSet(colsdownrOption))
