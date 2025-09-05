@@ -36,6 +36,7 @@ ASIC from a Casio FX-2500 calculator and its soviet clone, the
 ## Release Changelog
 
 `master` -- GoodASM REPL now has working autocompletion on Windows.
+Dropping support for x86_64 macOS.
 
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver
