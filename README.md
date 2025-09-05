@@ -129,8 +129,7 @@ libreadline-dev qt6-declarative-dev
 ...
 % cd maskromtool
 % git submodule init
-...
-% git submodule update
+% git submodule update --remote
 ...
 % mkdir build; cd build
 % cmake ..
@@ -151,6 +150,31 @@ Releases](https://github.com/travisgoodspeed/maskromtool/releases).
 On macOS, you might need to run 'xattr -dr com.apple.quarantine *` if
 you get warnings about the signature not being recognized.
 
+
+To install on macOS, first install XCode, [Homebrew](https://brew.sh),
+and [Qt for Open Source](https://www.qt.io/download-qt-installer-oss),
+which sadly requires an account.  After that, you can open
+`CMakeLists.txt` in QT Creator or use the release script to build.
+(Edit the script if its Qt version is older than yours.)
+
+```
+% ./buildrelease-macos.sh
+... (ignore errors about signing
+% open release/maskromtool.app
+```
+
+You can also build it without the official Qt installer or App,
+through Homebrew alone.  This is roughly like what we'd do in Linux.
+
+```
+% brew install cmake emacs qt
+% git submodule init
+% git submodule update --remote
+...
+% mkdir build; cd build
+% cmake ..
+% make -j 8 && sudo make install
+```
 
 ## GUI Usage
 

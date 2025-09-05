@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
+# X86 is no longer supported, but you could edit this to bring it back.
+# set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
+set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "" FORCE)
 
 project(maskromtool VERSION 0.1 LANGUAGES CXX)
 
