@@ -33,6 +33,10 @@ is a Zilog Z8 ROM from a music synthesize module.
 ASIC from a Casio FX-2500 calculator and its soviet clone, the
 Электроника МК51.
 
+[EMZ1001ROMs](https://github.com/travisgoodspeed/emz1001roms) contains photos
+from Yugoslavia's EMZ1001 microcontroller, a licensed clone of the S2000.
+These decodings are not yet solved, which might make them an interesting target.
+
 ## Release Changelog
 
 `master` -- GoodASM REPL now has working autocompletion on Windows.
