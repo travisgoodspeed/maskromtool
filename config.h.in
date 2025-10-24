@@ -1,0 +1,6 @@
+
+// I don't know why this doesn't work.
+#define MASKROMTOOL_VERSION_STRING "${PROJECT_VERSION}"
+
+// We don't want to fail when this library is missing.
+#cmakedefine01 YARAX_FOUND

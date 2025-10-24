@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
+include(CMakeFindDependencyMacro)
+
+configure_file(config.h.in config.h)
 
 # X86 is no longer supported, but you could edit this to bring it back.
 # set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
@@ -15,8 +18,26 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core Quick Qml)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core  Quick Qml)
+#find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core Quick Qml)
+find_package(Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core  Quick Qml)
+
+# Optional packages.
+# https://virustotal.github.io/yara-x/docs/api/c/c-/
+#find_library(YARAX NAMES yara_x_capi)
+#find_library(YARAX NAMES libyara_x_capi.a)
+
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(YARAX REQUIRED IMPORTED_TARGET yara_x_capi)
+
+
+# Check if the library was found
+if (YARAX_FOUND)
+    set(YARAX ${YARAX_STATIC_LIBRARIES} )
+    message(STATUS "Found yarax: ${YARAX}")
+else()
+    message(STATUS "Yarax not found.  Will build without it.")
+endif()
 
 # GoodASM as a disassembler and library.
 if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/goodasm/CMakeLists.txt")
@@ -54,12 +75,11 @@ set(GATOROM_SOURCES
     gatograderbytes.h gatograderbytes.cpp
     gatograderstring.h gatograderstring.cpp
     gatograderascii.h gatograderascii.cpp
-    gatograderyara.h gatograderyara.cpp
+    gatograderyara.h gatograderyara.cpp    # Old Yara from CLI.
+    gatograderyarax.h gatograderyarax.cpp  # New Yara-X from library.
     gatogradergoodasm.h gatogradergoodasm.cpp
     # Decoders that are new to GatoRom.
     gatodecoderinfo.h gatodecoderinfo.cpp  # Just info, no details.
-    # gatodecoderarm6.h gatodecoderarm6.cpp  # MYK82 Clipper Chip Decoder.  Use cols-left instead.
-    # gatodecodermsp430.h gatodecodermsp430.cpp # MSP430 ROM
     gatodecodertlcsfont.h gatodecodertlcsfont.cpp # TMP47C434N Font ROM
     gatodecoderz86x1.h gatodecoderz86x1.cpp # Zilog Z8 Z86x1
     gatodecodercolsdownlswap.h gatodecodercolsdownlswap.cpp # Used in NEC uCOM4 Micros
@@ -97,7 +117,6 @@ set(MRT_SOURCES
         romdecoderasciidamage.h romdecoderasciidamage.cpp
         romdecoderjson.h romdecoderjson.cpp
         romdecodercsv.h romdecodercsv.cpp
-#        romdecodermarc4.h romdecodermarc4.cpp   # Deprecated, needs to move to gatorom.
         romdecoderphotograph.h romdecoderphotograph.cpp
         romdecoderhistogram.h romdecoderhistogram.cpp
         romencoderdiff.h romencoderdiff.cpp
@@ -133,12 +152,17 @@ if(NOT WIN32)
 endif()
 
 
+
+
+
 qt_add_executable(maskromtool
     MANUAL_FINALIZATION
     ${MRT_SOURCES}
 )
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-target_link_libraries(maskromtool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport libgoodasm ${READLINE})
+target_link_libraries(maskromtool PRIVATE Qt6::Widgets
+        Qt6::Charts Qt6::PrintSupport
+        libgoodasm ${READLINE} PkgConfig::YARAX)
 
 
 set_target_properties(maskromtool PROPERTIES
@@ -156,7 +180,9 @@ if(WIN32)
         MANUAL_FINALIZATION
         ${MRT_SOURCES}
     )
-    target_link_libraries(maskromtoolcli PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts Qt${QT_VERSION_MAJOR}::PrintSupport libgoodasm ${READLINE})
+    target_link_libraries(maskromtoolcli PRIVATE Qt6::Widgets
+            Qt6::Charts Qt6::PrintSupport
+            libgoodasm ${READLINE} ${YARAX_LIBRARIES} )
     qt_finalize_executable(maskromtoolcli)
     install(TARGETS maskromtoolcli DESTINATION bin)
 endif()
@@ -173,7 +199,8 @@ add_executable(gatorom
   # CLI
   gatomain.cpp
 )
-target_link_libraries(gatorom Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::PrintSupport libgoodasm ${READLINE})
+target_link_libraries(gatorom Qt6::Core
+        Qt6::PrintSupport libgoodasm ${READLINE} ${YARAX_LIBRARIES})
 
 install(TARGETS gatorom
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

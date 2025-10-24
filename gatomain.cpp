@@ -32,8 +32,8 @@
 #include "gatograderstring.h"
 #include "gatograderascii.h"
 #include "gatograderyara.h"
+#include "gatograderyarax.h"
 #include "gatogradergoodasm.h"
-#include "extern/goodasm/goodasm.h"
 
 
 /* This is a quick CLI wrapper for GatoROM, which you might run on textfiles
@@ -236,6 +236,12 @@ int main(int argc, char *argv[]) {
                                     ""
                                     );
     parser.addOption(solveyaraOption);
+    QCommandLineOption solveyaraxOption(QStringList()<<"solve-yarax",
+                                       "YaraX rule file.",
+                                       "rule",
+                                       ""
+                                       );
+    parser.addOption(solveyaraxOption);
     QCommandLineOption solvegoodasmOption(QStringList()<<"solve-goodasm",
                                        "GoodASM Language Solver",
                                        "lang",
@@ -411,6 +417,7 @@ int main(int argc, char *argv[]) {
             QString bytes=parser.value(bytesOption);
             QString string=parser.value(stringOption);
             QString yararule=parser.value(solveyaraOption);
+            QString yaraxrule=parser.value(solveyaraxOption);
             QString goodasmsolver=parser.value(solvegoodasmOption);
             if(goodasmsolver.startsWith("goodasm/"))
                 goodasmsolver=goodasmsolver.right(goodasmsolver.length()-QString("goodasm/").length());
@@ -429,6 +436,14 @@ int main(int argc, char *argv[]) {
                 grader=new GatoGraderASCII();
             }else if(parser.isSet(solveyaraOption)){
                 grader=new GatoGraderYara(yararule);
+            }else if(parser.isSet(solveyaraxOption)){
+#ifdef YARAX_FOUND
+                QFile source(yaraxrule);
+                source.open(QFile::ReadOnly);
+                grader=new GatoGraderYaraX(source.readAll());
+#else
+                qDebug()<<"YaraX not linked.";
+#endif
             }else if(parser.isSet(solvegoodasmOption)){
                 gr->arch=goodasmsolver;
                 grader=new GatoGraderGoodAsm(gr->goodasm());
