@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 include(CMakeFindDependencyMacro)
 
-configure_file(config.h.in config.h)
+
 
 # X86 is no longer supported, but you could edit this to bring it back.
 # set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
@@ -45,6 +45,9 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/goodasm/CMakeLists.txt")
 endif()
 add_subdirectory(extern/goodasm)
 install(TARGETS goodasm DESTINATION bin)
+
+# Must come after some things are configured.
+configure_file(config.h.in config.h)
 
 # We currently only support English, so we define this file but we do
 # not link it.  That can, of course, be changed if/when we get around
