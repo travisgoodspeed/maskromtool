@@ -437,7 +437,7 @@ int main(int argc, char *argv[]) {
             }else if(parser.isSet(solveyaraOption)){
                 grader=new GatoGraderYara(yararule);
             }else if(parser.isSet(solveyaraxOption)){
-#ifdef YARAX_FOUND
+#if YARAX_FOUND==1
                 QFile source(yaraxrule);
                 source.open(QFile::ReadOnly);
                 grader=new GatoGraderYaraX(source.readAll());

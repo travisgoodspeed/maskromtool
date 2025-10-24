@@ -12,7 +12,7 @@
  * with or without YaraX.
  */
 
-#ifdef YARAX_FOUND
+#if YARAX_FOUND==1
 
 GatoGraderYaraX::GatoGraderYaraX(QString rule) {
     //Someday we might hold more than one rule.

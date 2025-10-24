@@ -15,7 +15,7 @@
 #include "gatosolver.h"
 #include "config.h"     //Needed for "YARAX_FOUND" from Cmake.
 
-#ifdef YARAX_FOUND
+#if YARAX_FOUND==1
 
 //Library is C, not C++, so name mangling must be disabled.
 extern "C" {

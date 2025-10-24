@@ -28,12 +28,12 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport C
 
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(YARAX REQUIRED IMPORTED_TARGET yara_x_capi)
+pkg_check_modules(YARAX IMPORTED_TARGET yara_x_capi)
 
 
 # Check if the library was found
 if (YARAX_FOUND)
-    set(YARAX ${YARAX_STATIC_LIBRARIES} )
+    set(YARAX PkgConfig::YARAX )
     message(STATUS "Found yarax: ${YARAX}")
 else()
     message(STATUS "Yarax not found.  Will build without it.")
@@ -162,7 +162,7 @@ qt_add_executable(maskromtool
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 target_link_libraries(maskromtool PRIVATE Qt6::Widgets
         Qt6::Charts Qt6::PrintSupport
-        libgoodasm ${READLINE} PkgConfig::YARAX)
+        libgoodasm ${READLINE} ${YARAX_LIBRARIES})
 
 
 set_target_properties(maskromtool PROPERTIES
