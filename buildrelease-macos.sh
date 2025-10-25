@@ -11,9 +11,9 @@ set -e
 ## These paths are hardcoded to prevent Homebrew for gunking things
 ## up.  Be sure to install *everything* in that version of Qt, or
 ## you'll be missing important libraries like QtCharts.
-export QTDIR=~/Qt/6.9.2/macos/bin
-export CMAKE=~/Qt/6.9.2/macos/bin/qt-cmake
-export DEPLOYQT=~/Qt/6.9.2/macos/bin/macdeployqt
+export QTDIR=~/Qt/6.10.0/macos/bin
+export CMAKE=~/Qt/6.10.0/macos/bin/qt-cmake
+export DEPLOYQT=~/Qt/6.10.0/macos/bin/macdeployqt
 
 
 
@@ -34,8 +34,9 @@ cp -rf build/maskromtool.app build/gatorom build/extern/goodasm/goodasm release/
 # Set the rpath so that the CLI tools run.
 (cd release && install_name_tool -add_rpath @executable_path/maskromtool.app/Contents/Frameworks goodasm )
 (cd release && install_name_tool -add_rpath @executable_path/maskromtool.app/Contents/Frameworks gatorom )
+(cd release && install_name_tool -change /usr/local/lib/libyara_x_capi.1.dylib @executable_path/maskromtool.app/Contents/Frameworks/libyara_x_capi.1.dylib gatorom )
 # Hardcoding the executable is bad, but the Homebrew version will break the build.
-$DEPLOYQT release/maskromtool.app -dmg -sign-for-notarization="Developer ID Application: Travis Goodspeed"
+$DEPLOYQT release/maskromtool.app -dmg -sign-for-notarization="Apple Distribution: Travis Goodspeed (F56DQ35SUJ)"
 # Verify the signature
 codesign --verify --verbose  release/maskromtool.app
 

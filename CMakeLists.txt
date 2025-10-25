@@ -32,6 +32,9 @@ pkg_check_modules(YARAX IMPORTED_TARGET yara_x_capi)
 if (YARAX_FOUND)
     set(YARAX PkgConfig::YARAX )
     message(STATUS "Found yarax: ${YARAX}")
+    # Sometimes macOS doesn't include /usr/local/include.
+    include_directories(${YARAX_INCLUDE_DIRS})
+
 else()
     message(STATUS "Yarax not found.  Will build without it.")
 endif()
@@ -162,7 +165,7 @@ qt_add_executable(maskromtool
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 target_link_libraries(maskromtool PRIVATE Qt6::Widgets
         Qt6::Charts Qt6::PrintSupport
-        libgoodasm ${READLINE} ${YARAX_LIBRARIES})
+        libgoodasm ${READLINE} ${YARAX_LINK_LIBRARIES})
 
 
 set_target_properties(maskromtool PROPERTIES
@@ -182,7 +185,7 @@ if(WIN32)
     )
     target_link_libraries(maskromtoolcli PRIVATE Qt6::Widgets
             Qt6::Charts Qt6::PrintSupport
-            libgoodasm ${READLINE} ${YARAX_LIBRARIES} )
+            libgoodasm ${READLINE} ${YARAX_LINK_LIBRARIES} )
     qt_finalize_executable(maskromtoolcli)
     install(TARGETS maskromtoolcli DESTINATION bin)
 endif()
@@ -200,7 +203,7 @@ add_executable(gatorom
   gatomain.cpp
 )
 target_link_libraries(gatorom Qt6::Core
-        Qt6::PrintSupport libgoodasm ${READLINE} ${YARAX_LIBRARIES})
+        Qt6::PrintSupport libgoodasm ${READLINE} ${YARAX_LINK_LIBRARIES})
 
 install(TARGETS gatorom
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

@@ -129,7 +129,7 @@ Building the tool is easiest from the CLI.  In Debian Bullseye (11.x),
 ```
 % sudo apt install make gcc g++ cmake git qt6-base-dev libqt6charts6-dev \
 qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats-plugins \
-libreadline-dev qt6-declarative-dev
+libreadline-dev qt6-declarative-dev pkgconfig
 % git clone https://github.com/travisgoodspeed/maskromtool/
 ...
 % cd maskromtool
@@ -156,7 +156,7 @@ On macOS, you might need to run 'xattr -dr com.apple.quarantine *` if
 you get warnings about the signature not being recognized.
 
 
-To install on macOS, first install XCode, [Homebrew](https://brew.sh),
+To build on macOS, first install XCode, [Homebrew](https://brew.sh),
 and [Qt for Open Source](https://www.qt.io/download-qt-installer-oss),
 which sadly requires an account.  After that, you can open
 `CMakeLists.txt` in QT Creator or use the release script to build.
@@ -172,13 +172,34 @@ You can also build it without the official Qt installer or App,
 through Homebrew alone.  This is roughly like what we'd do in Linux.
 
 ```
-% brew install cmake emacs qt
+% brew install cmake emacs qt pkgconfig
 % git submodule init
 % git submodule update --remote
 ...
 % mkdir build; cd build
 % cmake ..
 % make -j 8 && sudo make install
+```
+
+## Optional Libraries
+
+### YaraX
+
+[Yara-X](https://github.com/VirusTotal/yara-x) is a pattern matching
+library that's popular in the malware research world.  MaskRomTool and
+GatoROM support it as an optional library, for solving unkown layouts.
+Yara-X is automatically included when PkgConfig is available and its C
+API [has been
+installed](https://virustotal.github.io/yara-x/docs/api/c/c-/).
+
+```
+% git clone https://github.com/VirusTotal/yara-x
+...
+% cd yara-x
+% cargo install cargo-c
+...
+% cargo cinstall -p yara-x-capi --release
+... (If error here, make your user own /usr/local/lib and include.)
 ```
 
 ## GUI Usage
