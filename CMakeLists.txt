@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 include(CMakeFindDependencyMacro)
 
 
@@ -18,16 +18,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core Quick Qml)
+
 find_package(Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport Core  Quick Qml)
 
-# Optional packages.
+
+# Neither PkgConfig nor YaraX are required.
+find_package(PkgConfig)
 # https://virustotal.github.io/yara-x/docs/api/c/c-/
-#find_library(YARAX NAMES yara_x_capi)
-#find_library(YARAX NAMES libyara_x_capi.a)
-
-
-find_package(PkgConfig REQUIRED)
 pkg_check_modules(YARAX IMPORTED_TARGET yara_x_capi)
 
 

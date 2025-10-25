@@ -40,7 +40,7 @@ These decodings are not yet solved, which might make them an interesting target.
 ## Release Changelog
 
 `master` -- GoodASM REPL now has working autocompletion on Windows.
-Dropping support for x86_64 macOS.
+Dropping support for x86_64 macOS.  Optional support for Yara-X.
 
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver
