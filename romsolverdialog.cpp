@@ -5,12 +5,12 @@
 #include "gatograderbytes.h"
 #include "gatograderstring.h"
 #include "gatograderyara.h"
+#include "gatograderyarax.h"
 #include "gatogradergoodasm.h"
 
 #include "maskromtool.h"
 #include "gatosolver.h"
 #include "gatorom.h"
-#include "extern/goodasm/goodasm.h"
 
 
 RomSolverDialog::RomSolverDialog(QWidget *parent) :
@@ -18,6 +18,13 @@ RomSolverDialog::RomSolverDialog(QWidget *parent) :
     ui(new Ui::RomSolverDialog)
 {
     ui->setupUi(this);
+#if YARAX_FOUND==1
+    //Nothing to do in the happy case.
+#else
+    //Sad case, we disable the page.
+    qDebug()<<"YaraX isn't linked into this build.  Disabling.";
+    ui->editYaraX->setEnabled(false);
+#endif
 }
 
 RomSolverDialog::~RomSolverDialog()
@@ -32,10 +39,6 @@ void RomSolverDialog::setMaskRomTool(MaskRomTool *mrt){
 void RomSolverDialog::setYaraRule(QString rule){
     yararule=rule;
     ui->editYara->setPlainText(yararule);
-}
-
-void RomSolverDialog::on_editYara_textChanged(){
-    yararule=ui->editYara->toPlainText();
 }
 
 /* Returns a new GatoGrader based upon the GUI settings.
@@ -59,12 +62,22 @@ GatoGrader* RomSolverDialog::grader(){
             delete tmpfile;
         tmpfile=new QTemporaryFile();
         tmpfile->open();
+        yararule=ui->editYara->toPlainText();
         tmpfile->write(yararule.toStdString().data());
         tmpfile->flush();
         tmpfile->close();
         grader=new GatoGraderYara(tmpfile->fileName());
         break;
-    case 4: // GoodASM
+    case 4: // YaraX
+#if YARAX_FOUND==1
+        yaraxrule=ui->editYaraX->toPlainText();
+        grader=new GatoGraderYaraX(yaraxrule);
+#else
+        qDebug()<<"YaraX isn't linked into this build.";
+#endif
+        break;
+
+    case 5: // GoodASM
         grader=new GatoGraderGoodAsm(mrt->gatorom().goodasm());
         break;
     default:

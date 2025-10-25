@@ -21,13 +21,12 @@ public:
     ~RomSolverDialog();
     void setMaskRomTool(MaskRomTool *mrt);
     void setYaraRule(QString rule);
-    QString yararule;
+    QString yararule, yaraxrule;
     GatoGrader* grader();
     void solve(QString solveset="");
 
 private slots:
     void on_butSolve_clicked();
-    void on_editYara_textChanged();
 
 private:
     Ui::RomSolverDialog *ui;
