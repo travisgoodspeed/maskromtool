@@ -23,6 +23,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport C
 
 
 # Neither PkgConfig nor YaraX are required.
+set(ENV{PKG_CONFIG_PATH} "c:/lib/pkgconfig")
+
 find_package(PkgConfig)
 # https://virustotal.github.io/yara-x/docs/api/c/c-/
 pkg_check_modules(YARAX IMPORTED_TARGET yara_x_capi)
@@ -31,12 +33,14 @@ pkg_check_modules(YARAX IMPORTED_TARGET yara_x_capi)
 # Check if the library was found
 if (YARAX_FOUND)
     set(YARAX PkgConfig::YARAX )
-    message(STATUS "Found yarax: ${YARAX}")
+    message(STATUS "Found YaraX: ${YARAX}")
     # Sometimes macOS doesn't include /usr/local/include.
     include_directories(${YARAX_INCLUDE_DIRS})
-
+elseif(EXISTS "C:/lib/yara_x_capi.lib")
+    message(STATUS "You have Yara-X installed on windows, but not pkg-config-lite.")
+    message(STATUS "winget install \"Pkg Config Lite\"")
 else()
-    message(STATUS "Yarax not found.  Will build without it.")
+    message(STATUS "YaraX not found.  Will build without it.")
 endif()
 
 # GoodASM as a disassembler and library.
