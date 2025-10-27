@@ -55,7 +55,7 @@ echo Finishing packing Release.  Now making installer.
 
 
 REM Including the path.
-set PATH=C:\Qt\Tools\QtInstallerFramework\4.8\bin;C:\Qt\Tools\CMake_64\bin;C:\Qt\6.10.0\msvc2022_64\bin;C:\Qt\Tools\QtInstallerFramework\4.8\bin;%PATH%
+set PATH=C:\Qt\Tools\QtInstallerFramework\4.8\bin;C:\Qt\Tools\CMake_64\bin;C:\Qt\6.10.0\msvc2022_64\bin;C:\Qt\Tools\QtInstallerFramework\4.10\bin;%PATH%
 
 REM Copying packages.
 xcopy/y/s Release\* Deployment\packages\com.maskromtool.maskromtool\data\
