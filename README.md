@@ -129,7 +129,7 @@ Building the tool is easiest from the CLI.  In Debian Bullseye (11.x),
 ```
 % sudo apt install make gcc g++ cmake git qt6-base-dev libqt6charts6-dev \
 qt6-translations-l10n linguist-qt6 qt6-l10n-tools qt6-tools-\* qt6-image-formats-plugins \
-libreadline-dev qt6-declarative-dev pkgconfig
+libreadline-dev qt6-declarative-dev pkg-config
 % git clone https://github.com/travisgoodspeed/maskromtool/
 ...
 % cd maskromtool
