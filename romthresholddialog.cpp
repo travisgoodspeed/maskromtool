@@ -29,8 +29,8 @@ void RomThresholdDialog::setMaskRomTool(MaskRomTool* parent){
     //This gets corrupted later, so we cache it early.
     int samplersize=mrt->getSamplerSize();
 
-    qreal r=3, g=3, b=3;
-    mrt->getBitThreshold(r,g,b);
+    qreal r=3, g=3, b=3, h=3, s=3, l=3;
+    mrt->getBitThreshold(r,g,b, h,s,l);
 
     //This must come first, or we'll redraw the bits and destroy the thresholds.
     ui->sizeScrollBar->setValue(mrt->getBitSize());
@@ -43,6 +43,14 @@ void RomThresholdDialog::setMaskRomTool(MaskRomTool* parent){
     ui->redEdit->setText(QString::number((int) r));
     ui->greenEdit->setText(QString::number((int) g));
     ui->blueEdit->setText(QString::number((int) b));
+
+    //HSL values added in October 2025.
+    ui->hScrollBar->setValue((int) h);
+    ui->satScrollBar->setValue((int) s);
+    ui->lScrollBar->setValue((int) l);
+    ui->hEdit->setText(QString::number((int) h));
+    ui->satEdit->setText(QString::number((int) s));
+    ui->lEdit->setText(QString::number((int) l));
 
     //Populate the chooser box with each sampler algorithm.
     ui->samplesizeScrollBar->setValue(samplersize);
@@ -128,6 +136,8 @@ void RomThresholdDialog::on_averageButton_clicked(){
     ui->redScrollBar->setValue((int) average_red);
     ui->greenScrollBar->setValue((int) average_green);
     ui->blueScrollBar->setValue((int) average_blue);
+
+    //No averages for HSL.
 }
 
 void RomThresholdDialog::postThresholds(){
@@ -141,12 +151,20 @@ void RomThresholdDialog::postThresholds(){
     //Sends the thresholds back to MRT.
     mrt->setBitThreshold(ui->redScrollBar->value(),
                          ui->greenScrollBar->value(),
-                         ui->blueScrollBar->value());
+                         ui->blueScrollBar->value(),
+                         ui->hScrollBar->value(),
+                         ui->satScrollBar->value(),
+                         ui->lScrollBar->value()
+                         );
 
     //Updates the textboxes.
     ui->redEdit->setText(QString::number((int) ui->redScrollBar->value()));
     ui->greenEdit->setText(QString::number((int) ui->greenScrollBar->value()));
     ui->blueEdit->setText(QString::number((int) ui->blueScrollBar->value()));
+    ui->hEdit->setText(QString::number((int) ui->hScrollBar->value()));
+    ui->satEdit->setText(QString::number((int) ui->satScrollBar->value()));
+    ui->lEdit->setText(QString::number((int) ui->lScrollBar->value()));
+
 
     //Updates the text size.
     mrt->setBitSize(ui->sizeScrollBar->value());
@@ -169,6 +187,15 @@ void RomThresholdDialog::on_blueScrollBar_valueChanged(int value){
     postThresholds();
 }
 void RomThresholdDialog::on_sizeScrollBar_valueChanged(int value){
+    postThresholds();
+}
+void RomThresholdDialog::on_hScrollBar_valueChanged(int value){
+    postThresholds();
+}
+void RomThresholdDialog::on_satScrollBar_valueChanged(int value){
+    postThresholds();
+}
+void RomThresholdDialog::on_lScrollBar_valueChanged(int value){
     postThresholds();
 }
 
@@ -245,6 +272,15 @@ void RomThresholdDialog::on_greenScrollBar_sliderPressed(){
 void RomThresholdDialog::on_blueScrollBar_sliderPressed(){
     mrt->markUndoPoint();
 }
+void RomThresholdDialog::on_hScrollBar_sliderPressed(){
+    mrt->markUndoPoint();
+}
+void RomThresholdDialog::on_satScrollBar_sliderPressed(){
+    mrt->markUndoPoint();
+}
+void RomThresholdDialog::on_lScrollBar_sliderPressed(){
+    mrt->markUndoPoint();
+}
 void RomThresholdDialog::on_samplesizeScrollBar_sliderPressed(){
     mrt->markUndoPoint();
 }
@@ -261,9 +297,16 @@ void RomThresholdDialog::on_greenScrollBar_sliderReleased(){
 void RomThresholdDialog::on_blueScrollBar_sliderReleased(){
     mrt->gatorom();
 }
+void RomThresholdDialog::on_hScrollBar_sliderReleased(){
+    mrt->gatorom();
+}
+void RomThresholdDialog::on_satScrollBar_sliderReleased(){
+    mrt->gatorom();
+}
+void RomThresholdDialog::on_lScrollBar_sliderReleased(){
+    mrt->gatorom();
+}
 void RomThresholdDialog::on_samplesizeScrollBar_sliderReleased(){
     mrt->gatorom();
 }
-
-
 

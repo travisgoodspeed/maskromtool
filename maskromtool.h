@@ -162,9 +162,11 @@ public:
     void fileOpen(QString filename);
 
     //Sets the threshold.  Expect this to change in later revisions.
-    void setBitThreshold(qreal r, qreal g, qreal b);
+    void setBitThreshold(qreal r, qreal g, qreal b,
+                         qreal h, qreal s, qreal l);
     //Gets the bit threshold.
-    void getBitThreshold(qreal &r, qreal &g, qreal &b);
+    void getBitThreshold(qreal &r, qreal &g, qreal &b,
+                         qreal &h, qreal &s, qreal &l);
     //Sets the bit display size.
     void setBitSize(qreal size);
     //Gets the bit display size.
@@ -247,7 +249,8 @@ public:
     GatoROM gr;
 
     //Histogram bits.
-    qreal reds[256], greens[256], blues[256];
+    qreal reds[256], greens[256], blues[256],
+        hues[256], sats[256], lights[256];
 
 private slots:
     void on_openButton_triggered();
@@ -314,7 +317,8 @@ private slots:
 
 private:
     Ui::MaskRomTool *ui;
-    qreal thresholdR, thresholdG, thresholdB;
+    qreal thresholdR, thresholdG, thresholdB,
+          thresholdH, thresholdS, thresholdL;
     qreal bitSize=10;
     bool alignmentdirty=true;   // Table marking is outdated.
     bool markingdirty=true;     // Bit marking is outdated.

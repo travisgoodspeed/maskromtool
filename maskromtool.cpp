@@ -1177,17 +1177,27 @@ void MaskRomTool::updateThresholdHistogram(bool force){
 
     //Zero the score.
     for(int i=0; i<256; i++)
-        reds[i]=greens[i]=blues[i]=0;
+        reds[i]=greens[i]=blues[i]=hues[i]=sats[i]=lights[i]=0;
 
     //Count the bits of each color.
     for(auto i=bits.constBegin(); i!=bits.constEnd(); i++){
-        long pixel=(*i)->bitvalue_raw(this, background);
+        QRgb pixel=(*i)->bitvalue_raw(this, background);
+
+        //RGB are easy.
         int r=((pixel>>16)&0xFF);
         int g=((pixel>>8)&0xFF);
         int b=((pixel)&0xFF);
         reds[r]++;
         greens[g]++;
         blues[b]++;
+
+        //HSL require conversion.
+        QColor c(pixel);
+        int h=0, s=0, l=0;
+        c.getHsl(&h, &s, &l);
+        hues[h]++;
+        sats[s]++;
+        lights[l]++;
     }
 
     /* This looks like a memory leak, but it's
@@ -1201,13 +1211,28 @@ void MaskRomTool::updateThresholdHistogram(bool force){
     green->setName("Green");
     QLineSeries *blue = new QLineSeries();
     blue->setName("Blue");
+    QLineSeries *H = new QLineSeries();
+    H->setName("H");
+    QLineSeries *S = new QLineSeries();
+    S->setName("S");
+    QLineSeries *L = new QLineSeries();
+    L->setName("L");
+
+
     for(int i=0; i<256; i++){
         red->append(i,reds[i]);
         green->append(i,greens[i]);
         blue->append(i,blues[i]);
+        H->append(i, hues[i]);
+        S->append(i, sats[i]);
+        L->append(i, lights[i]);
+
         if(reds[i]>skyhigh) skyhigh=reds[i];
         if(greens[i]>skyhigh) skyhigh=greens[i];
         if(blues[i]>skyhigh) skyhigh=blues[i];
+        if(hues[i]>skyhigh) skyhigh=hues[i];
+        if(sats[i]>skyhigh) skyhigh=sats[i];
+        if(lights[i]>skyhigh) skyhigh=lights[i];
     }
 
     QLineSeries *redmark = new QLineSeries();
@@ -1219,23 +1244,64 @@ void MaskRomTool::updateThresholdHistogram(bool force){
     QLineSeries *bluemark = new QLineSeries();
     bluemark->append(thresholdB,0);
     bluemark->append(thresholdB,skyhigh);
+    QLineSeries *hmark = new QLineSeries();
+    hmark->append(thresholdH,0);
+    hmark->append(thresholdH,skyhigh);
+    QLineSeries *smark = new QLineSeries();
+    smark->append(thresholdS,0);
+    smark->append(thresholdS,skyhigh);
+    QLineSeries *lmark = new QLineSeries();
+    lmark->append(thresholdL,0);
+    lmark->append(thresholdL,skyhigh);
 
+    //Remove the old ones
     histogramchart.legend()->hide();
     histogramchart.removeAllSeries();
-    histogramchart.addSeries(red);
-    histogramchart.addSeries(redmark);
-    histogramchart.addSeries(green);
-    histogramchart.addSeries(greenmark);
-    histogramchart.addSeries(blue);
-    histogramchart.addSeries(bluemark);
 
-    //Colors must be set *after* adding them to the chart.
-    red->setColor(Qt::red);
-    redmark->setColor(Qt::red);
-    green->setColor(Qt::green);
-    greenmark->setColor(Qt::green);
-    blue->setColor(Qt::blue);
-    bluemark->setColor(Qt::blue);
+    //Show RGB if none of the thresholds have been set.
+    bool showrgb=((thresholdR+thresholdG+thresholdB+thresholdH+thresholdS+thresholdL)==0);
+
+    //Colors must be set *after* adding series to the chart.
+
+    if(showrgb || thresholdR>0){
+       histogramchart.addSeries(red);
+       histogramchart.addSeries(redmark);
+       red->setColor(Qt::red);
+       redmark->setColor(Qt::red);
+    }
+
+    if(showrgb || thresholdG>0){
+        histogramchart.addSeries(green);
+        histogramchart.addSeries(greenmark);
+        green->setColor(Qt::green);
+        greenmark->setColor(Qt::green);
+    }
+
+    if(showrgb || thresholdB>0){
+        histogramchart.addSeries(blue);
+        histogramchart.addSeries(bluemark);
+        blue->setColor(Qt::blue);
+        bluemark->setColor(Qt::blue);
+    }
+
+    if(thresholdH>0){
+        histogramchart.addSeries(H);
+        histogramchart.addSeries(hmark);
+        H->setColor(Qt::cyan);
+        hmark->setColor(Qt::cyan);
+    }
+    if(thresholdS>0){
+        histogramchart.addSeries(S);
+        histogramchart.addSeries(smark);
+        S->setColor(Qt::magenta);
+        smark->setColor(Qt::magenta);
+    }
+    if(thresholdL>0){
+        histogramchart.addSeries(L);
+        histogramchart.addSeries(lmark);
+        L->setColor(Qt::darkYellow);
+        lmark->setColor(Qt::darkYellow);
+    }
 
     histogramchart.createDefaultAxes();
     histogramchart.setTitle("Bit Histogram");
@@ -1245,20 +1311,31 @@ void MaskRomTool::updateThresholdHistogram(bool force){
 
 
 //Set the threshold.
-void MaskRomTool::setBitThreshold(qreal r, qreal g, qreal b){
+void MaskRomTool::setBitThreshold(qreal r, qreal g, qreal b,
+                                  qreal h, qreal s, qreal l){
     thresholdR=r;
     thresholdG=g;
     thresholdB=b;
+
+    thresholdH=h;
+    thresholdS=s;
+    thresholdL=l;
 
     //Redraws only if the histogram is visible.
     updateThresholdHistogram();
 }
 
 //Get the threshold.
-void MaskRomTool::getBitThreshold(qreal &r, qreal &g, qreal &b){
+void MaskRomTool::getBitThreshold(qreal &r, qreal &g, qreal &b,
+                                  qreal &h, qreal &s, qreal &l
+                                ){
     r=thresholdR;
     g=thresholdG;
     b=thresholdB;
+
+    h=thresholdH;
+    s=thresholdS;
+    l=thresholdL;
 
     if(verbose)
         qDebug()<<"Returning RGB threshold"<<r<<g<<b;
@@ -1545,7 +1622,9 @@ void MaskRomTool::markBit(RomLineItem* row, RomLineItem* col){
     bits.append(bit);
 
     bit->bitvalue_raw(this, background);
-    bit->bitvalue_sample(this, background, thresholdR, thresholdG, thresholdB);
+    bit->bitvalue_sample(this, background,
+                         thresholdR, thresholdG, thresholdB,
+                         thresholdH, thresholdS, thresholdL);
 
     bitcount++;
 }
@@ -1859,7 +1938,9 @@ void MaskRomTool::markFixes(){
 void MaskRomTool::remarkBits(){
     for(auto i=bits.constBegin(); i!=bits.constEnd(); i++){
         (*i)->bitvalue_raw(this, background);
-        (*i)->bitvalue_sample(this, background, thresholdR, thresholdG, thresholdB);
+        (*i)->bitvalue_sample(this, background,
+                              thresholdR, thresholdG, thresholdB,
+                              thresholdH, thresholdS, thresholdL);
     }
     //We remark all fixes here, because it's fast.
     markFixes();
@@ -1918,6 +1999,7 @@ QJsonObject MaskRomTool::exportJSON(bool justselection){
     /* We try not to break compatibility, but as features are added,
      * we should update this date to indicate the new file format
      * version number.
+     * 2025.10.30 -- HSL colorspace.
      * 2025.05.07 -- Disassembly settings, such as damage bits.
      * 2025.03.30 -- Export of partial selection.
      * 2024.07.27 -- Lines are sorted, no new types.
@@ -1933,13 +2015,16 @@ QJsonObject MaskRomTool::exportJSON(bool justselection){
      * 2023.05.05 -- Adds the 'alignthreshold' field.  Defaults to 5 if missing.
      * 2022.09.28 -- First public release.
      */
-        root["00version"]="2025.03.30";
+        root["00version"]="2025.10.30";
 
         //These threshold values will change in a later version.
         QJsonObject settings;
         settings["red"]=thresholdR;
         settings["green"]=thresholdG;
         settings["blue"]=thresholdB;
+        settings["H"]=thresholdH;                          //2025.10.30
+        settings["S"]=thresholdS;                          //2025.10.30
+        settings["L"]=thresholdL;                          //2025.10.30
         settings["bitsize"]=bitSize;
         settings["alignthreshold"]=QJsonValue((int) alignSkipThreshold); //2023.05.05
         settings["sampler"]=sampler->name;                 //2023.05.08
@@ -2092,7 +2177,12 @@ void MaskRomTool::importJSON(QJsonObject o){
     QJsonValue red=settings.value("red");
     QJsonValue green=settings.value("green");
     QJsonValue blue=settings.value("blue");
-    setBitThreshold(red.toDouble(0), green.toDouble(0), blue.toDouble(0));
+    QJsonValue h=settings.value("H");
+    QJsonValue s=settings.value("S");
+    QJsonValue l=settings.value("L");
+    setBitThreshold(red.toDouble(0), green.toDouble(0), blue.toDouble(0),
+                    h.toDouble(0), s.toDouble(0), l.toDouble(0)
+                    );
     setBitSize(settings.value("bitsize").toDouble(10));
     QJsonValue alignskipthreshold=settings.value("alignthreshold");
     setAlignSkipCountThreshold(alignskipthreshold.toInt(5)); //Default of 5.

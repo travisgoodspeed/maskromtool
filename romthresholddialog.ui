@@ -33,7 +33,7 @@
        <property name="geometry">
         <rect>
          <x>70</x>
-         <y>30</y>
+         <y>60</y>
          <width>271</width>
          <height>16</height>
         </rect>
@@ -42,14 +42,14 @@
         <number>255</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
       <widget class="QLabel" name="redLabel">
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>30</y>
+         <y>60</y>
          <width>58</width>
          <height>18</height>
         </rect>
@@ -62,7 +62,7 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>60</y>
+         <y>90</y>
          <width>58</width>
          <height>18</height>
         </rect>
@@ -75,7 +75,7 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>90</y>
+         <y>120</y>
          <width>58</width>
          <height>18</height>
         </rect>
@@ -88,22 +88,6 @@
        <property name="geometry">
         <rect>
          <x>70</x>
-         <y>60</y>
-         <width>271</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="maximum">
-        <number>255</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-      <widget class="QScrollBar" name="blueScrollBar">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
          <y>90</y>
          <width>271</width>
          <height>16</height>
@@ -113,14 +97,30 @@
         <number>255</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QScrollBar" name="blueScrollBar">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>120</y>
+         <width>271</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
       <widget class="QPushButton" name="averageButton">
        <property name="geometry">
         <rect>
-         <x>310</x>
-         <y>120</y>
+         <x>300</x>
+         <y>250</y>
          <width>88</width>
          <height>34</height>
         </rect>
@@ -133,7 +133,7 @@
        <property name="geometry">
         <rect>
          <x>360</x>
-         <y>30</y>
+         <y>60</y>
          <width>31</width>
          <height>21</height>
         </rect>
@@ -143,7 +143,7 @@
        <property name="geometry">
         <rect>
          <x>360</x>
-         <y>60</y>
+         <y>90</y>
          <width>31</width>
          <height>21</height>
         </rect>
@@ -153,7 +153,7 @@
        <property name="geometry">
         <rect>
          <x>360</x>
-         <y>90</y>
+         <y>120</y>
          <width>31</width>
          <height>21</height>
         </rect>
@@ -162,18 +162,18 @@
       <widget class="QComboBox" name="samplerBox">
        <property name="geometry">
         <rect>
-         <x>80</x>
-         <y>160</y>
+         <x>70</x>
+         <y>10</y>
          <width>271</width>
          <height>32</height>
         </rect>
        </property>
       </widget>
-      <widget class="QLabel" name="redLabel_2">
+      <widget class="QLabel" name="samplerLabel">
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>160</y>
+         <y>10</y>
          <width>58</width>
          <height>18</height>
         </rect>
@@ -185,8 +185,8 @@
       <widget class="QScrollBar" name="samplesizeScrollBar">
        <property name="geometry">
         <rect>
-         <x>70</x>
-         <y>200</y>
+         <x>60</x>
+         <y>290</y>
          <width>271</width>
          <height>16</height>
         </rect>
@@ -204,14 +204,14 @@
         <number>5</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
       <widget class="QLabel" name="redLabel_3">
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>200</y>
+         <y>290</y>
          <width>31</width>
          <height>18</height>
         </rect>
@@ -224,7 +224,7 @@
        <property name="geometry">
         <rect>
          <x>360</x>
-         <y>200</y>
+         <y>290</y>
          <width>31</width>
          <height>21</height>
         </rect>
@@ -234,7 +234,7 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>230</y>
+         <y>320</y>
          <width>321</width>
          <height>24</height>
         </rect>
@@ -243,8 +243,125 @@
         <string>Inverted Bits</string>
        </property>
       </widget>
+      <widget class="QLineEdit" name="hEdit">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>160</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lLabel">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>220</y>
+         <width>58</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Light</string>
+       </property>
+      </widget>
+      <widget class="QScrollBar" name="satScrollBar">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>190</y>
+         <width>271</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="satLabel">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>190</y>
+         <width>58</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Sat.</string>
+       </property>
+      </widget>
+      <widget class="QScrollBar" name="lScrollBar">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>220</y>
+         <width>271</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QScrollBar" name="hScrollBar">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>160</y>
+         <width>271</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="hLabel">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>160</y>
+         <width>58</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Hue</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="satEdit">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>190</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lEdit">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>220</y>
+         <width>31</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
       <zorder>redLabel_3</zorder>
-      <zorder>redLabel_2</zorder>
+      <zorder>samplerLabel</zorder>
       <zorder>blueLabel</zorder>
       <zorder>greenLabel</zorder>
       <zorder>redLabel</zorder>
@@ -259,6 +376,15 @@
       <zorder>samplesizeScrollBar</zorder>
       <zorder>samplesizeEdit</zorder>
       <zorder>checkInverted</zorder>
+      <zorder>hEdit</zorder>
+      <zorder>lLabel</zorder>
+      <zorder>satScrollBar</zorder>
+      <zorder>satLabel</zorder>
+      <zorder>lScrollBar</zorder>
+      <zorder>hScrollBar</zorder>
+      <zorder>hLabel</zorder>
+      <zorder>satEdit</zorder>
+      <zorder>lEdit</zorder>
      </widget>
      <widget class="QWidget" name="tabDisplay">
       <attribute name="title">
@@ -283,7 +409,7 @@
         <number>15</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
       </widget>
       <widget class="QLabel" name="sizeLabel">

@@ -46,7 +46,9 @@ void RomBitItem::setBrush(){
     QGraphicsRectItem::setBrush(value?truebrush:falsebrush);
 }
 
-bool RomBitItem::bitvalue_sample(MaskRomTool *mrt, QImage &bg, float red, float green, float blue){
+bool RomBitItem::bitvalue_sample(MaskRomTool *mrt, QImage &bg,
+                                 float red, float green, float blue,
+                                 float H, float S, float L){
     if(!fixed){
         //First we grab a fresh sample of the pixel.
         QRgb pixel=bitvalue_raw(mrt, bg);
@@ -56,9 +58,25 @@ bool RomBitItem::bitvalue_sample(MaskRomTool *mrt, QImage &bg, float red, float 
         r=(red>((pixel>>16)&0xFF));
         g=(green>((pixel>>8)&0xFF));
         b=(blue>((pixel)&0xFF));
-        //Value is true if any sample fits.
-        value=r|g|b;
 
+        //HSL values.
+        int Hp, Sp, Lp;
+        bool h, s, l;
+        QColor c=QColor(pixel);
+        c.toHsl();
+        c.getHsl(&Hp, &Sp, &Lp);
+        h=(H>Hp);
+        s=(S>Sp);
+        l=(L>Lp);
+
+
+
+
+        //Value is true if any sample fits.
+        value=r|g|b | h|s|l;
+
+
+        //FIXME: This should be better calibrated.
         //Is the value just on the threshold?
         int ambiguitythreshold=3;
         int R, G, B;
