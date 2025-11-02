@@ -169,7 +169,8 @@ RomBitItem* RomAlignerTilting::linkresults(){
     }
 
     //Do I want to correct by a tilt or by a shear?
-    qDebug()<<"Tilt angle of the first row after alignment is "<<angle();
+    if(verbose)
+        qDebug()<<"Tilt angle of the first row after alignment is "<<angle();
 
     if(row)
         return rowstarts[0];
