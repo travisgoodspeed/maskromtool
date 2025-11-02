@@ -1683,7 +1683,7 @@ void MaskRomTool::markBit(RomLineItem* row, RomLineItem* col){
         return;
 
 
-    RomBitItem *bit=new RomBitItem(point, bitSize, row, col);
+    RomBitItem *bit=new RomBitItem(this, point, row, col);
     scene->addItem(bit);
     bit->setVisible(bitsVisible);
     bits.append(bit);

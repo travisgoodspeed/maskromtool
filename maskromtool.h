@@ -256,6 +256,8 @@ public:
     qreal reds[256], greens[256], blues[256],
         hues[256], sats[256], lights[256];
 
+    qreal bitSize=10;
+
 private slots:
     void on_openButton_triggered();
     void openHistory();              //Called by any of the file history entries.
@@ -320,7 +322,7 @@ private:
     Ui::MaskRomTool *ui;
     qreal thresholdR, thresholdG, thresholdB,
           thresholdH, thresholdS, thresholdL;
-    qreal bitSize=10;
+
     bool alignmentdirty=true;   // Table marking is outdated.
     bool markingdirty=true;     // Bit marking is outdated.
     uint32_t alignSkipThreshold=5;

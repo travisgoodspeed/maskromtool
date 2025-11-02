@@ -1,10 +1,10 @@
 #include "rombitsamplerwide.h"
+#include "maskromtool.h"
 #include <QDebug>
 
 RomBitSamplerWide::RomBitSamplerWide(){
     name="Wide";
 }
-
 
 QRgb RomBitSamplerWide::bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos){
     //Start with the brightest, then fall to the darkest.
@@ -34,3 +34,16 @@ QRgb RomBitSamplerWide::bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos){
 
     return newpixel;
 }
+
+
+/* This returns a rectangle for the bit to be
+ * rendered.  Sometimes that's just a box, but
+ * it can also show more complex shapes when the
+ * sampling needs it.
+ */
+QRectF RomBitSamplerWide::getRect(MaskRomTool *mrt){
+    qreal width=size;
+    qreal height=mrt->bitSize;
+    return QRectF(-width/2, -height/2, width, height);
+}
+

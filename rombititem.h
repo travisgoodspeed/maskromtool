@@ -24,7 +24,7 @@ class RomBitItem : public QGraphicsRectItem
 {
 public:
     //Creates a bit at a crossing point.
-    RomBitItem(QPointF pos, qreal size,
+    RomBitItem(MaskRomTool *mrt, QPointF pos,
                RomLineItem *rlrow, RomLineItem *rlcol);
 
     //Sample the color of the bit.
@@ -69,6 +69,7 @@ public:
     virtual int type() const override;
 
 private:
+    MaskRomTool *mrt=0;
     bool value=false;     //This is the value.
     bool ambiguous=false; //Do we suspect the value is wrong?
     bool fixed=false;     //Is this bit overridden?

@@ -5,12 +5,13 @@
 #include <QBrush>
 #include <QDebug>
 
-RomBitItem::RomBitItem(QPointF pos, qreal size, RomLineItem *rlrow, RomLineItem *rlcol){
+RomBitItem::RomBitItem(MaskRomTool *mrt, QPointF pos,
+                       RomLineItem *rlrow, RomLineItem *rlcol){
     //Need to manually enable caching.
     //setCacheMode(QGraphicsItem::DeviceCoordinateCache);
-
+    this->mrt=mrt;
     setPos(pos);
-    setBitSize(size);
+    setBitSize(mrt->bitSize);
     this->rlcol=rlcol;
     this->rlrow=rlrow;
 }
@@ -27,8 +28,12 @@ int RomBitItem::type() const{
 
 //Sets the bit size.
 void RomBitItem::setBitSize(qreal s){
-    bitSize=s;
-    setRect(-s/2, -s/2, s, s);
+    /* Previous behavior.
+     bitSize=s;
+     setRect(-s/2, -s/2, s, s);
+    */
+    assert(mrt);
+    setRect(mrt->sampler->getRect(mrt));
 }
 
 qreal RomBitItem::getBitSize(){

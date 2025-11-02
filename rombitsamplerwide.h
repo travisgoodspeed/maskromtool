@@ -12,6 +12,7 @@ class RomBitSamplerWide : public RomBitSampler
 public:
     RomBitSamplerWide();
     QRgb bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos);
+    QRectF getRect(MaskRomTool *mrt);
 };
 
 #endif // ROMBITSAMPLERWIDE_H

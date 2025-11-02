@@ -18,6 +18,7 @@ public:
     virtual QRgb bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos);
     virtual void setSize(int newsize);
     virtual int getSize();
+    virtual QRectF getRect(MaskRomTool *mrt);
     int size=0;  //Zero must remain a legal size.
 };
 
