@@ -74,6 +74,11 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     : QMainWindow(parent)
     , ui(new Ui::MaskRomTool) {
 
+    //Set our Qt configuration, needed for settings.
+    QCoreApplication::setOrganizationName("TravisGoodspeed");
+    QCoreApplication::setOrganizationDomain("kk4vcz.com");
+    QCoreApplication::setApplicationName("MaskRomTool");
+
     //Setup caches
     QPixmapCache::setCacheLimit(0x100000); //1GB
     if(verbose) qDebug()<<"Cache limit is "<<QPixmapCache::cacheLimit()<<"kb";
@@ -116,6 +121,9 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
 
     //Set up the second view.
     second.view->setScene(scene);
+
+    //Build a history of past entries.
+    buildFileHistoryList();
 
     //Enable OpenGL without antialiasing, now that it's stable.
     if(opengl)
@@ -1370,6 +1378,61 @@ void MaskRomTool::getAlignSkipCountThreshold(uint32_t &count){
     count=alignSkipThreshold;
 }
 
+//Records a file in settings for the history.
+void MaskRomTool::recordFileHistory(QFileInfo file){
+    /* What we do here is build a stack of the old filenames,
+     * cull the new filename from that stack, and then ensure
+     * that the new filename comes first in the new listing.
+     */
+    QSettings settings;
+    QString path=file.absoluteFilePath();
+    QStack<QString> filenames;  //Ordered list of filenames.
+
+    //Build the new list.
+    filenames.append(path);     //New file always comes first.
+    for(int i=0; i<10; i++){
+        QString k="filename"+QString::number(i);
+        QVariant v=settings.value(k);
+        if(v.isValid()){
+            if(path!=v.toString())
+                filenames.append(v.toString());
+        }
+    }
+
+    //Write back the new list.
+    int i=0;
+    foreach(QString f, filenames){
+        QString k="filename"+QString::number(i);
+        settings.setValue(k, f);
+        i++;
+    }
+}
+
+//Builds the history menu entries.
+void MaskRomTool::buildFileHistoryList(){
+    QMenu* recents=ui->menuOpen_Recent;
+    recents->clear();
+
+    QSettings settings;
+    for(int i=0; i<10; i++){
+        QString k="filename"+QString::number(i);
+        QVariant v=settings.value(k);
+        if(v.isValid()){
+            QAction *action=new QAction(recents);
+            action->setText(v.toString());
+            recents->addAction(action);
+            QObject::connect(action, SIGNAL(triggered(bool)),
+                             this, SLOT(openHistory()));
+        }
+    }
+}
+
+//Opens whichever entry in the history was selected.
+void MaskRomTool::openHistory(){
+    QAction *action = (QAction*) this->sender();
+    fileOpen(action->text());
+}
+
 //Opens *either* an image or a JSON description of lines.
 void MaskRomTool::fileOpen(QString filename){
     //On macOS, each window likes to have a file attached.
@@ -1392,8 +1455,12 @@ void MaskRomTool::fileOpen(QString filename){
 
 
         //We load the image as a background, so it's not really a part of the scene.
+        QFileInfo info(imagefilename);
+        recordFileHistory(info);
+        buildFileHistoryList();
         if(verbose)
-            qDebug()<<"Loading background image: "<<imagefilename;
+            qDebug()<<"Loading background image: "<<info.absoluteFilePath();
+
         background=QImage(imagefilename);
         backgroundpixmap = scene->addPixmap(QPixmap(imagefilename));
         backgroundpixmap->setZValue(-10);

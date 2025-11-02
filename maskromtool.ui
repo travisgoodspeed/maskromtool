@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>24</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -72,11 +72,17 @@
      </property>
      <addaction name="importDiff"/>
     </widget>
+    <widget class="QMenu" name="menuOpen_Recent">
+     <property name="title">
+      <string>Open Recent</string>
+     </property>
+    </widget>
     <addaction name="openButton"/>
     <addaction name="saveButton"/>
     <addaction name="menuImport"/>
     <addaction name="menuExport"/>
     <addaction name="actionPrint"/>
+    <addaction name="menuOpen_Recent"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">

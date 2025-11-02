@@ -42,7 +42,7 @@ These decodings are not yet solved, which might make them an interesting target.
 `master` -- GoodASM REPL now has working autocompletion on Windows.
 Dropping support for x86_64 macOS.  Optional support for Yara-X.  HSL
 color space for bit thresholds, with bit color histograms that are
-easier on the eyes.
+easier on the eyes.  Open recent menu, QSettings.
 
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver

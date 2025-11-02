@@ -44,6 +44,10 @@ public:
     ~MaskRomTool();
     void closeEvent(QCloseEvent *event);
 
+    //Records a file in settings for the history.
+    void recordFileHistory(QFileInfo file);
+    void buildFileHistoryList();
+
     void enableVerbose(unsigned int level=1);
     void enableOpenGL(unsigned int antialiasing=0);
 
@@ -254,6 +258,7 @@ public:
 
 private slots:
     void on_openButton_triggered();
+    void openHistory();              //Called by any of the file history entries.
     void on_saveButton_triggered();
   
     void on_alignconstrainButton_triggered();
@@ -269,7 +274,7 @@ private slots:
     void on_asciiButton_triggered();
     void on_actionHexView_triggered();
 
-    //Import from a file.  (Loose definition.
+    //Import from a file.  (Loose definition.)
     void on_importDiff_triggered();
 
     //Export to a file.
@@ -306,13 +311,9 @@ private slots:
     void on_selectioncolorButton_triggered();
     void on_crosshaircolorButton_triggered();
     void on_exportSolverSetBytes_triggered();
-
     void on_actionHexDamage_triggered();
-
     void on_actionAsciiDamage_triggered();
-
     void on_exportAsciiDamage_triggered();
-
     void on_exportDamageBytes_triggered();
 
 private:
