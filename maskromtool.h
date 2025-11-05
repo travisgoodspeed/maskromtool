@@ -128,7 +128,7 @@ public:
     //Moves a line to a new location.
     void moveLine(RomLineItem* line, QPointF newpoint);
     //Moves a group of items by an offset.
-    void moveList(QList<QGraphicsItem*> list, QPointF offset);
+    void moveLines(QList<QGraphicsItem*> &list, QPointF offset);
     //Inserts a new line, either row or column.
     bool insertLine(RomLineItem* line);
     //Is a point visible?  Handy when dragging.

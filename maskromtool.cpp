@@ -1753,7 +1753,7 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
      * are not shown.
      *
      * Group selections are not moved with this function, but instead
-     * use moveList().
+     * use moveLines().
      */
     if(bitsVisible){
         removeLine(line,false);  //Remove the line's bits, but not the line itself.
@@ -1770,16 +1770,17 @@ void MaskRomTool::moveLine(RomLineItem* line, QPointF newpoint){
 }
 
 //Moves a group of items by an offset, used while dragging.
-void MaskRomTool::moveList(QList<QGraphicsItem*> list, QPointF offset){
+void MaskRomTool::moveLines(QList<QGraphicsItem*> &list, QPointF offset){
     /* This function's job is to move a list of items by an offset.
      * It's called when you hit the arrow keys or drag with the right
      * mouse button, and it's vital for it to be fast because there's
      * the potential for redrawing a ton of bits on every frame.
      *
      * This implementation drops all bits that are not actively on
-     * moving lines as a necessary performance hack.  The missing bits
-     * are not on moving lines, and they will return as soon as the mouse
-     * button is released.
+     * moving lines as a necessary performance hack. This includes
+     * dropping bits from the selection. The missing bits are not on
+     * moving lines, and they will return as soon as the mouse button
+     * is released.
      *
      * As a workaround when movements are too slow, use the TAB key
      * to hide the bits for a while.
@@ -1957,7 +1958,11 @@ void MaskRomTool::clearBits(bool full){
 
     //This avoids a deep copy, but cannot be partial.
     for(auto i=bits.constBegin(); i!=bits.constEnd(); i++){
+        // The bits must first be removed from the selection
+        scene->selection.removeOne(*i);
+        // Then the scene
         scene->removeItem(*i);
+        // And now they can be deleted
         delete *i;
         bitcount--;
     }
