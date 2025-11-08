@@ -5,7 +5,7 @@
 /* This is my decoder for the ROM of the TMP47C434N's font ROM,
  * which is much like down-left except that:
  * 1. Bytes are interleaved in each row.  (word, wordi)
- * 2. Every 64 bytes (8 rows), the rows reverse direction. (row, rowi).
+ * 2. Every 8 rows (64 bytes in font), the rows reverse direction. (row, rowi).
  *
  * FIXME: Make this more generic and support code ROMs.
  */
