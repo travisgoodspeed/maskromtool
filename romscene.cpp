@@ -195,7 +195,6 @@ void RomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
     if(mouseEvent->buttons()==Qt::RightButton){
         maskRomTool->dragging=true;
         maskRomTool->markUndoPoint();
-        maskRomTool->clearBits(false);
     }
 }
 
