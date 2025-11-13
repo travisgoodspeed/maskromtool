@@ -10,6 +10,7 @@
 #include "gatodecodersqueezelr.h"
 #include "gatodecodertlcsfont.h"
 #include "gatodecodercolsdownlswap.h"  //NEC uCOM4
+#include "gatodecodertms320c28x.h"     //TI TMS320C28x
 #include "gatodecoderz86x1.h"
 
 
@@ -41,8 +42,8 @@ GatoSolver::GatoSolver(GatoROM *rom, GatoGrader *grader){
     decoders[5]=new GatoDecoderTLCSFont();
     decoders[6]=new GatoDecoderZ86x1();
     decoders[7]=new GatoDecoderColsDownLSwap(); //NEC uCOM4
+    decoders[8]=new GatoDecoderTMS320C28x();    //TI TMS320C28x
     //Remainder of table must be null.
-    decoders[8]=0;
     decoders[9]=0;
     decoders[10]=0;
     decoders[11]=0;
