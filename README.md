@@ -43,7 +43,8 @@ These decodings are not yet solved, which might make them an interesting target.
 Dropping support for x86_64 macOS.  Optional support for Yara-X.  HSL
 color space for bit thresholds, with bit color histograms that are
 easier on the eyes.  Open recent menu, QSettings.  Wide and tall
-sampling sizes are now displayed in the view.
+sampling sizes are now displayed in the view.  Fixes crash when
+dragging both lines and bits.
 
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver
