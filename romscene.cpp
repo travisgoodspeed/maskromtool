@@ -41,7 +41,7 @@ void RomScene::keyPressEvent(QKeyEvent *event){
         case Qt::Key_Left: dpos.setX(-1); break;
         case Qt::Key_Right: dpos.setX(1); break;
         }
-        maskRomTool->moveList(selection, dpos);
+        maskRomTool->moveLines(selection, dpos);
         break;
     default:
         QGraphicsScene::keyPressEvent(event);
@@ -150,7 +150,8 @@ void RomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
     //here instead of on release so we can have preview
     if(mouseEvent->buttons()==Qt::RightButton){
         QPointF dpos = mouseEvent->scenePos() - presspos;
-        maskRomTool->moveList(selection, dpos);
+        
+        maskRomTool->moveLines(selection, dpos);
 
         // update because we already moved it
         presspos = scenepos;
@@ -194,7 +195,6 @@ void RomScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
     if(mouseEvent->buttons()==Qt::RightButton){
         maskRomTool->dragging=true;
         maskRomTool->markUndoPoint();
-        maskRomTool->clearBits(false);
     }
 }
 
