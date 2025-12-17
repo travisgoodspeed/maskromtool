@@ -10,6 +10,7 @@
 #include "gatodecodertlcsfont.h"
 #include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
+#include "gatodecodermarc4.h" //MARC4
 //Zorrom compatibility.
 #include "gatodecodercolsdownr.h"
 #include "gatodecodercolsdownl.h"
@@ -184,6 +185,8 @@ void GatoROM::setDecoderByName(QString name){
         decoder=new GatoDecoderColsRight();
     else if(name=="squeeze-lr")
         decoder=new GatoDecoderSqueezeLR();
+    else if(name=="marc4")
+        decoder=new GatoDecoderMarc4();
     else
         qDebug()<<"Unknown decoder"<<name;
 }

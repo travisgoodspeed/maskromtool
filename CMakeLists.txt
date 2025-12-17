@@ -90,6 +90,8 @@ set(GATOROM_SOURCES
     gatodecodertlcsfont.h gatodecodertlcsfont.cpp # TMP47C434N Font ROM
     gatodecoderz86x1.h gatodecoderz86x1.cpp # Zilog Z8 Z86x1
     gatodecodercolsdownlswap.h gatodecodercolsdownlswap.cpp # Used in NEC uCOM4 Micros
+    gatodecodermarc4.h gatodecodermarc4.cpp
+    affinedecoder.h # generic affine decoder
     # Decoder named after Zorrom strategies.
     gatodecodercolsdownr.h gatodecodercolsdownr.cpp   # Top-to-bottom then left to right, 8-bits.
     gatodecodercolsdownl.h gatodecodercolsdownl.cpp
