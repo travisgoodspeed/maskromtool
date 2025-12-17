@@ -5,6 +5,7 @@ all:
 	make -C gameboy all
 	make -C seanriddle all
 	make -C z8 all
+	make -C marc4 all
 clean:
 	make -C zorrom clean
 	make -C arm6 clean
@@ -12,4 +13,5 @@ clean:
 	make -C gameboy clean
 	make -C seanriddle clean
 	make -C z8 clean
+	make -C marc4 clean
 

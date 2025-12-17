@@ -19,6 +19,7 @@
 #include "gatodecodertlcsfont.h"
 #include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
+#include "gatodecodermarc4.h" //MARC4
 
 //Zorrom compatibility.
 #include "gatodecodercolsdownr.h"
@@ -185,6 +186,11 @@ int main(int argc, char *argv[]) {
                                        "Zorrom compatibility mode, with flipx before rotation."
                                        );
     parser.addOption(zorromOption);
+
+    QCommandLineOption marc4Option(QStringList()<<"decode-marc4",
+                                       "Decodes column-major, 2-bit column interleave as for MARC4 ROM"
+                                       );
+    parser.addOption(marc4Option);
 
     //banking
     QCommandLineOption leftbankOption(QStringList()<<"leftbank",
@@ -389,6 +395,8 @@ int main(int argc, char *argv[]) {
             gr->decoder=new GatoDecoderColsRight();
         else if(parser.isSet(squeezelrOption))
             gr->decoder=new GatoDecoderSqueezeLR();
+        else if (parser.isSet(marc4Option))
+            gr->decoder = new GatoDecoderMarc4();
 
 
 

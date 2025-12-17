@@ -11,7 +11,7 @@
 #include "gatodecodertlcsfont.h"
 #include "gatodecodercolsdownlswap.h"  //NEC uCOM4
 #include "gatodecoderz86x1.h"
-
+#include "gatodecodermarc4.h" // marc4
 
 // Default solver is a dummy state that covers everything.
 GatoGraderAll::GatoGraderAll(){}
@@ -41,8 +41,8 @@ GatoSolver::GatoSolver(GatoROM *rom, GatoGrader *grader){
     decoders[5]=new GatoDecoderTLCSFont();
     decoders[6]=new GatoDecoderZ86x1();
     decoders[7]=new GatoDecoderColsDownLSwap(); //NEC uCOM4
+    decoders[8]=new GatoDecoderMarc4();
     //Remainder of table must be null.
-    decoders[8]=0;
     decoders[9]=0;
     decoders[10]=0;
     decoders[11]=0;
