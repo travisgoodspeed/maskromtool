@@ -36,6 +36,7 @@
 #include "romdecoderphotograph.h"
 #include "romdecodergato.h"          //GatoROM implements most binary decoders.
 #include "romdecoderhistogram.h"
+#include "romdecoderbitimages.h"
 //Importers too, weird as they are.
 #include "romencoderdiff.h"
 
@@ -1087,6 +1088,16 @@ void MaskRomTool::on_exportHistogram_triggered(){
     if(!filename.isEmpty()){
         hist.writeFile(this, filename);
     }
+}
+
+//Exports all of the bits as individual images.
+void MaskRomTool::on_actionBit_Images_triggered(){
+    RomDecoderBitImages bitimages;
+    QString fn = QFileDialog::getExistingDirectory(this, tr("Export Directory"));
+    if(QDir(fn).exists())
+        bitimages.writeFile(this, fn);
+    else
+        qDebug()<<"Refusing to export images when directory doesn't exist.";
 }
 
 //Pop up the about dialog.
@@ -2484,6 +2495,9 @@ void MaskRomTool::on_actionDisassembly_triggered(){
     gatorom();
     disDialog.show();
 }
+
+
+
 
 
 

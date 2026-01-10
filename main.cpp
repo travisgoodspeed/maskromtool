@@ -7,6 +7,7 @@
 #include "romdecoderpython.h"
 #include "romdecoderphotograph.h"
 #include "romdecoderhistogram.h"
+#include "romdecoderbitimages.h"
 #include "romencoderdiff.h"
 #include "romscene.h"
 
@@ -118,7 +119,6 @@ int main(int argc, char *argv[]){
                                             QCoreApplication::translate("main", "Export histogram."),
                                             QCoreApplication::translate("main", "file"));
     parser.addOption(histogramExportOption);
-
     // Exporting to CSV table.
     QCommandLineOption csvExportOption(QStringList() << "export-csv",
         QCoreApplication::translate("main", "Export CSV bits for use in Matlab or Excel."),
@@ -139,6 +139,11 @@ int main(int argc, char *argv[]){
         QCoreApplication::translate("main", "Export a photograph."),
         QCoreApplication::translate("main", "file"));
     parser.addOption(photoExportOption);
+    // Export bit images.
+    QCommandLineOption bitimagesExportOption(QStringList() << "export-bit-images",
+                                            QCoreApplication::translate("main", "Export bit images."),
+                                            QCoreApplication::translate("main", "directory"));
+    parser.addOption(bitimagesExportOption);
 
 
 
@@ -238,6 +243,14 @@ int main(int argc, char *argv[]){
         qDebug()<<"Exporting a photo.";
         RomDecoderPhotograph exporter;
         exporter.writeFile(&mrt, parser.value(photoExportOption));
+    }
+    //Export bit images.
+    if(parser.isSet(bitimagesExportOption)){
+        qDebug()<<"Exporting bit images.";
+        mrt.markBits(true);
+        RomDecoderBitImages exporter;
+        exporter.writeFile(&mrt, parser.value(bitimagesExportOption));
+
     }
 
     //Stress test.

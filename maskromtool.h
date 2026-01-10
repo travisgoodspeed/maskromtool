@@ -254,7 +254,7 @@ public:
 
     //Histogram bits.
     qreal reds[256], greens[256], blues[256],
-        hues[256], sats[256], lights[256];
+          hues[256], sats[256], lights[256];
 
     qreal bitSize=10;
 
@@ -317,6 +317,8 @@ private slots:
     void on_actionAsciiDamage_triggered();
     void on_exportAsciiDamage_triggered();
     void on_exportDamageBytes_triggered();
+
+    void on_actionBit_Images_triggered();
 
 private:
     Ui::MaskRomTool *ui;

@@ -44,7 +44,8 @@ Dropping support for x86_64 macOS.  Optional support for Yara-X.  HSL
 color space for bit thresholds, with bit color histograms that are
 easier on the eyes.  Open recent menu, QSettings.  Wide and tall
 sampling sizes are now displayed in the view.  Fixes crash when
-dragging both lines and bits.
+dragging both lines and bits.  Export of individual bits as separate
+images.  Partial CPack support for producing `.deb` packages.
 
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver
@@ -156,7 +157,7 @@ reopen the project to try again.
 For the convenience of Windows and macOS users, we have also made some
 [Prebuilt
 Releases](https://github.com/travisgoodspeed/maskromtool/releases).
-On macOS, you might need to run 'xattr -dr com.apple.quarantine *` if
+On macOS, you might need to run `xattr -dr com.apple.quarantine *` if
 you get warnings about the signature not being recognized.
 
 

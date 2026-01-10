@@ -42,7 +42,9 @@ static void callback(const struct YRX_RULE *rule, void *user_data){
 }
 
 int GatoGraderYaraX::grade(QByteArray ba){
-    assert(scanner);
+    //assert(scanner);
+    if(!scanner)
+        return 0;
 
     //Scan the bytes.
     this->match=0; //Reset match count.

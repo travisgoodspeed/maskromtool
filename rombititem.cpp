@@ -36,6 +36,27 @@ void RomBitItem::setBitSize(qreal s){
     setRect(mrt->sampler->getRect(mrt));
 }
 
+
+//Returns an image of the bit.  Useful for export or post processing.
+QImage RomBitItem::getImage(){
+    /* This returns a small square with the bit inside of it.  Doing
+     * this for every bit in the project can be time consuming, but
+     * it might be useful in projects with a lot of tearing, where
+     * the bits are not perfectly aligned to the crossing points of
+     * the row and column lines.
+     *
+     * Note that this function only returns the image.  The actual
+     * processing happens elsewhere.  (FIXME: Where?)
+     */
+
+
+    //This looks pretty good, but damned if I know what the right value is.
+    int size=mrt->bitSize*4;
+    QRect bounding=QRect(x()-size, y()-size, size*2, size*2);
+
+    return mrt->background.copy(bounding);
+}
+
 qreal RomBitItem::getBitSize(){
     return bitSize;
 }

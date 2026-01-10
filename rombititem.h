@@ -68,6 +68,9 @@ public:
     //Allows for fast lookups.
     virtual int type() const override;
 
+    //Returns an image of the bit.  Useful for export or post processing.
+    QImage getImage();
+
 private:
     MaskRomTool *mrt=0;
     bool value=false;     //This is the value.

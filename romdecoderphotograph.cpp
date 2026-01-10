@@ -9,7 +9,7 @@ RomDecoderPhotograph::RomDecoderPhotograph()
 }
 
 QString RomDecoderPhotograph::preview(MaskRomTool *m){
-    return "";
+    return "No preview of image exports.";
 }
 
 

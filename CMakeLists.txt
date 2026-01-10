@@ -23,7 +23,7 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets LinguistTools Charts PrintSupport C
 
 
 # Neither PkgConfig nor YaraX are required.
-set(ENV{PKG_CONFIG_PATH} "c:/lib/pkgconfig")
+set(ENV{PKG_CONFIG_PATH} "c:/lib/pkgconfig;/usr/local/lib64")
 
 find_package(PkgConfig)
 # https://virustotal.github.io/yara-x/docs/api/c/c-/
@@ -127,6 +127,7 @@ set(MRT_SOURCES
         romdecoderphotograph.h romdecoderphotograph.cpp
         romdecoderhistogram.h romdecoderhistogram.cpp
         romencoderdiff.h romencoderdiff.cpp
+        romdecoderbitimages.h romdecoderbitimages.cpp
 # Alignment stategies
         romaligner.h romaligner.cpp
         romalignerreliable.h romalignerreliable.cpp
@@ -211,3 +212,22 @@ target_link_libraries(gatorom Qt6::Core
 
 install(TARGETS gatorom
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+
+set(CPACK_PACKAGE_NAME maskromtool)
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A Mask ROM Reverse Engineering Tool")
+set(CPACK_PACKAGE_VENDOR "Travis Goodspeed")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
+set(CPACK_VERBATIM_VARIABLES ON)
+# set(CPACK_PACKAGING_INSTALL_PREFIX "/opt/maskromtool")
+# set(CPACK_PACKAGE_INSTALL_DIRECTORY "/opt/maskromtool")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Travis Goodspeed <travis@radiantmachines.com>")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libstdc++6, libgcc-s1")
+set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://github.com/travisgoodspeed/maskromtool/")
+
+# TBZ and ZIP might be handy if the libraries were included.
+set(CPACK_GENERATOR DEB)
+
+
+include(CPack)
