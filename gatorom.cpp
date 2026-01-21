@@ -10,6 +10,7 @@
 #include "gatodecodertlcsfont.h"
 #include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
+#include "gatodecodertms320c28x.h"    // TI TMS320C28x
 //Zorrom compatibility.
 #include "gatodecodercolsdownr.h"
 #include "gatodecodercolsdownl.h"
@@ -184,6 +185,8 @@ void GatoROM::setDecoderByName(QString name){
         decoder=new GatoDecoderColsRight();
     else if(name=="squeeze-lr")
         decoder=new GatoDecoderSqueezeLR();
+    else if(name=="tms320c28x")
+        decoder=new GatoDecoderTMS320C28x();
     else
         qDebug()<<"Unknown decoder"<<name;
 }
