@@ -37,9 +37,9 @@ void GatoDecoderMarc4::decode(GatoROM *gr) {
     return;
   }
   std::array<unsigned int, 4> counts = {wordsize, nrows, 2, ncols / 16};
-  std::array<int, 4> col_strides = {2, 0, 1, (int)wordsize * 2};
+  std::array<int, 4> col_strides = {-2, 0, 1, (int)wordsize * 2};
   std::array<int, 4> row_strides = {0, 1, 0, 0};
   AffineDecoder<4> root_decode =
-      AffineDecoder(counts, row_strides, col_strides, 0, 0);
+      AffineDecoder(counts, row_strides, col_strides, 0, wordsize*2-2);
   return root_decode.decode(gr);
 }
