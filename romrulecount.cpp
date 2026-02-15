@@ -24,12 +24,12 @@ void RomRuleCount::evaluate(MaskRomTool *mrt){
             firstlinecount=nextlinecount;
 
         if(firstlinecount!=nextlinecount){
-            QString title("Unexpect Count on Row %1");
-            QString detail("Unexpect Count on Row %1.");
+            QString title("Unexpected Count on Row %1");
+            QString detail("Row %1 has %2 bits, not %3");
 
             RomRuleViolation* violation=new RomRuleViolation(rowbit->pos(),
                                        title.arg(rowi),
-                                       detail.arg(rowi));
+                                       detail.arg(rowi).arg(firstlinecount).arg(nextlinecount));
             violation->error=true;
             mrt->addViolation(violation);
         }
