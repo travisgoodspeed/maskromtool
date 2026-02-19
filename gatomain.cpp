@@ -20,6 +20,7 @@
 #include "gatodecoderz86x1.h"
 #include "gatodecodercolsdownlswap.h" // NEC uCOM4
 #include "gatodecodermarc4.h" //MARC4
+#include "gatodecodermsp430.h" // TI msp430 
 
 //Zorrom compatibility.
 #include "gatodecodercolsdownr.h"
@@ -191,6 +192,11 @@ int main(int argc, char *argv[]) {
                                        "Decodes column-major, 2-bit column interleave as for MARC4 ROM"
                                        );
     parser.addOption(marc4Option);
+
+    QCommandLineOption msp430Option(QStringList()<<"decode-msp430",
+                                       "Cols downr, but make words by interleaving every other bit."
+                                       );
+    parser.addOption(msp430Option);
 
     //banking
     QCommandLineOption leftbankOption(QStringList()<<"leftbank",
@@ -397,6 +403,8 @@ int main(int argc, char *argv[]) {
             gr->decoder=new GatoDecoderSqueezeLR();
         else if (parser.isSet(marc4Option))
             gr->decoder = new GatoDecoderMarc4();
+        else if (parser.isSet(msp430Option))
+            gr->decoder = new GatoDecoderMSP430();
 
 
 
