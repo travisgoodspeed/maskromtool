@@ -6,6 +6,7 @@ all:
 	make -C seanriddle all
 	make -C z8 all
 	make -C marc4 all
+	make -C msp430 all
 clean:
 	make -C zorrom clean
 	make -C arm6 clean
@@ -14,4 +15,5 @@ clean:
 	make -C seanriddle clean
 	make -C z8 clean
 	make -C marc4 clean
+	make -C msp430 clean
 

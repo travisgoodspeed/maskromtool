@@ -158,6 +158,11 @@
          <string>marc4</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>msp430</string>
+        </property>
+       </item>
       </widget>
       <widget class="QCheckBox" name="checkZorrom">
        <property name="geometry">
