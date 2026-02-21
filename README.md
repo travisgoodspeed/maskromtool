@@ -48,8 +48,8 @@ color space for bit thresholds, with bit color histograms that are
 easier on the eyes.  Open recent menu, QSettings.  Wide and tall
 sampling sizes are now displayed in the view.  Fixes crash when
 dragging both lines and bits.  Export of individual bits as separate
-images.  Partial CPack support for producing `.deb` packages.
-MARC4 ROM decoding.
+images.  Partial CPack support for producing `.deb` packages.  MARC4
+and MSP430F449 decoding, defined by affine maps.
 
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver
