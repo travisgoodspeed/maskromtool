@@ -40,6 +40,10 @@ ASIC from a Casio FX-2500 calculator and its soviet clone, the
 from Yugoslavia's EMZ1001 microcontroller, a licensed clone of the S2000.
 These decodings are not yet solved, which might make them an interesting target.
 
+[msp430f149rom](https://github.com/travisgoodspeed/msp430f149rom) is
+from the MSP430F149.  This chip is closely related to the MSP430F449,
+but our MSP430 ROM module is not yet compatible.
+
 ## Release Changelog
 
 `master` -- GoodASM REPL now has working autocompletion on Windows.
