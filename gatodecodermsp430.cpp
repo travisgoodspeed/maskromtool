@@ -26,7 +26,13 @@ void GatoDecoderMSP430::decode(GatoROM *gr) {
   if (ncols % (wordsize) != 0 || wordsize % 2 != 0) {
     return;
   }
+
+
   int word_skip = ncols / wordsize;
+
+  //On most devices, there are 64 rows and 128 columns with wordsize of 16.
+
+
   const size_t len = 4;
   std::array<unsigned int, len> counts = {wordsize / 2, 2, nrows,
                                           (unsigned int)word_skip};
