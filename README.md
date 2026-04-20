@@ -42,7 +42,7 @@ These decodings are not yet solved, which might make them an interesting target.
 
 [msp430f149rom](https://github.com/travisgoodspeed/msp430f149rom) is
 from the MSP430F149.  This chip is closely related to the MSP430F449,
-but our MSP430 ROM module is not yet compatible.
+solved with the same decoder.
 
 ## Release Changelog
 
@@ -53,7 +53,7 @@ easier on the eyes.  Open recent menu, QSettings.  Wide and tall
 sampling sizes are now displayed in the view.  Fixes crash when
 dragging both lines and bits.  Export of individual bits as separate
 images.  Partial CPack support for producing `.deb` packages.  MARC4
-and MSP430F449 decoding, defined by affine maps.
+and MSP430 decoding defined by affine maps.
 
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver
