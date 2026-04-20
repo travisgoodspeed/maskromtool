@@ -4,7 +4,13 @@
 // first row of the logo.
 
 rule gameboy {
+meta:
+  description = "Nintendo GameBoy Logo"
+  noisy=false
+  wordsize=8
+
 strings:
+  //Fragment of the logo.
   $nintendo = {CE ED 66 66 CC 0D 00 0B 03 73 00 83 00 0C 00 0D}
 
 condition:
