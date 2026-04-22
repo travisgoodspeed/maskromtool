@@ -9,7 +9,8 @@ clean:
 
 solved.bin: gameboy.txt
 # This solves the ROM from its first two bytes.
-	gatorom --solve --solve-bytes 0:0x31,1:0xfe gameboy.txt -o solved.bin
+# gatorom --solve --solve-bytes 0:0x31,1:0xfe gameboy.txt -o solved.bin
+	gatorom --solve --solve-yarax gameboy.yar gameboy.txt -o solved.bin
 gameboy.bin: gameboy.txt
 # This decodes the ROM from its settings.
 	gatorom gameboy.txt -o gameboy.bin --decode-cols-downr --flipx --invert

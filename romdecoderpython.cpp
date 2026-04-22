@@ -31,6 +31,10 @@ QString RomDecoderPython::preview(MaskRomTool *m){
 
 void RomDecoderPython::writeFile(MaskRomTool *m, QString filename){
     QFile fout(filename);
-    fout.open(QIODevice::WriteOnly);
+    if(!fout.open(QIODevice::WriteOnly)){
+        qDebug()<<"Unable to open"<<filename;
+        return;
+    }
     fout.write(preview(m).toUtf8());
+    fout.close();
 }

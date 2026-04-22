@@ -90,8 +90,12 @@ void RomDecoderGato::writeFile(MaskRomTool *m, QString filename){
     GatoROM gr=gatorom(m);
     QByteArray bytes=gr.decode();
     QFile fout(filename);
-    fout.open(QIODevice::WriteOnly);
+    if(!fout.open(QIODevice::WriteOnly)){
+        qDebug()<<"Unable to write"<<filename;
+        return;
+    }
     fout.write(bytes);
+    fout.close();
 }
 
 
@@ -101,6 +105,10 @@ void RomDecoderGato::writeDamageFile(MaskRomTool *m, QString filename){
     QFile fout(filename);
 
     gr.decode();
-    fout.open(QIODevice::WriteOnly);
+    if(!fout.open(QIODevice::WriteOnly)){
+        qDebug()<<"Unable to write"<<filename;
+        return;
+    }
     fout.write(gr.decodedDamage);
+    fout.close();
 }

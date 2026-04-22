@@ -40,6 +40,10 @@ void RomDecoderJson::writeFile(MaskRomTool *m, QString filename){
     QByteArray ba = document(m).toJson();
 
     QFile fout(filename);
-    fout.open(QIODevice::WriteOnly);
+    if(!fout.open(QIODevice::WriteOnly)){
+        qDebug()<<"Unable to write"<<filename;
+        return;
+    }
     fout.write(ba);
+    fout.close();
 }

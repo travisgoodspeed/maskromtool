@@ -1044,8 +1044,15 @@ void MaskRomTool::on_exportROMBytes_triggered(){
     QString filename = QFileDialog::getSaveFileName(this,tr("Export ROM"), tr("rom.bin"));
     if(!filename.isEmpty()){
         QFile fout(filename);
-        fout.open(QIODevice::WriteOnly);
+        if(!fout.open(QIODevice::WriteOnly)){
+            QMessageBox::warning(this, "Mask ROM Tool",
+                                 "Unable to export "+filename,
+                                 QMessageBox::Ok,
+                                 QMessageBox::Ok);
+            return;
+        }
         fout.write(gato.decode());
+        fout.close();
     }
 }
 
@@ -1065,9 +1072,16 @@ void MaskRomTool::on_exportDamageBytes_triggered(){
     QString filename = QFileDialog::getSaveFileName(this,tr("Export ROM Damage"), tr("damage.bin"));
     if(!filename.isEmpty()){
         QFile fout(filename);
-        fout.open(QIODevice::WriteOnly);
+        if(!fout.open(QIODevice::WriteOnly)){
+            QMessageBox::warning(this, "Mask ROM Tool",
+                                 "Unable to export "+filename,
+                                 QMessageBox::Ok,
+                                 QMessageBox::Ok);
+            return;
+        }
         gato.decode();
         fout.write(gato.decodedDamage);
+        fout.close();
     }
 }
 
@@ -1674,8 +1688,15 @@ void MaskRomTool::on_saveButton_triggered(){
     statusBar()->showMessage(tr("Saved to ")+imagefilename+".json");
 
     QFile fout(imagefilename+".json");
-    fout.open(QIODevice::WriteOnly);
+    if(!fout.open(QIODevice::WriteOnly)){
+        QMessageBox::warning(this, "Mask ROM Tool",
+                             "Error in saving "+imagefilename+".json",
+                             QMessageBox::Ok,
+                             QMessageBox::Ok);
+        return;
+    }
     fout.write(ba);
+    fout.close();
 }
 
 //Marks an individual bit.

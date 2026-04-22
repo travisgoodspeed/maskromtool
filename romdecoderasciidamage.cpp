@@ -26,6 +26,10 @@ QString RomDecoderAsciiDamage::preview(MaskRomTool *m){
 //Exports the preview to a file.
 void RomDecoderAsciiDamage::writeFile(MaskRomTool *m, QString filename){
     QFile fout(filename);
-    fout.open(QIODevice::WriteOnly);
+    if(!fout.open(QIODevice::WriteOnly)){
+        qDebug()<<"Unable to write"<<filename;
+        return;
+    }
     fout.write(preview(m).toUtf8());
+    fout.close();
 }

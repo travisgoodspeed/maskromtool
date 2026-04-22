@@ -19,7 +19,10 @@ void RomEncoderDiff::readFile(MaskRomTool *m, QString filename){
 
     //Input file and byte array.
     QFile fin(filename);
-    fin.open(QFile::ReadOnly);
+    if(!fin.open(QFile::ReadOnly)){
+        qDebug()<<"Unable to open"<<filename;
+        return;
+    }
     QByteArray ba=fin.readAll();
 
     //Local bits as linked lists of rows.
