@@ -317,8 +317,7 @@ private slots:
     void on_actionAsciiDamage_triggered();
     void on_exportAsciiDamage_triggered();
     void on_exportDamageBytes_triggered();
-
-    void on_actionBit_Images_triggered();
+    void on_exportBitImages_triggered();
 
 private:
     Ui::MaskRomTool *ui;

@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1095</width>
-     <height>20</height>
+     <height>57</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -61,6 +61,7 @@
      <addaction name="exportPython"/>
      <addaction name="exportPhotograph"/>
      <addaction name="exportHistogram"/>
+     <addaction name="exportBitImages"/>
      <addaction name="separator"/>
      <addaction name="exportROMBytes"/>
      <addaction name="exportDamageBytes"/>
@@ -544,6 +545,11 @@
   <action name="exportDamageBytes">
    <property name="text">
     <string>Damage Bytes</string>
+   </property>
+  </action>
+  <action name="exportBitImages">
+   <property name="text">
+    <string>Bit Images</string>
    </property>
   </action>
  </widget>
