@@ -20,7 +20,10 @@ int GatoGraderYara::grade(QByteArray ba){
 
     //This temporary file will be deleted when the function returns.
     QTemporaryFile tmpfile;
-    tmpfile.open();
+    if(!tmpfile.open()){
+        qDebug()<<"Unable to open"<<tmpfile.fileName();
+        return 0;
+    }
     tmpfile.write(ba);
     tmpfile.flush();
     tmpfile.close();

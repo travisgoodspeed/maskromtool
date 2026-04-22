@@ -61,12 +61,15 @@ GatoGrader* RomSolverDialog::grader(){
         if(tmpfile)
             delete tmpfile;
         tmpfile=new QTemporaryFile();
-        tmpfile->open();
-        yararule=ui->editYara->toPlainText();
-        tmpfile->write(yararule.toStdString().data());
-        tmpfile->flush();
-        tmpfile->close();
-        grader=new GatoGraderYara(tmpfile->fileName());
+        if(tmpfile->open())
+            qDebug()<<"Couldn't open temp file"<<tmpfile->fileName();
+        else{
+            yararule=ui->editYara->toPlainText();
+            tmpfile->write(yararule.toStdString().data());
+            tmpfile->flush();
+            tmpfile->close();
+            grader=new GatoGraderYara(tmpfile->fileName());
+        }
         break;
     case 4: // YaraX
 #if YARAX_FOUND==1
@@ -114,9 +117,14 @@ void RomSolverDialog::solve(QString solveset){
             //When called from File/Export/SolveSetBINs
             if(solveset.length()>0){
                 QFile outfile(solveset+gr->descriptiveFilename()+".bin");
-                outfile.open(QIODevice::WriteOnly);
-                outfile.write(gr->decoded);
-                outfile.close();
+                if(outfile.open(QIODevice::WriteOnly)){
+                    outfile.write(gr->decoded);
+                    outfile.close();
+                }else{
+                    QMessageBox msgBox;
+                    msgBox.setText("Couldn't open "+outfile.fileName());
+                    msgBox.exec();
+                }
             }
         }
     }

@@ -280,20 +280,28 @@ int main(int argc, char *argv[]) {
 
     if(args.count()==1 && parser.isSet(seanriddleOption)){  //Raw binary mode.
         QFile input(args[0]);
-        input.open(QFile::ReadOnly);
-        byteArray=input.readAll();
-        bool okay=false;
-        gr=new GatoROM(byteArray,parser.value(seanriddleOption).toInt(&okay));
-        if(!okay){
-            qDebug()<<"Not a valid row length:"<<parser.value(seanriddleOption);
+        if(input.open(QFile::ReadOnly)){
+            byteArray=input.readAll();
+            bool okay=false;
+            gr=new GatoROM(byteArray,parser.value(seanriddleOption).toInt(&okay));
+            if(!okay){
+                qDebug()<<"Not a valid row length:"<<parser.value(seanriddleOption);
+                exit(1);
+            }
+        }else{
+            qDebug()<<"Unable to open"<<input.fileName();
             exit(1);
         }
     }else if(args.count()==1){                              //Main ASCII art mode.
         //Open the file.
         QFile input(args[0]);
-        input.open(QFile::ReadOnly);
-        byteArray=input.readAll();
-        gr=new GatoROM(QString(byteArray));
+        if(input.open(QFile::ReadOnly)){
+            byteArray=input.readAll();
+            gr=new GatoROM(QString(byteArray));
+        }else{
+            qDebug()<<"Unable top open"<<input.fileName();
+            exit(1);
+        }
     }else if(parser.isSet(randomOption) || parser.isSet(randomOption2)){                   //Fake a random ROM.
         //Initialize a random generator.
         QRandomGenerator *rng=QRandomGenerator::global();
@@ -417,9 +425,13 @@ int main(int argc, char *argv[]) {
             //We can only decode to a binary if a decoder and output file have been chosen.
             if(parser.value(outputOption)!=""){
                 QFile outfile(parser.value(outputOption));
-                outfile.open(QIODevice::WriteOnly);
-                outfile.write(ba);
-                outfile.close();
+                if(outfile.open(QIODevice::WriteOnly)){
+                    outfile.write(ba);
+                    outfile.close();
+                }else{
+                    qDebug()<<"Unable to open"<<outfile.fileName();
+                    exit(1);
+                }
             }
 
             if(!gr->checkSanity()){
@@ -455,8 +467,12 @@ int main(int argc, char *argv[]) {
             }else if(parser.isSet(solveyaraxOption)){
 #if YARAX_FOUND==1
                 QFile source(yaraxrule);
-                source.open(QFile::ReadOnly);
-                grader=new GatoGraderYaraX(source.readAll());
+                if(source.open(QFile::ReadOnly))
+                    grader=new GatoGraderYaraX(source.readAll());
+                else{
+                    qDebug()<<"Unable top open"<<source.fileName();
+                    exit(1);
+                }
 #else
                 qDebug()<<"YaraX not linked.";
 #endif
@@ -480,7 +496,10 @@ int main(int argc, char *argv[]) {
 
                     if(solver.grade()>90 && parser.isSet(solvesetOption)){
                         QFile outfile(parser.value(solvesetOption)+statestring+".bin");
-                        outfile.open(QIODevice::WriteOnly);
+                        if(!outfile.open(QIODevice::WriteOnly)){
+                            qDebug()<<"Unable to open"<<outfile.fileName();
+                            exit(1);
+                        }
                         outfile.write(gr->decoded);
                         outfile.close();
                     }
@@ -490,7 +509,10 @@ int main(int argc, char *argv[]) {
                 if(solver.grade()==100 && parser.value(outputOption)!=""){
                     std::cout<<"Exporting\t"<<gr->description().toStdString()<<"\n";
                     QFile outfile(parser.value(outputOption));
-                    outfile.open(QIODevice::WriteOnly);
+                    if(!outfile.open(QIODevice::WriteOnly)){
+                        qDebug()<<"Unable to open"<<outfile.fileName();
+                        exit(1);
+                    }
                     outfile.write(gr->decoded);
                     outfile.close();
                 }
