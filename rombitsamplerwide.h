@@ -10,9 +10,11 @@
 class RomBitSamplerWide : public RomBitSampler
 {
 public:
-    RomBitSamplerWide();
+    RomBitSamplerWide(bool dark);
     QRgb bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos);
     QRectF getRect(MaskRomTool *mrt);
+private:
+    bool dark=true;
 };
 
 #endif // ROMBITSAMPLERWIDE_H

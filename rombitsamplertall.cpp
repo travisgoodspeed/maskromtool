@@ -2,15 +2,21 @@
 #include <QDebug>
 #include <maskromtool.h>
 
-RomBitSamplerTall::RomBitSamplerTall(){
-    name="Tall";
+RomBitSamplerTall::RomBitSamplerTall(bool dark){
+    name=(dark?"Tall":"TallBright");
+    this->dark=dark;
 }
 
 
 QRgb RomBitSamplerTall::bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos){
     //Start with the brightest, then fall to the darkest.
-    uint16_t r=0xff,g=0xff,b=0xff; //Samples from each pixel.
-    uint16_t R=0xff,G=0xff,B=0xff; //Darkest sample we've seen yet.
+    uint16_t r,g,b; //Samples from each pixel.
+    uint16_t R,G,B; //Darkest sample we've seen yet.
+
+    if(dark)
+        R=G=B=0xFF;
+    else
+        R=G=B=0;
 
     QPoint point=pos.toPoint();
     int ypos=point.y();
@@ -24,10 +30,16 @@ QRgb RomBitSamplerTall::bitvalue_raw(MaskRomTool *mrt, QImage &bg, QPointF pos){
         g=(rgb>>8)&0xFF;
         b=(rgb)&0xFF;
 
-        //Take the darkest.
-        if(r<R) R=r;
-        if(g<G) G=g;
-        if(b<B) B=b;
+        if(dark){
+            //Take the darkest.
+            if(r<R) R=r;
+            if(g<G) G=g;
+            if(b<B) B=b;
+        }else{
+            if(r>R) R=r;
+            if(g>G) G=g;
+            if(b>B) B=b;
+        }
     }
 
     //Recompile the colors to the darkest pixel in the line.

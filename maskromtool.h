@@ -210,9 +210,9 @@ public:
 
     //Selectable Strategies
     RomAligner *aligner=0;
-    QSet<RomAligner*> aligners;
+    QVector<RomAligner*> aligners;
     RomBitSampler *sampler=0;
-    QSet<RomBitSampler*> samplers;
+    QVector<RomBitSampler*> samplers;
 
     //Sampler functions.
     void addSampler(RomBitSampler *sampler); //Adds support for a sampler.

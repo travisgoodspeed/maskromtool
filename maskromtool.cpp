@@ -117,8 +117,10 @@ MaskRomTool::MaskRomTool(QWidget *parent, bool opengl)
     addAligner(new RomAlignerReliable());   //First is default.
     addAligner(new RomAlignerTilting());
     addSampler(new RomBitSampler());        //First is default.
-    addSampler(new RomBitSamplerWide());
-    addSampler(new RomBitSamplerTall());
+    addSampler(new RomBitSamplerWide(true));
+    addSampler(new RomBitSamplerWide(false));
+    addSampler(new RomBitSamplerTall(true));
+    addSampler(new RomBitSamplerTall(false));
 
     //Set up the second view.
     second.view->setScene(scene);
@@ -318,7 +320,7 @@ void MaskRomTool::on_actionPrint_triggered(){
 
 //Adds support for a sampler.  Does not select it.
 void MaskRomTool::addSampler(RomBitSampler *sampler){
-    samplers.insert(sampler);
+    samplers.append(sampler);
 
     //The first one to be inserted is the default.
     if(!this->sampler)
@@ -349,7 +351,7 @@ void MaskRomTool::chooseSampler(QString name){
 
 //Alignment strategies.
 void MaskRomTool::addAligner(RomAligner *aligner){
-    aligners.insert(aligner);
+    aligners.append(aligner);
 
     //First one is default.
     if(!this->aligner)
