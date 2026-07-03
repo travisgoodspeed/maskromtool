@@ -1,7 +1,16 @@
+REM This requires Visual Studio Community 2026 and Qt.  Versions must match.
+
+
+REM Set the 64-bit development mode.
+REM %comspec% /k
+call "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+
+
+echo on
+
 REM Delete old build.
 rmdir /s /q build
 rmdir /s /q Release
-
 
 REM Don't forget to pull the new release.
 git pull
@@ -9,67 +18,73 @@ git submodule init
 git submodule update --remote
 
 
+
+
 REM Import the Qt and VS2022 paths.
-set PATH=C:\Qt\Tools\CMake_64\bin;C:\Qt\6.10.0\msvc2022_64\bin;%PATH%
-REM "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsMSBuildCmd"
+REM set PATH=C:\Qt\Tools\CMake\bin;C:\Qt\6.11.1\msvc2022_64\bin;%PATH%
+set PATH=%PATH%;C:\Qt\Tools\CMake\bin;C:\Qt\6.11.1\msvc2022_64\bin
+call "C:\Program Files\Microsoft Visual Studio\18\Community\Common7\Tools\VsDevCmd"  -host_arch=x64 -arch=x64
+call "C:\Program Files\Microsoft Visual Studio\18\Community\Common7\Tools\VsMSBuildCmd"  -host_arch=x64 -arch=x64
+
+echo on
 
 REM Create the solution file.
 mkdir build
 cd build
-cmake ..
+REM cmake -A x64 .. || goto fail
+REM It's bad to hardocde the path, but Qt's cmake doesn't support Visual Studio 18 yet.
+"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -G "Visual Studio 18 2026" -A x64 .. || goto fail
 
 
 REM Build goodasm.exe
 cd extern\goodasm
-msbuild goodasm.sln /property:Configuration=Release -maxcpucount
+msbuild goodasm.slnx /property:Configuration=Release -maxcpucount || goto fail
 cd ..\..
 
 REM Compile the .exe into Release\
-msbuild maskromtool.sln /property:Configuration=Release -maxcpucount
+msbuild maskromtool.slnx /property:Configuration=Release -maxcpucount || goto fail
 
 REM Add the required Qt libraries.
 REM Use --pdb to include debugging symbols.
-windeployqt Release
+windeployqt Release || goto fail
 echo moving the release
-move Release ..\
-copy extern\goodasm\Release\goodasm.exe ..\Release\
+move Release ..\ || goto fail
+copy extern\goodasm\Release\goodasm.exe ..\Release\ || goto fail
 cd ..
 
 REM Adding files that windeployqt forgets.
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6Charts.dll Release\
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6OpenGL.dll Release\
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6OpenGLWidgets.dll Release\
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6Widgets.dll Release\
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6Gui.dll Release\
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6PrintSupport.dll Release\
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6Pdf.dll Release\
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6Svg.dll Release\
-rem copy C:\Qt\6.10.0\msvc2022_64\bin\Qt6Core.dll Release\
-copy C:\Qt\6.10.0\msvc2022_64\bin\*.dll Release\
+copy C:\Qt\6.11.1\msvc2022_64\bin\*.dll Release\ || goto fail
 
 REM Adding Yara lib if it exists.
-copy c:\bin\yara_x_capi.dll Release\
+copy c:\bin\yara_x_capi.dll Release\ || goto fail
 
 echo Finishing packing Release.  Now making installer.
 
 
 REM Including the path.
-set PATH=C:\Qt\Tools\QtInstallerFramework\4.8\bin;C:\Qt\Tools\CMake_64\bin;C:\Qt\6.10.0\msvc2022_64\bin;C:\Qt\Tools\QtInstallerFramework\4.10\bin;%PATH%
+set PATH=C:\Qt\Tools\QtInstallerFramework\4.8\bin;C:\Qt\Tools\CMake_64\bin;C:\Qt\6.11.1\msvc2022_64\bin;C:\Qt\Tools\QtInstallerFramework\4.11\bin;%PATH%
 
 REM Copying packages.
 xcopy/y/s Release\* Deployment\packages\com.maskromtool.maskromtool\data\
 
 cd Deployment
 echo Building the installer executable.
-binarycreator.exe -c config\config.xml -p packages -f MaskRomToolInstaller
-move MaskRomToolInstaller.exe maskromtool-win-x86_64.exe
-copy C:\Qt\vcredist\vcredist_msvc2022_x64.exe vcredist_msvc2022_x64.exe
+binarycreator.exe -c config\config.xml -p packages -f MaskRomToolInstaller || goto fail
+move MaskRomToolInstaller.exe maskromtool-win-x64.exe || goto fail
+copy "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Redist\MSVC\v145\vc_redist.x64.exe"  || goto fail
 
 REM Zip the redist with the installer.
-erase maskromtool-win-x86_64.zip
-tar -a -c -f maskromtool-win-x86_64.zip maskromtool-win-x86_64.exe vcredist_msvc2022_x64.exe
+erase maskromtool-win-*.zip
+tar -a -c -f maskromtool-win-x64.zip maskromtool-win-x64.exe *redist*.exe  || goto fail
 
 cd ..
 
 echo "Release files are available in Deployment\."
+goto done
+
+
+:fail
+
+@echo "Compiling failed."
+
+:done
