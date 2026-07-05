@@ -36,7 +36,8 @@ cp -rf build/maskromtool.app build/gatorom build/extern/goodasm/goodasm release/
 (cd release && install_name_tool -add_rpath @executable_path/maskromtool.app/Contents/Frameworks gatorom )
 (cd release && install_name_tool -change /usr/local/lib/libyara_x_capi.1.dylib @executable_path/maskromtool.app/Contents/Frameworks/libyara_x_capi.1.dylib gatorom )
 # Hardcoding the executable is bad, but the Homebrew version will break the build.
-$DEPLOYQT release/maskromtool.app -dmg -sign-for-notarization="Apple Distribution: Travis Goodspeed (F56DQ35SUJ)"
+# security find-identity -v -p codesigning ## Will list available keys.  You want the most recent distribution key.
+$DEPLOYQT release/maskromtool.app -dmg -sign-for-notarization="035B460E613575DC92448193BD49DFCBB8857B69"
 # Verify the signature
 codesign --verify --verbose  release/maskromtool.app
 
