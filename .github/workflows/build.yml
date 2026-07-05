@@ -57,7 +57,7 @@ jobs:
       if: contains(matrix.os, 'windows')
       run: |
         cd build
-        msbuild maskromtool.sln /property:Configuration=Release -maxcpucount
+        msbuild maskromtool.slnx /property:Configuration=Release -maxcpucount
 
     - name: Build Project (Others)
       if: contains(matrix.os, 'windows') != true
