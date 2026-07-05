@@ -46,14 +46,17 @@ solved with the same decoder.
 
 ## Release Changelog
 
-`master` -- GoodASM REPL now has working autocompletion on Windows.
+`master` -- 
+
+2026-07-04 -- GoodASM REPL now has working autocompletion on Windows.
 Dropping support for x86_64 macOS.  Optional support for Yara-X.  HSL
 color space for bit thresholds, with bit color histograms that are
 easier on the eyes.  Open recent menu, QSettings.  Wide and tall
 sampling sizes are now displayed in the view.  Fixes crash when
 dragging both lines and bits.  Export of individual bits as separate
 images.  Partial CPack support for producing `.deb` packages.  MARC4
-and MSP430 decoding defined by affine maps.
+and MSP430 decoding defined by affine maps.  Visual Studio 18, adding
+support for ARM64 on Windows.
 
 2025-06-01 -- CLI and GUI features to work with ambiguous/damaged
 bits, useful when part of an implant ROM is poorly exposed.  Solver
