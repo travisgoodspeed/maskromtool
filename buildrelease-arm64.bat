@@ -37,11 +37,11 @@ REM It's bad to hardocde the path, but Qt's cmake doesn't support Visual Studio 
 
 REM Build goodasm.exe
 cd extern\goodasm
-msbuild goodasm.sln /property:Configuration=Release -maxcpucount || goto fail
+msbuild goodasm.slnx /property:Configuration=Release -maxcpucount || goto fail
 cd ..\..
 
 REM Compile the .exe into Release\
-msbuild maskromtool.sln /property:Configuration=Release -maxcpucount || goto fail
+msbuild maskromtool.slnx /property:Configuration=Release -maxcpucount || goto fail
 
 REM Add the required Qt libraries.
 REM Use --pdb to include debugging symbols.
