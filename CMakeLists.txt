@@ -42,9 +42,14 @@ elseif(EXISTS "C:/lib/yara_x_capi.lib")
     message(STATUS "You have Yara-X installed on windows, but not pkg-config-lite.")
     message(STATUS "Attempting to guess at paths.")
     set(YARAX 1)
-    set(YARAX_LINK_LIBRARIES "-Lc:/lib -lyara_x_capi")
-    set(YARAX_FOUND 1)
+    ## Previously, we would set the parameters, but that causes problems with MSVC2026.
+    ## Now we find the library by name in c:/lib/ on Windows.
+    find_library(YARAX_LINK_LIBRARIES
+        NAMES yara_x_capi
+        PATHS "C:/lib"
+    )
     include_directories("C:/include")
+    set(YARAX_FOUND 1)
 else()
     message(STATUS "YaraX not found.  Will build without it.")
 endif()
