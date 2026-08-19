@@ -157,6 +157,24 @@ libreadline-dev qt6-declarative-dev pkg-config
 % make -j 8 && sudo make install
 ```
 
+A dockerfile is also provided which can be helpful if, for instance,
+you are on an LTS distro version that is stuck with a pre-6.5 version
+of Qt6 (required for goodasm). To quick-start: (**Caution: insecure on
+multi-user systems!**)
+```
+$ docker build --build-arg GROUP_ID=$(id -g) \
+    --build-arg USER_ID=$(id -u) \
+    --build-arg USER_NAME=$(whoami) \
+    -t image_name .
+
+$ xhost +local:docker # setup host X server access
+
+$ docker run -it --rm -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+    -v /home/$(whoami):/home/$(whoami) \
+    image_name
+```
+
 In Windows and macOS, use the [Qt for Open
 Source](https://www.qt.io/download-qt-installer-oss) installer, being
 sure to include the Charts and Image Formats extensions.  Then open
