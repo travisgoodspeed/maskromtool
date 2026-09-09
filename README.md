@@ -44,6 +44,8 @@ These decodings are not yet solved, which might make them an interesting target.
 from the MSP430F149.  This chip is closely related to the MSP430F449,
 solved with the same decoder.
 
+[NEC V20/V30](https://github.com/dbalsom/x86_microcode/tree/main/v20)
+
 ## Release Changelog
 
 `master` -- 
