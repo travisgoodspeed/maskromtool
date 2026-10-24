@@ -62,11 +62,14 @@
 #include <QtMath>
 #include <QProgressDialog>
 #include <QGraphicsPixmapItem>
+#include <QHash>
 
 //Printing.  See https://github.com/travisgoodspeed/maskromtool/issues/75
 #include <QPrinter>
 #include <QPrintDialog>
 
+// std::floor
+#include <cmath>
 
 using namespace std;
 
@@ -2012,15 +2015,82 @@ void MaskRomTool::clearBits(bool full){
 
 //Marks the bit fixes.
 void MaskRomTool::markFixes(){
-    /* We assume that fixes are far outnumbered by bits,
-     * so it's far faster to search for every bit that
-     * overlaps a fix than every fix that overlaps a bit.
-     */
-    bool bitswerevisible=bitsVisible;
+    if(bitfixes.isEmpty())
+        return;
 
+    /*
+      MaskRomTool's original assumption was that fixed (forced) bits would be 
+      rare in proportion to normal bits; however tools that export to 
+      MaskRomTool project format may export all bits as fixed.
+       
+      Here we build a temporary, bit-only spatial cache to speed up lookups.
+    */
+    bool bitswerevisible=bitsVisible;
     setBitsVisible(true);
+
+    // getBit() chooses the last bit in descending stacking order. Keep that
+    // same priority by inserting candidates in ascending stacking order.
+    QList<RomBitItem*> orderedBits;
+    qreal cellWidth=1, cellHeight=1;
+
+    // Collect a list of bits in ascending order
+    const auto items=scene->items(Qt::AscendingOrder);
+    for(QGraphicsItem* item: items){
+        // * UserType+2 -- Bit
+        if(item->type()!=QGraphicsItem::UserType+2
+            || !item->isVisible() 
+            || item->effectiveOpacity()==0)
+            continue;
+        auto bit=static_cast<RomBitItem*>(item);
+        orderedBits.append(bit);
+        const QRectF bounds=bit->sceneBoundingRect();
+        cellWidth=qMax(cellWidth, bounds.width());
+        cellHeight=qMax(cellHeight, bounds.height());
+    }
+
+    // Avoid narrowing large scene coordinates.
+    using Cell=QPair<qreal, qreal>;
+    const auto cell=[=](QPointF point){
+        return Cell(std::floor(point.x()/cellWidth),
+                    std::floor(point.y()/cellHeight));
+    };
+
+    QHash<Cell, QList<RomBitItem*>> buckets;
+    buckets.reserve(orderedBits.size());
+
+    // Bucket our bits by bounding box
+    for(RomBitItem* bit: orderedBits){
+        const QRectF bounds=bit->sceneBoundingRect();
+        const Cell first=cell(bounds.topLeft()), last=cell(bounds.bottomRight());
+        // Each bounding rectangle spans at most two cells on either axis.
+        buckets[first].append(bit);
+        
+        if(last.first!=first.first)
+            buckets[Cell(last.first, first.second)].append(bit);
+
+        if(last.second!=first.second){
+            buckets[Cell(first.first, last.second)].append(bit);
+            if(last.first!=first.first)
+                buckets[last].append(bit);
+        }
+    }
+
+    // Apply fixes with fast bucket lookup
     foreach (RomBitFix* fix, bitfixes){
-        RomBitItem* bit=getBit(fix->pos());
+        RomBitItem* bit=nullptr;
+        const auto candidates=buckets.constFind(cell(fix->pos()));
+
+        if(candidates!=buckets.cend()){
+            for(RomBitItem* candidate: *candidates){
+                // Use the full item shape, including its pen and sampler
+                // dimensions
+                if(candidate->contains(candidate->mapFromScene(fix->pos()))){
+                    bit=candidate;
+                    break;
+                }
+            }
+        }
+        
         if(bit) // Apply the fix.
             bit->setFix(fix);
         else if(!markingdirty)
