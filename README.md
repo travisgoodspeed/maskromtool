@@ -48,7 +48,7 @@ solved with the same decoder.
 
 ## Release Changelog
 
-`master` -- 
+`master` -- Improved performance of Forced bits.
 
 2026-07-04 -- GoodASM REPL now has working autocompletion on Windows.
 Dropping support for x86_64 macOS.  Optional support for Yara-X.  HSL
